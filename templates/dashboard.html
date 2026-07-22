@@ -116,9 +116,6 @@
 
     </div>
 </a>   
-    
-    
-    <!-- Account Activation & Fasset KYC Dual CTA Card (কেবল আন-অ্যাক্টিভেটেড ইউজারদের দেখাবে) -->
 {% if not user.is_activated %}
 <div class="block bg-gradient-to-r from-[#03150D] to-[#010603] border border-[#00E575]/25 p-5 rounded-[28px] relative overflow-hidden shadow-xl mb-4" style="font-family: 'Plus Jakarta Sans', sans-serif;">
     <!-- ব্যাকগ্রাউন্ড নিয়ন গ্লো আভা -->
@@ -147,11 +144,11 @@
             <!-- ১. অ্যাকাউন্ট সচল করার লিংক বাটন -->
             <a href="/activate" class="w-full sm:w-1/2 bg-[#fba82f] hover:opacity-95 text-white py-2.5 rounded-xl transition text-center shadow-md flex items-center justify-center gap-1">
                 <i class="fa-solid fa-shield-halved text-[9px]"></i> অ্যাকাউন্ট সক্রিয় করুন (৳৪০)
-            </a>
-            <!-- ২. ফ্যাসেট কাজের ডিরেক্ট লিংক বাটন -->
-            <a href="/fasset" class="w-full sm:w-1/2 bg-[#00E575] hover:opacity-95 text-black py-2.5 rounded-xl transition text-center shadow-md flex items-center justify-center gap-1">
-                <i class="fa-solid fa-credit-card text-[9px]"></i> ফ্যাসেট কাজ
-                <!-- ডান পাশের ১-কলাম (শর্টকাট ও সাপোর্টস) -->
+            </a>        </div>
+    </div>
+</div>
+{% endif %}
+            <!-- ডান পাশের ১-কলাম (শর্টকাট ও সাপোর্টস) -->
     <div class="space-y-4">
         
         <!-- ৩ডি টাচ শর্টকাট গ্রিড (উন্নত কন্ট্রাস্ট ও গ্লো) -->
