@@ -115,7 +115,43 @@
         </div>
 
     </div>
-</a>    <!-- ডান পাশের ১-কলাম (শর্টকাট ও সাপোর্টস) -->
+</a>   
+    
+    
+    <!-- Account Activation & Fasset KYC Dual CTA Card (কেবল আন-অ্যাক্টিভেটেড ইউজারদের দেখাবে) -->
+{% if not user.is_activated %}
+<div class="block bg-gradient-to-r from-[#03150D] to-[#010603] border border-[#00E575]/25 p-5 rounded-[28px] relative overflow-hidden shadow-xl mb-4" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+    <!-- ব্যাকগ্রাউন্ড নিয়ন গ্লো আভা -->
+    <div class="absolute -right-8 -top-8 w-24 h-24 bg-[#00E575]/5 rounded-full blur-2xl"></div>
+    <div class="absolute -left-12 -bottom-12 w-32 h-32 bg-[#00E575]/5 rounded-full blur-3xl"></div>
+    
+    <div class="space-y-4 z-10 relative">
+        <div class="flex items-center gap-3">
+            <!-- নিয়ন গ্লোয়িং সিকিউরিটি শিল্ড আইকন -->
+            <div class="w-10 h-10 rounded-2xl bg-[#00E575]/10 border border-[#00E575]/20 flex items-center justify-center text-[#00E575] shadow-[0_0_15px_rgba(0,229,117,0.15)] shrink-0">
+                <i class="fa-solid fa-user-shield text-base"></i>
+            </div>
+            <div class="space-y-0.5 text-left">
+                <span class="text-[8px] bg-[#00E575]/15 text-[#00E575] border border-[#00E575]/30 font-black px-2.5 py-0.5 rounded-full uppercase tracking-widest leading-none">Account Security</span>
+                <h3 class="text-xs font-black text-white mt-1">ভেরিফিকেশন ও অ্যাকাউন্ট সচলীকরণ প্যানেল</h3>
+            </div>
+        </div>
+        
+        <!-- আবেগপূর্ণ ও বিশ্বাসযোগ্য ডেসক্রিপশন টেক্সট -->
+        <p class="text-[10px] text-slate-300 font-medium leading-relaxed text-justify">
+            প্রিয় মেম্বার, আমাদের ক্লাউড প্রসেসরের নিরাপত্তা নিশ্চিত করতে এবং ভুয়া বটস প্রতিহত করতে আপনার অ্যাকাউন্টটি ওয়ান-টাইম ৳৪০ দিয়ে সচল (Activate) করুন। একই সাথে আমাদের **fAsset KYC ক্যাম্পেইনে** অংশ নিয়ে মাত্র একটি আইডি ভেরিফাই করলেই পেয়ে যান সরাসরি **৳১২০ - ৳১৩৫** বোনাস! প্রথম দিনেই আপনার ভেরিফিকেশন ফি-র চেয়ে ৩ গুণ বেশি টাকা সরাসরি বিকাশ/নগদে ক্যাশ-আউট করুন।
+        </p>
+
+        <!-- ডাইনামিক ডুয়াল বাটন গ্রিড (মোবাইলের জন্য নিচে নিচে এবং ডেস্কটপের জন্য পাশাপাশি) -->
+        <div class="flex flex-col sm:flex-row gap-2 pt-1 font-bold text-[10px] tracking-wider uppercase">
+            <!-- ১. অ্যাকাউন্ট সচল করার লিংক বাটন -->
+            <a href="/activate" class="w-full sm:w-1/2 bg-[#fba82f] hover:opacity-95 text-white py-2.5 rounded-xl transition text-center shadow-md flex items-center justify-center gap-1">
+                <i class="fa-solid fa-shield-halved text-[9px]"></i> অ্যাকাউন্ট সক্রিয় করুন (৳৪০)
+            </a>
+            <!-- ২. ফ্যাসেট কাজের ডিরেক্ট লিংক বাটন -->
+            <a href="/fasset" class="w-full sm:w-1/2 bg-[#00E575] hover:opacity-95 text-black py-2.5 rounded-xl transition text-center shadow-md flex items-center justify-center gap-1">
+                <i class="fa-solid fa-credit-card text-[9px]"></i> ফ্যাসেট কাজ
+                <!-- ডান পাশের ১-কলাম (শর্টকাট ও সাপোর্টস) -->
     <div class="space-y-4">
         
         <!-- ৩ডি টাচ শর্টকাট গ্রিড (উন্নত কন্ট্রাস্ট ও গ্লো) -->
