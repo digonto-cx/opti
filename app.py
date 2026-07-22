@@ -1199,7 +1199,8 @@ def tasks():
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
-        
+    
+    
     user = supabase.table("users").select("*").eq("id", user_id).execute().data[0]
     
     # ইউজার ইতিমধ্যে ক্লেইম করা ওয়ান-টাইম টাস্কগুলোর তালিকা
@@ -1242,6 +1243,10 @@ def task_detail(task_id):
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
+    user = supabase.table("users").select("*").eq("id", user_id).execute().data[0]
+    if not user.get('is_activated'):
+        flash("টাস্ক শুরু করার পূর্বে দয়া করে আপনার অ্যাকাউন্টটি অ্যাক্টিভ বা সচল করুন।", "danger")
+        return redirect(url_for('activate'))
         
     user = supabase.table("users").select("username").eq("id", user_id).execute().data[0]
     
@@ -1624,6 +1629,10 @@ def withdraw():
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
+    user = supabase.table("users").select("*").eq("id", user_id).execute().data[0]
+    if not user.get('is_activated'):
+        flash("উইথড্র করার পূর্বে দয়া করে আপনার অ্যাকাউন্টটি অ্যাক্টিভ বা সচল করুন।", "danger")
+        return redirect(url_for('activate'))
         
     user = supabase.table("users").select("*").eq("id", user_id).execute().data[0]
     balance = float(user['balance'])
