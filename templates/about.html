@@ -1,65 +1,102 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="space-y-5">
+<div class="space-y-4 max-w-2xl mx-auto px-1">
     
     <!-- হেডার কার্ড -->
-    <div class="minimal-card p-5 rounded-2xl bg-white border border-slate-200 shadow-sm relative overflow-hidden">
-        <div class="absolute -right-8 -top-8 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl"></div>
-        <h2 class="text-sm font-extrabold uppercase tracking-wider text-slate-800 flex items-center gap-1.5 z-10 relative">
-            <i class="fa-solid fa-circle-info text-emerald-500"></i> আমাদের কাজের সহজ পদ্ধতি
+    <div class="relative overflow-hidden p-6 rounded-3xl bg-slate-900 text-white shadow-xl shadow-slate-900/10">
+        <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="flex items-center gap-2 mb-1.5">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs">
+                <i class="fa-solid fa-circle-info"></i>
+            </span>
+            <span class="text-[11px] font-bold uppercase tracking-widest text-emerald-400">Opti Work Guide</span>
+        </div>
+        <h2 class="text-lg font-bold tracking-tight text-white/95">
+            আমাদের কাজের সহজ পদ্ধতি
         </h2>
-        <p class="text-[10px] text-slate-400 font-bold uppercase mt-1 tracking-wider z-10 relative">Opti Work - Simple Miner Guide</p>
+        <p class="text-xs text-slate-400 mt-1 font-normal leading-relaxed">
+            ব্লকচেন ও মাইনিং সিস্টেম কীভাবে কাজ করে তা একনজরে জেনে নিন।
+        </p>
     </div>
 
     <!-- সেকশন ১: সহজ ভাষায় মাইনিং কী? -->
-    <div class="minimal-card p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
-        <h3 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 border-b border-slate-50 pb-2">
-            <i class="fa-solid fa-cube text-slate-400"></i> ১. সহজ ভাষায় মাইনিং কী?
-        </h3>
-        <p class="text-xs text-slate-500 leading-relaxed text-justify">
-            সহজ কথায়, ক্রিপ্টোকারেন্সি (যেমন: বিটকয়েন) লেনদেনের নিরাপত্তা দেওয়া বা পাহারা দেওয়ার কাজকেই **মাইনিং** বলা হয়। বিশ্বজুড়ে মানুষ যখন এক জায়গা থেকে অন্য জায়গায় বিটকয়েন পাঠায়, তখন সেই লেনদেনগুলো যাতে নিরাপদ থাকে, তার জন্য আমাদের বড় বড় শক্তিশালী কম্পিউটার বা সার্ভার দিন-রাত ২৪ ঘণ্টা কাজ করে। এই পাহারা দেওয়ার কাজের বিনিময়ে আন্তর্জাতিক ব্লকচেন নেটওয়ার্ক আমাদেরকে পুরস্কৃত বা পেমেন্ট করে থাকে।
+    <div class="p-5 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow space-y-2.5">
+        <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+            <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">
+                <i class="fa-solid fa-cube"></i>
+            </div>
+            <h3 class="text-sm font-bold text-slate-800 tracking-wide">
+                ১. সহজ ভাষায় মাইনিং কী?
+            </h3>
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed text-justify font-normal">
+            সহজ কথায়, ক্রিপ্টোকারেন্সি (যেমন: বিটকয়েন) লেনদেনের নিরাপত্তা দেওয়া বা পাহারা দেওয়ার কাজকেই <strong class="font-semibold text-slate-900">মাইনিং</strong> বলা হয়। বিশ্বজুড়ে মানুষ যখন এক জায়গা থেকে অন্য জায়গায় বিটকয়েন পাঠায়, তখন সেই লেনদেনগুলো যাতে নিরাপদ থাকে, তার জন্য আমাদের শক্তিশালী সার্ভার ২৪ ঘণ্টা কাজ করে। এই কাজের বিনিময়ে আন্তর্জাতিক ব্লকচেন নেটওয়ার্ক পেমেন্ট বা রিওয়ার্ড প্রদান করে।
         </p>
     </div>
 
     <!-- সেকশন ২: আমরা কীভাবে কাজ করি? -->
-    <div class="minimal-card p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
-        <h3 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 border-b border-slate-50 pb-2">
-            <i class="fa-solid fa-server text-slate-400"></i> ২. আমরা কীভাবে কাজ করি?
-        </h3>
-        <p class="text-xs text-slate-500 leading-relaxed text-justify">
-            আমাদের নিজস্ব ডাটা সেন্টারে অসংখ্য অতি শক্তিশালী মাইনিং প্রসেসর নোড বসানো রয়েছে। আপনি যখন এখান থেকে কোনো প্রিমিয়াম প্যাকেজ ভাড়া (Rent) নেন, আমরা সেই সংগৃহীত অর্থ দিয়ে আমাদের ডাটা সেন্টারের মাইনিং ক্ষমতা আরও বৃদ্ধি করি। আপনার ভাড়াকৃত প্রসেসর অংশটি বিশ্বজুড়ে ব্লকচেন লেনদেন পাহারা দেওয়ার কাজে নিয়োজিত থাকে।
+    <div class="p-5 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow space-y-2.5">
+        <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+            <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">
+                <i class="fa-solid fa-server"></i>
+            </div>
+            <h3 class="text-sm font-bold text-slate-800 tracking-wide">
+                ২. আমরা কীভাবে কাজ করি?
+            </h3>
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed text-justify font-normal">
+            আমাদের ডাটা সেন্টারে প্রসেসর নোড বসানো রয়েছে। আপনি যখন কোনো প্রসেসর নোড ভাড়া (<strong class="font-semibold text-slate-900">Rent</strong>) নেন, আমরা সেই অর্থ দিয়ে ডাটা সেন্টারের মাইনিং ক্ষমতা আরও বৃদ্ধি করি। আপনার ভাড়াকৃত অংশটি ২৪/৭ আন্তর্জাতিক ব্লকচেন লেনদেন প্রক্রিয়াকরণে যুক্ত থাকে।
         </p>
     </div>
 
     <!-- সেকশন ৩: আমরা আপনাদের কীভাবে টাকা দিই? -->
-    <div class="minimal-card p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
-        <h3 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 border-b border-slate-50 pb-2">
-            <i class="fa-solid fa-wallet text-slate-400"></i> ৩. আমরা কীভাবে আপনাদের টাকা দিই?
-        </h3>
-        <p class="text-xs text-slate-500 leading-relaxed text-justify">
-            আপনার ভাড়াকৃত সার্ভারটি দিন-রাত ২৪ ঘণ্টা কাজ করে আন্তর্জাতিক ব্লকচেন থেকে ডলারে বা ক্রিপ্টোকারেন্সিতে প্রফিট ইনকাম করে। আমরা সেই উপার্জিত ডলারকে টাকায় রূপান্তর করে আপনার ড্যাশবোর্ডে যোগ করি এবং আপনি তা বিকাশ বা নগদে উইথড্র করতে পারেন। মূলত আপনার দেওয়া ভাড়ার টাকায় আমাদের হার্ডওয়্যার চলে এবং সেই হার্ডওয়্যারের আয়ের একটি বড় অংশ আমরা আপনাদের লভ্যাংশ হিসেবে বণ্টন করি।
+    <div class="p-5 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow space-y-2.5">
+        <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+            <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+            <h3 class="text-sm font-bold text-slate-800 tracking-wide">
+                ৩. আমরা কীভাবে আপনাদের পেমেন্ট করি?
+            </h3>
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed text-justify font-normal">
+            ভাড়াকৃত সার্ভার থেকে ক্রিপ্টোকারেন্সিতে অর্জিত প্রফিট টাকায় রূপান্তর করে আপনার ড্যাশবোর্ডে যোগ করা হয়, যা বিকাশ বা নগদে উইথড্র করতে পারেন। মূলত সার্ভারের আয়ের সিংহভাগ লভ্যাংশ হিসেবে আপনাদের মাঝে বণ্টন করা হয়।
         </p>
     </div>
 
     <!-- সেকশন ৪: ফ্রি ক্লেইম এবং পলিসি -->
-    <div class="minimal-card p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
-        <h3 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 border-b border-slate-50 pb-2">
-            <i class="fa-solid fa-circle-question text-slate-400"></i> ৪. ফ্রি ট্রায়াল এবং ভেরিফিকেশন কন্ডিশন
-        </h3>
+    <div class="p-5 rounded-2xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-shadow space-y-3">
+        <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+            <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs font-bold">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h3 class="text-sm font-bold text-slate-800 tracking-wide">
+                ৪. ফ্রি ট্রায়াল এবং ভেরিফিকেশন কন্ডিশন
+            </h3>
+        </div>
         
-        <div class="space-y-2 text-xs text-slate-500">
-            <div class="p-3 bg-slate-50 border border-slate-100 rounded-xl leading-relaxed">
-                <span class="font-bold text-slate-800 block mb-0.5">• ফ্রি প্যাকেজে আয়ের কারণ:</span>
-                আমাদের ক্লাউড নেটওয়ার্কের কার্যকারিতা ও গতি পরীক্ষা করার জন্য নতুন ইউজারদের একটি ফ্রি ডেমো টেস্ট সার্ভার দেওয়া হয়, যা প্রতি ৮ ঘণ্টায় ৭ টাকা গ্যাস ফি প্রস্তুত করে। এটি সম্পূর্ণ আমাদের কোম্পানির প্রচার ও বিপণন ফান্ড থেকে বহন করা হয়।
+        <div class="space-y-2.5 text-xs">
+            <div class="p-3.5 bg-slate-50 border border-slate-100 rounded-xl leading-relaxed">
+                <span class="font-bold text-slate-800 flex items-center gap-1.5 mb-1 text-[11px]">
+                    <i class="fa-solid fa-bolt text-amber-500"></i> ফ্রি প্যাকেজে আয়ের কারণ
+                </span>
+                <p class="text-slate-600">
+                    আমাদের ক্লাউড নেটওয়ার্কের কার্যকারিতা ও গতি পরীক্ষার জন্য নতুন ইউজারদের একটি ডেমো নোড দেওয়া হয়, যা প্রতি ৮ ঘণ্টায় ৭ টাকা বোনাস তৈরি করে। এটি মূলত আমাদের প্রমোশন ফান্ড থেকে বহন করা হয়।
+                </p>
             </div>
             
-            <div class="p-3 bg-slate-50 border border-slate-100 rounded-xl leading-relaxed">
-                <span class="font-bold text-slate-800 block mb-0.5">• উইথড্রয়াল ভেরিফিকেশন:</span>
-                ফ্রি নোড ব্যবহারকারীদের ক্ষেত্রে রোবটিক বা ফেক অ্যাকাউন্ট প্রতিরোধ করতে আমাদের সিস্টেম ৩টি রেফারেল শর্ত কার্যকর রাখে। তবে আপনি যদি যেকোনো একটি প্রিমিয়াম মাইনিং নোড ভাড়া নেন, তবে আপনার ডেডিকেটেড নোড ভেরিফাইড থাকায় কোনো প্রকার রেফারেল ছাড়াই সরাসরি পেমেন্ট উইথড্র করতে পারবেন।
+            <div class="p-3.5 bg-slate-50 border border-slate-100 rounded-xl leading-relaxed">
+                <span class="font-bold text-slate-800 flex items-center gap-1.5 mb-1 text-[11px]">
+                    <i class="fa-solid fa-[#10B981] fa-user-check text-emerald-500"></i> উইথড্রয়াল ভেরিফিকেশন
+                </span>
+                <p class="text-slate-600">
+                    ফ্রি ট্রায়ালের ক্ষেত্রে ভুয়া বা রোবটিক অ্যাকাউন্ট ঠেকাতে ৩টি রেফারেল শর্ত থাকে। তবে প্রিমিয়াম নোড ইউজাররা নোড ভেরিফাইড থাকায় কোনো প্রকার রেফারেল ছাড়াই সরাসরি পেমেন্ট উইথড্র করতে পারবেন।
+                </p>
             </div>
         </div>
     </div>
+
 </div>
 
 {% endblock %}
