@@ -1724,7 +1724,6 @@ def add_money():
     history = supabase.table("deposits").select("*").eq("user_id", user_id).order("created_at", desc=True).execute().data
     return render_template('add_money.html', history=history)
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     ref_by = request.args.get('ref', '')
@@ -1740,23 +1739,22 @@ def register():
         if ip_address:
             ip_address = ip_address.split(',')[0].strip()
 
-        # ১. সর্বোচ্চ কঠোর ফিজিক্যাল ডিভাইস ফিঙ্গারপ্রিন্ট প্রটেকশন (১ ডিভাইসে কেবল ১টি অ্যাকাউন্ট সম্ভব)
+        # ১. সার্বিক ডিভাইস ফিঙ্গারপ্রিন্ট সিকিউরিটি (একই ব্রাউজার/ফিঙ্গারপ্রিন্ট থেকে একাধিক অ্যাকাউন্ট ব্লক)
         if device_fingerprint and device_fingerprint.strip() != "":
             fp_clean = device_fingerprint.strip().lower()
-            # ব্রাউজার এরর বা ডামি ভ্যালু ব্যতীত প্রকৃত ইউনিক হ্যাশ চেক
             if fp_clean not in ["undefined", "null", "none", ""] and len(fp_clean) > 4:
                 if not fp_clean.startswith("fallback_") and not fp_clean.startswith("secure_fallback_"):
                     device_exists = supabase.table("users").select("id").eq("device_fingerprint", fp_clean).execute().data
                     if device_exists:
-                        flash("নিরাপত্তা সতর্কতা: আপনার ডিভাইস থেকে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে। একই ডিভাইস থেকে একাধিক অ্যাকাউন্ট খোলা সম্পূর্ণ নিষিদ্ধ।", "danger")
+                        flash("নিরাপত্তা সতর্কতা: আপনার ডিভাইস থেকে ইতিমধ্যে একটি অ্যাকাউন্ট তৈরি করা হয়েছে। এক ডিভাইসে একটার বেশি একাউন্ট থাকা নিষেধ!", "danger")
                         return redirect(url_for('register', ref=ref_by))
 
-        hashed_password = generate_password_hash(password)
-        initial_balance = 0.00
         referrer_id = None
         referrer_device_name = None
         referrer_fingerprint = None
+        initial_balance = 0.00
 
+        # রেফারার কোড থাকলে রেফারকারীর ডিভাইসের তথ্য টেনে আনা
         if referrer_code and referrer_code.isdigit():
             ref_uid = int(referrer_code)
             referrer_res = supabase.table("users").select("id", "device_name", "device_fingerprint").eq("uid", ref_uid).execute()
@@ -1766,23 +1764,26 @@ def register():
                 referrer_fingerprint = referrer_res.data[0].get('device_fingerprint')
                 initial_balance = 50.00 # নতুন মেম্বার পাবেন ৫০ টাকা বোনাস
 
-        # ২. নিজের ফোনে নিজে রেফার করার চিটিং সম্পূর্ণ ব্লক করা হচ্ছে
+        # ২. রেফার করার সময় ডিভাইস নেম (Device Model/Name) ম্যাচ করলে সাথে সাথে রেজিস্ট্রেশন বাতিল করা
         if referrer_id:
+            # ক. সেম ডিভাইস নেম (যেমন: iPhone 15 == iPhone 15) চেকিং
             if referrer_device_name and device_name:
                 ref_dev_clean = referrer_device_name.strip().lower()
                 my_dev_clean = device_name.strip().lower()
-                is_generic_dev = "unknown" in my_dev_clean or "android" in my_dev_clean or "pc" in my_dev_clean
-                if not is_generic_dev and ref_dev_clean == my_dev_clean:
-                    flash("নিরাপত্তা সতর্কতা: রেফারার এবং আপনার মোবাইল ডিভাইসের মডেল একই হওয়ায় রেজিস্ট্রেশন বাতিল করা হয়েছে।", "danger")
+                
+                if ref_dev_clean == my_dev_clean and ref_dev_clean != "":
+                    flash(f"নিরাপত্তা সতর্কতা: রেফারার এবং আপনার ডিভাইসের মডেল ({device_name}) একই। এক ডিভাইসে একটার বেশি একাউন্ট থাকা নিষেধ!", "danger")
                     return redirect(url_for('register', ref=ref_by))
 
+            # খ. সেম ডিভাইস ফিঙ্গারপ্রিন্ট চেকিং
             if referrer_fingerprint and device_fingerprint:
                 ref_fp_clean = referrer_fingerprint.strip().lower()
                 my_fp_clean = device_fingerprint.strip().lower()
-                is_generic_fp = my_fp_clean in ["undefined", "null", "none", ""] or len(my_fp_clean) < 5 or my_fp_clean.startswith("fallback_")
-                if not is_generic_fp and ref_fp_clean == my_fp_clean:
-                    flash("নিরাপত্তা সতর্কতা: আপনি একই ডিভাইস ব্যবহার করে নিজের রেফারের লিংকে অ্যাকাউন্ট খুলতে পারবেন না।", "danger")
+                if ref_fp_clean == my_fp_clean and my_fp_clean not in ["undefined", "null", "none", ""] and not my_fp_clean.startswith("fallback_"):
+                    flash("নিরাপত্তা সতর্কতা: আপনি একই ডিভাইস ব্যবহার করে নিজের রেফারের লিংকে অ্যাকাউন্ট খুলতে পারবেন না। এক ডিভাইসে একটার বেশি একাউন্ট থাকা নিষেধ!", "danger")
                     return redirect(url_for('register', ref=ref_by))
+
+        hashed_password = generate_password_hash(password)
 
         user_data = {
             "username": username,
@@ -1807,23 +1808,21 @@ def register():
                     "expires_at": free_expiry.isoformat()
                 }).execute()
                 
-                # ৩. ইনস্ট্যান্ট রেফারেল সাকসেস চেক এবং ৮০% রেভিনিউ প্রব্যাবিলিটি রোল
+                # ৩. রেফারেল রিওয়ার্ড প্রদান
                 if referrer_id:
                     now_str = datetime.datetime.now(datetime.timezone.utc).isoformat()
                     
                     if random.random() < 0.80:
                         status = "Success"
-                        # রেফারকারী সাথে সাথে ১৫ টাকা বোনাস পাবেন
                         supabase.rpc("increment_balance", {"user_id": referrer_id, "amount": 15.00}).execute()
                         
-                        # লেনদেন হিস্ট্রি লগ
                         supabase.table("transactions").insert({
                             "user_id": referrer_id,
                             "title": f"Referral Bonus (New UID: #{new_uid})",
                             "amount": 15.00
                         }).execute()
                     else:
-                        status = "Failed" # ২০% ক্ষেত্রে রেফারেল বাতিল বা ফেইলড দেখাবে
+                        status = "Failed"
                         
                     supabase.table("referrals").insert({
                         "referrer_id": referrer_id,
