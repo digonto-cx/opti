@@ -1635,8 +1635,8 @@ def withdraw():
         .execute().data
     success_ref_count = len(success_refs_query)
     
-    meets_referral_cond = (success_ref_count >= 3)
-    meets_balance_cond = (balance >= 400.00)
+    meets_referral_cond = (success_ref_count >= 4)
+    meets_balance_cond = (balance >= 350.00)
     can_withdraw = (meets_referral_cond and meets_balance_cond)
     
     if request.method == 'POST':
@@ -1646,8 +1646,8 @@ def withdraw():
         
         if not can_withdraw:
             flash("উইথড্র করার শর্তসমূহ পূরণ হয়নি।", "danger")
-        elif amount < 400.00:
-            flash("সর্বনিম্ন উইথড্রয়াল পরিমাণ ৪০০ টাকা।", "danger")
+        elif amount < 350.00:
+            flash("সর্বনিম্ন উইথড্রয়াল পরিমাণ ৩৫০ টাকা।", "danger")
         elif amount > balance:
             flash("আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই।", "danger")
         else:
