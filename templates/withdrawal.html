@@ -3,33 +3,48 @@
 
 <div class="space-y-6 max-w-3xl mx-auto pb-10">
     
-    <!-- ১. উইথড্রয়াল শর্ত কার্ড (স্মুথ রাউন্ডেড ও হাই-কন্ট্রাস্ট) -->
+    <!-- ⚡ ২৪/৭ উইথড্র নোটিশ কার্ড (২ ঘণ্টার মধ্যে পেমেন্ট) -->
+    <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-4 rounded-3xl text-white shadow-lg relative overflow-hidden">
+        <div class="flex items-center gap-3.5 z-10 relative">
+            <div class="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center shrink-0 text-lg backdrop-blur-md">
+                ⚡
+            </div>
+            <div class="text-xs space-y-0.5">
+                <span class="bg-white/20 text-[9px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider inline-block">24/7 Instant Processing</span>
+                <p class="font-extrabold text-sm leading-snug">
+                    যেকোনো সময় উইথড্র দিতে পারবেন। উইথড্র দেওয়ার <span class="text-yellow-300 font-black underline decoration-yellow-300">২ ঘণ্টার মধ্যে</span> পেমেন্ট সম্পন্ন করা হবে।
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ১. উইথড্রয়াল শর্ত কার্ড -->
     <div class="premium-card p-6 rounded-3xl border border-white/40 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
         <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-4 flex items-center gap-1.5 border-b border-slate-50 pb-2.5">
             <i class="fa-solid fa-circle-info text-blue-600"></i> উইথড্রয়াল শর্তসমূহ
         </h2>
         
         <div class="space-y-3 text-xs font-bold">
-            <!-- শর্ত ১: রেফারেল -->
+            <!-- শর্ত ১: ৪টি সফল রেফারেল -->
             <div class="flex justify-between items-center p-3.5 rounded-2xl border transition-all duration-300 {% if meets_referral_cond %}bg-emerald-50/60 border-emerald-200 text-emerald-800 shadow-[0_2px_10px_rgba(16,185,129,0.02)]{% else %}bg-red-50/60 border-red-200 text-red-800 shadow-[0_2px_10px_rgba(239,68,68,0.02)]{% endif %}">
                 <span class="flex items-center gap-2">
                     {% if meets_referral_cond %}<i class="fa-solid fa-circle-check text-emerald-600"></i>{% else %}<i class="fa-solid fa-triangle-exclamation text-red-600"></i>{% endif %}
-                    ১. ন্যূনতম ৩টি সফল রেফারেল
+                    ১. ন্যূনতম ৪টি সফল রেফারেল
                 </span>
-                {% if has_premium_pkg %}
-                    <span class="font-extrabold text-[9px] bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full uppercase tracking-wider">Bypassed (Premium)</span>
+                {% if user.get('is_optiboost') %}
+                    <span class="font-extrabold text-[9px] bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full uppercase tracking-wider">Bypassed (OptiBoost)</span>
                 {% else %}
-                    <span class="font-black text-xs">{{ success_ref_count }} / 3</span>
+                    <span class="font-black text-xs">{{ success_ref_count }} / 4</span>
                 {% endif %}
             </div>
             
-            <!-- শর্ত ২: ব্যালেন্স (৪০০ টাকা) -->
+            <!-- শর্ত ২: ব্যালেন্স (৩৫০ টাকা) -->
             <div class="flex justify-between items-center p-3.5 rounded-2xl border transition-all duration-300 {% if meets_balance_cond %}bg-emerald-50/60 border-emerald-200 text-emerald-800 shadow-[0_2px_10px_rgba(16,185,129,0.02)]{% else %}bg-red-50/60 border-red-200 text-red-800 shadow-[0_2px_10px_rgba(239,68,68,0.02)]{% endif %}">
                 <span class="flex items-center gap-2">
                     {% if meets_balance_cond %}<i class="fa-solid fa-circle-check text-emerald-600"></i>{% else %}<i class="fa-solid fa-triangle-exclamation text-red-600"></i>{% endif %}
-                    ২. ন্যূনতম ৪০০ টাকা ব্যালেন্স
+                    ২. ন্যূনতম ৩৫০ টাকা ব্যালেন্স
                 </span>
-                <span class="font-black text-xs">৳ {{ balance }} / 400</span>
+                <span class="font-black text-xs">৳ {{ balance }} / 350</span>
             </div>
         </div>
     </div>
@@ -55,11 +70,11 @@
             
             <!-- টাকার পরিমাণ -->
             <div>
-                <label class="block text-[10px] font-black text-slate-500 uppercase mb-1.5">টাকার পরিমাণ (৳) [সর্বনিম্ন 4০০]</label>
-                <input type="number" name="amount" min="300" max="{{ balance }}" required placeholder="টাকার পরিমাণ লিখুন..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-extrabold focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
+                <label class="block text-[10px] font-black text-slate-500 uppercase mb-1.5">টাকার পরিমাণ (৳) [সর্বনিম্ন ৩৫০]</label>
+                <input type="number" name="amount" min="350" max="{{ balance }}" required placeholder="টাকার পরিমাণ লিখুন (যেমন: ৩৫০)..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-extrabold focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
             </div>
 
-            <!-- লোগো সহ গেটওয়ে কার্ড সিলেক্টর গ্রুপ (বিকাশ, নগদ, রকেট) -->
+            <!-- গেটওয়ে কার্ড সিলেক্টর -->
             <div>
                 <label class="block text-[10px] font-black text-slate-500 uppercase mb-2">পেমেন্ট গেটওয়ে নির্বাচন করুন</label>
                 <div class="grid grid-cols-3 gap-3">
@@ -87,7 +102,7 @@
             <!-- মোবাইল নম্বর -->
             <div>
                 <label class="block text-[10px] font-black text-slate-500 uppercase mb-1.5">মোবাইল নম্বর (Personal)</label>
-                <input type="text" name="number" required placeholder="01XXXXXXXXX" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-extrabold focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
+                <input type="text" name="number" required placeholder="01XXXXXXXXX" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-extrabold focus:outline-none focus:border-blue-500 focus:bg-white transition-all font-mono">
             </div>
 
             <button type="submit" class="w-full glow-btn-light bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-xs py-3.5 rounded-2xl transition shadow">
@@ -97,7 +112,7 @@
     </div>
     {% endif %}
 
-    <!-- ৩. উইথড্রয়াল হিস্ট্রি তালিকা (লোগো ওভারল্যাপ বাস্ট স্ক্রিপ্ট ফিক্স সহ) -->
+    <!-- ৩. উইথড্রয়াল হিস্ট্রি তালিকা -->
     <div class="premium-card p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
         <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-4 border-b border-slate-50 pb-3 flex items-center gap-1.5">
             <i class="fa-solid fa-clock-rotate-left text-slate-500"></i> উইথড্রয়াল রেকর্ড
@@ -117,7 +132,6 @@
                         <td class="p-3.5 font-black text-slate-900 text-sm">৳ {{ item.amount }}</td>
                         <td class="p-3.5">
                             <div class="flex items-center gap-3">
-                                <!-- লোগো সাইজ লক কন্টেইনার (এটি ওভারল্যাপ ফিক্স করবে) -->
                                 <div class="w-12 h-8 flex items-center justify-start shrink-0">
                                     {% if item.payment_method == 'Bkash' %}
                                         <img src="https://images.seeklogo.com/logo-png/27/1/bkash-logo-png_seeklogo-273684.png" class="h-6 object-contain" style="max-height: 24px;">
@@ -151,21 +165,17 @@
 </div>
 
 <script>
-// গেটওয়ে কার্ড সিলেক্ট এবং রয়্যাল ব্লু বর্ডার হাইলাইট করার জাভাস্ক্রিপ্ট লজিক
 function selectGateway(method) {
-    // পূর্বে সিলেক্ট করা কার্ডের বর্ডার এবং শ্যাডো রিসেট করা
     document.querySelectorAll('label[id^="label-"]').forEach(lbl => {
         lbl.className = "cursor-pointer border border-slate-200 rounded-2xl p-3.5 flex flex-col items-center justify-center bg-slate-50/50 hover:bg-slate-100/50 hover:scale-[1.01] transition-all duration-300 relative text-center w-full shadow-sm";
     });
     
-    // নতুন সিলেক্ট করা কার্ডের বর্ডার এবং রয়্যাল ব্লু শ্যাডো গ্লো উজ্জ্বল করা
     const activeLabel = document.getElementById(`label-${method.toLowerCase()}`);
     if (activeLabel) {
         activeLabel.className = "cursor-pointer border-2 border-blue-600 bg-blue-50/20 rounded-2xl p-3.5 flex flex-col items-center justify-center transition-all duration-300 relative text-center w-full shadow-[0_6px_20px_rgba(37,99,235,0.15)] scale-[1.02] font-bold";
     }
 }
 
-// ডিফল্টভাবে bKash সিলেক্ট করা থাকবে
 setTimeout(() => selectGateway('Bkash'), 50);
 </script>
 
