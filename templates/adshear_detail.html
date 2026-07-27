@@ -3,6 +3,7 @@
 
 <div class="space-y-6 max-w-3xl mx-auto pb-10">
     
+    <!-- টাস্ক হেডার -->
     <div class="premium-card p-5 flex justify-between items-center rounded-3xl border border-white/40 shadow-sm bg-white">
         <div class="space-y-1.5">
             <span class="text-[9px] bg-purple-50 text-purple-600 border border-purple-100 font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full">Ad Share Panel</span>
@@ -37,7 +38,7 @@
             </div>
         {% else %}
             
-            <form action="/adshear/submit" method="POST" class="space-y-5">
+            <form action="/adshear/submit" method="POST" class="space-y-6">
                 <input type="hidden" name="task_id" value="{{ task.id }}">
 
                 <!-- ১. ক্যাপশন কপি -->
@@ -49,9 +50,31 @@
                     </button>
                 </div>
 
-                <!-- ২. পোস্ট লিংক সাবমিশন ইনপুট -->
+                <!-- 🖼️ ২. ইমেজ/ব্যানার ডাউনলোড ও প্রিভিউ সেকশন -->
+                {% if task.image_url %}
+                <div class="space-y-3 pt-3 border-t border-slate-100">
+                    <label class="block text-[10px] font-black text-slate-500 uppercase">২. শেয়ার করার ব্যানার ইমেজ ডাউনলোড করুন</label>
+
+                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <img src="{{ task.image_url }}" alt="Ad Banner" class="w-16 h-16 rounded-xl object-cover border border-slate-200 shadow-xs shrink-0">
+                            <div>
+                                <h4 class="text-xs font-extrabold text-slate-800">ক্যাম্পেইন ব্যানার</h4>
+                                <p class="text-[9px] text-slate-400 font-bold mt-0.5">ছবিটি ডাউনলোড করে ফেসবুকে ক্যাপশনসহ পোস্ট করুন</p>
+                            </div>
+                        </div>
+
+                        <!-- ১-ক্লিক ইমেজ ডাউনলোড বাটন -->
+                        <button type="button" id="download-img-btn" onclick="downloadCampaignImage('{{ task.image_url }}')" class="bg-purple-600 hover:bg-purple-700 text-white text-[10px] font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-xs shrink-0 w-full sm:w-auto justify-center">
+                            <i class="fa-solid fa-download"></i> Download Image
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ৩. পোস্ট লিংক সাবমিশন ইনপুট -->
                 <div class="space-y-2 pt-3 border-t border-slate-100">
-                    <label class="block text-[10px] font-black text-slate-500 uppercase">২. ফেসবুকে পোস্ট করে সেই পোস্টের লিংক (URL) এখানে দিন</label>
+                    <label class="block text-[10px] font-black text-slate-500 uppercase">৩. ফেসবুকে পোস্ট করে সেই পোস্টের লিংক (URL) এখানে দিন</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                             <i class="fa-solid fa-link text-xs"></i>
@@ -69,6 +92,7 @@
 </div>
 
 <script>
+// ১. ক্যাপশন কপি স্ক্রিপ্ট
 function copyCaption() {
     const capText = document.getElementById('ad-caption');
     capText.select();
@@ -82,6 +106,34 @@ function copyCaption() {
         btn.innerHTML = `<i class="fa-solid fa-copy"></i> Copy Caption`;
         btn.className = "bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-bold px-4 py-2 rounded-xl transition shadow-xs";
     }, 1500);
+}
+
+// ২. ১-ক্লিক ইমেজ ডাউনলোডার স্ক্রিপ্ট
+async function downloadCampaignImage(imageUrl) {
+    const btn = document.getElementById('download-img-btn');
+    const originalHtml = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Downloading...';
+
+    try {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'OptiWork-Campaign-Banner.jpg';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Downloaded';
+        setTimeout(() => {
+            btn.innerHTML = originalHtml;
+        }, 2000);
+    } catch (error) {
+        // ফেইলওভার: সরাসরি নিউ ট্যাবে ইমেজ ওপেন হবে
+        window.open(imageUrl, '_blank');
+        btn.innerHTML = originalHtml;
+    }
 }
 </script>
 
