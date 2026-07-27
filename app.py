@@ -2037,9 +2037,11 @@ def claim_mining():
     else:
         return jsonify({"status": "error", "message": "এই নোডের মাইনিং প্রসেস এখনও সম্পন্ন হয়নি।"})
 
-# (অন্যান্য কোডের সাথে নিচের নতুন অ্যাডস শেয়ারিং সম্পর্কিত রাউটগুলো যুক্ত করুন)
 
-# ১. অ্যাডস শেয়ার টাস্ক তালিকা রাউট (/adshear)
+
+
+
+# ১. অ্যাডস শেয়ার টাস্ক তালিকা রাউট
 @app.route('/adshear')
 def adshear_list():
     user_id = session.get('user_id')
@@ -2048,24 +2050,55 @@ def adshear_list():
         
     user = supabase.table("users").select("*").eq("id", user_id).execute().data[0]
     
-    # এডমিনের তৈরি সমস্ত অ্যাক্টিভ অ্যাডস শেয়ার টাস্কসমূহ
+    # সমস্ত সক্রিয় অ্যাডস শেয়ার টাস্ক
     all_ads_tasks = supabase.table("adshear_tasks").select("*").order("created_at", desc=True).execute().data or []
     
-    # ইউজারের সাবমিট করা পূর্ববর্তী কাজের রেকর্ডসমূহ
-    submissions = supabase.table("adshear_submissions").select("task_id, status").eq("user_id", user_id).execute().data or []
-    submission_map = {s['task_id']: s['status'] for s in submissions}
+    # ইউজারের সাবমিট করা কাজসমূহ
+    user_submissions = supabase.table("adshear_submissions").select("task_id, status").eq("user_id", user_id).execute().data or []
+    user_sub_map = {s['task_id']: s['status'] for s in user_submissions}
     
-    # ফিল্টারিং: অনুমোদিত (Approved) বা প্রক্রিয়াধীন (Pending) কাজগুলো হাইড থাকবে, রিজেক্টেড কাজ পুনরায় করা যাবে
-    active_ads_tasks = []
+    # ইউজারের জন্য লকড টাস্ক আইডি সেট করা
+    locked_ids_for_user = set()
+    for sub in user_submissions:
+        if sub['status'] in ['Pending', 'Approved']:
+            # সাবমিট করা টাস্কটির locked_task_ids চেক
+            matching_task = next((t for t in all_ads_tasks if str(t['id']) == str(sub['task_id'])), None)
+            if matching_task and matching_task.get('locked_task_ids'):
+                raw_ids = str(matching_task['locked_task_ids']).split(',')
+                for rid in raw_ids:
+                    cleaned = rid.strip()
+                    if cleaned.isdigit():
+                        locked_ids_for_user.add(int(cleaned))
+
+    # সর্বমোট সাবমিশন কাউন্ট (লিমিট চেকের জন্য)
+    all_active_subs = supabase.table("adshear_submissions").select("task_id").neq("status", "Rejected").execute().data or []
+    task_counts = {}
+    for sub in all_active_subs:
+        tid = sub['task_id']
+        task_counts[tid] = task_counts.get(tid, 0) + 1
+
+    enhanced_tasks = []
     for task in all_ads_tasks:
-        status = submission_map.get(task['id'])
-        if status is None or status == 'Rejected':
-            active_ads_tasks.append(task)
+        tid = task['id']
+        sub_count = task_counts.get(tid, 0)
+        max_limit = task.get('max_submissions') or 0
+        
+        is_limit_reached = (max_limit > 0 and sub_count >= max_limit)
+        is_locked = (tid in locked_ids_for_user)
+        user_status = user_sub_map.get(tid)
+        
+        enhanced_tasks.append({
+            **task,
+            'sub_count': sub_count,
+            'is_limit_reached': is_limit_reached,
+            'is_locked': is_locked,
+            'user_status': user_status
+        })
             
-    return render_template('adshear.html', user=user, all_ads_tasks=active_ads_tasks, submission_map=submission_map)
+    return render_template('adshear.html', user=user, all_ads_tasks=enhanced_tasks)
 
 
-# ২. ডেডিকেটেড অ্যাডস ডিটেইলস ও স্টেপ-বাই-স্টেপ সাবমিশন রাউট (/adshear/<task_id>)
+# ২. অ্যাডস ডিটেইলস ও লিংক সাবমিশন পেজ
 @app.route('/adshear/<task_id>')
 def adshear_detail(task_id):
     user_id = session.get('user_id')
@@ -2074,7 +2107,6 @@ def adshear_detail(task_id):
         
     user = supabase.table("users").select("username").eq("id", user_id).execute().data[0]
     
-    # নির্দিষ্ট টাস্ক আইডি দিয়ে ডাটা কুয়েরি
     task_query = supabase.table("adshear_tasks").select("*").eq("id", task_id).execute().data
     if not task_query:
         flash("অ্যাড টাস্কটি খুঁজে পাওয়া যায়নি।", "danger")
@@ -2082,18 +2114,24 @@ def adshear_detail(task_id):
         
     task = task_query[0]
     
-    # এই কাজের পূর্ববর্তী সাবমিশন চেক করা
+    # সাবমিশন তথ্য
     submission_query = supabase.table("adshear_submissions") \
-        .select("status, proof_image_url") \
+        .select("status, proof_link") \
         .eq("user_id", user_id).eq("task_id", task_id).execute().data
         
     status = submission_query[0]['status'] if submission_query else None
-    proof_url = submission_query[0]['proof_image_url'] if submission_query else None
+    proof_link = submission_query[0]['proof_link'] if submission_query else None
     
-    return render_template('adshear_detail.html', task=task, status=status, proof_url=proof_url)
+    # লিমিট চেক
+    sub_count_res = supabase.table("adshear_submissions").select("id", count="exact").eq("task_id", task_id).neq("status", "Rejected").execute()
+    current_subs = sub_count_res.count if sub_count_res.count is not None else 0
+    max_limit = task.get('max_submissions') or 0
+    is_limit_reached = (max_limit > 0 and current_subs >= max_limit)
+
+    return render_template('adshear_detail.html', task=task, status=status, proof_link=proof_link, sub_count=current_subs, is_limit_reached=is_limit_reached)
 
 
-# ৩. অ্যাডস প্রুফ সাবমিট এপিআই
+# ৩. অ্যাডস পোস্ট লিংক সাবমিট এপিআই
 @app.route('/adshear/submit', methods=['POST'])
 def submit_adshear():
     user_id = session.get('user_id')
@@ -2101,31 +2139,40 @@ def submit_adshear():
         return redirect(url_for('login'))
         
     task_id = request.form.get('task_id')
-    proof_url = request.form.get('proof_image_url')
+    proof_link = request.form.get('proof_link', '').strip()
     
-    if not proof_url:
-        flash("দয়া করে কাজের প্রুফ (স্ক্রিনশট) আপলোড করুন।", "danger")
+    if not proof_link or not (proof_link.startswith("http://") or proof_link.startswith("https://")):
+        flash("দয়া করে একটি সঠিক পোস্ট লিংক (URL) প্রদান করুন।", "danger")
         return redirect(url_for('adshear_detail', task_id=task_id))
-        
+
+    # লিমিট চেক
+    task = supabase.table("adshear_tasks").select("*").eq("id", task_id).execute().data[0]
+    max_limit = task.get('max_submissions') or 0
+    if max_limit > 0:
+        sub_count_res = supabase.table("adshear_submissions").select("id", count="exact").eq("task_id", task_id).neq("status", "Rejected").execute()
+        current_subs = sub_count_res.count if sub_count_res.count is not None else 0
+        if current_subs >= max_limit:
+            flash("দুঃখিত, এই কাজের নির্ধারিত লিমিট পূর্ণ হয়ে গেছে!", "danger")
+            return redirect(url_for('adshear_list'))
+
     try:
-        # রিজেক্টেড থাকলে তা মুছে দেওয়া হচ্ছে পুনরায় সাবমিটের জন্য
         supabase.table("adshear_submissions").delete() \
             .eq("user_id", user_id).eq("task_id", task_id).eq("status", "Rejected").execute()
             
         supabase.table("adshear_submissions").insert({
             "user_id": user_id,
             "task_id": task_id,
-            "proof_image_url": proof_url,
+            "proof_link": proof_link,
             "status": "Pending"
         }).execute()
-        flash("অ্যাডস শেয়ার প্রুফ সফলভাবে জমা দেওয়া হয়েছে। এডমিন ভেরিফাই করবে।", "success")
+        flash("পোস্ট লিংক সফলভাবে জমা দেওয়া হয়েছে। এডমিন ভেরিফাই করবে।", "success")
     except Exception:
         flash("এই কাজটি ইতিমধ্যে প্রক্রিয়াধীন (Pending) অথবা অনুমোদিত (Approved) আছে।", "danger")
         
     return redirect(url_for('adshear_list'))
 
 
-# ৪. এডমিন অ্যাডস টাস্ক ম্যানেজার রাউট (/admin/adshear)
+# ৪. এডমিন অ্যাডস টাস্ক ম্যানেজার
 @app.route('/admin/adshear', methods=['GET', 'POST'])
 def admin_adshear():
     if not check_admin_auth():
@@ -2134,21 +2181,24 @@ def admin_adshear():
     if request.method == 'POST':
         title = request.form.get('title')
         caption = request.form.get('caption')
-        image_url = request.form.get('image_url') # এডমিন আপলোড করা ইমেজের লিঙ্ক (রোটেশন প্রক্সি দিয়ে আপলোড হবে)
+        image_url = request.form.get('image_url')
         reward = float(request.form.get('reward', 0))
+        max_submissions = int(request.form.get('max_submissions', 0))
+        locked_task_ids = request.form.get('locked_task_ids', '').strip()
         
         supabase.table("adshear_tasks").insert({
             "title": title,
             "caption": caption,
             "image_url": image_url,
-            "reward": reward
+            "reward": reward,
+            "max_submissions": max_submissions,
+            "locked_task_ids": locked_task_ids
         }).execute()
-        flash("নতুন অ্যাডস শেয়ার টাস্কটি সফলভাবে যুক্ত হয়েছে।", "success")
+        flash("নতুন অ্যাডস শেয়ার ক্যাম্পেইনটি সফলভাবে যুক্ত হয়েছে।", "success")
         return redirect(url_for('admin_adshear'))
         
-    # এডমিনের এপ্রুভালের জন্য পেন্ডিং সমস্ত প্রুফ রিকোয়েস্ট রিট্রিভ করা
     pending = supabase.table("adshear_submissions") \
-        .select("id, proof_image_url, status, created_at, users(username, email, uid), adshear_tasks(title, reward)") \
+        .select("id, proof_link, status, created_at, users(username, email, uid), adshear_tasks(title, reward)") \
         .eq("status", "Pending").execute().data or []
         
     return render_template('admin_adshear.html', pending_submissions=pending)
