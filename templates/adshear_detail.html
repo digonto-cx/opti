@@ -50,7 +50,7 @@
                     </button>
                 </div>
 
-                <!-- 🖼️ ২. ইমেজ/ব্যানার ডাউনলোড ও প্রিভিউ সেকশন -->
+                <!-- 🖼️ ২. ব্যানার ইমেজ ডাউনলোড -->
                 {% if task.image_url %}
                 <div class="space-y-3 pt-3 border-t border-slate-100">
                     <label class="block text-[10px] font-black text-slate-500 uppercase">২. শেয়ার করার ব্যানার ইমেজ ডাউনলোড করুন</label>
@@ -64,7 +64,6 @@
                             </div>
                         </div>
 
-                        <!-- ১-ক্লিক ইমেজ ডাউনলোড বাটন -->
                         <button type="button" id="download-img-btn" onclick="downloadCampaignImage('{{ task.image_url }}')" class="bg-purple-600 hover:bg-purple-700 text-white text-[10px] font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-xs shrink-0 w-full sm:w-auto justify-center">
                             <i class="fa-solid fa-download"></i> Download Image
                         </button>
@@ -72,14 +71,14 @@
                 </div>
                 {% endif %}
 
-                <!-- ৩. পোস্ট লিংক সাবমিশন ইনপুট -->
+                <!-- ৩. পোস্ট লিংক ইনপুট -->
                 <div class="space-y-2 pt-3 border-t border-slate-100">
                     <label class="block text-[10px] font-black text-slate-500 uppercase">৩. ফেসবুকে পোস্ট করে সেই পোস্টের লিংক (URL) এখানে দিন</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                             <i class="fa-solid fa-link text-xs"></i>
                         </span>
-                        <input type="url" name="proof_link" required placeholder="https://facebook.com/..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-extrabold focus:outline-none focus:border-blue-500">
+                        <input type="text" name="proof_link" required placeholder="facebook.com/..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-extrabold focus:outline-none focus:border-blue-500">
                     </div>
                 </div>
 
@@ -92,7 +91,6 @@
 </div>
 
 <script>
-// ১. ক্যাপশন কপি স্ক্রিপ্ট
 function copyCaption() {
     const capText = document.getElementById('ad-caption');
     capText.select();
@@ -108,7 +106,6 @@ function copyCaption() {
     }, 1500);
 }
 
-// ২. ১-ক্লিক ইমেজ ডাউনলোডার স্ক্রিপ্ট
 async function downloadCampaignImage(imageUrl) {
     const btn = document.getElementById('download-img-btn');
     const originalHtml = btn.innerHTML;
@@ -126,11 +123,8 @@ async function downloadCampaignImage(imageUrl) {
         a.click();
         window.URL.revokeObjectURL(url);
         btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Downloaded';
-        setTimeout(() => {
-            btn.innerHTML = originalHtml;
-        }, 2000);
+        setTimeout(() => { btn.innerHTML = originalHtml; }, 2000);
     } catch (error) {
-        // ফেইলওভার: সরাসরি নিউ ট্যাবে ইমেজ ওপেন হবে
         window.open(imageUrl, '_blank');
         btn.innerHTML = originalHtml;
     }
