@@ -2186,7 +2186,7 @@ def submit_adshear():
         flash("লিংক সাবমিট করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।", "danger")
         return redirect(url_for('adshear_detail', task_id=task_id))
         
-# ৪. এডমিন অ্যাডস টাস্ক ম্যানেজার
+# ৪. এডমিন প্যানেল অ্যাডস শেয়ার ম্যানেজার (/admin/adshear)
 @app.route('/admin/adshear', methods=['GET', 'POST'])
 def admin_adshear():
     if not check_admin_auth():
@@ -2211,9 +2211,21 @@ def admin_adshear():
         flash("নতুন অ্যাডস শেয়ার ক্যাম্পেইনটি সফলভাবে যুক্ত হয়েছে।", "success")
         return redirect(url_for('admin_adshear'))
         
-    pending = supabase.table("adshear_submissions") \
-        .select("id, proof_link, status, created_at, users(username, email, uid), adshear_tasks(title, reward)") \
-        .eq("status", "Pending").execute().data or []
+    # PGRST201 অ্যাম্বিগুয়িটি এরর রোধে ম্যানুয়াল সেফ কুয়েরি
+    pending = []
+    try:
+        raw_subs = supabase.table("adshear_submissions").select("*").eq("status", "Pending").order("created_at", desc=True).execute().data or []
+        for sub in raw_subs:
+            # ইউজার ইনফো ফেচ করা
+            u_res = supabase.table("users").select("username, email, uid").eq("id", sub['user_id']).execute().data
+            # টাস্ক ইনফো ফেচ করা
+            t_res = supabase.table("adshear_tasks").select("title, reward").eq("id", sub['task_id']).execute().data
+            
+            sub['users'] = u_res[0] if u_res else {'username': 'Unknown User', 'email': '', 'uid': '0'}
+            sub['adshear_tasks'] = t_res[0] if t_res else {'title': 'Ad Task', 'reward': 0}
+            pending.append(sub)
+    except Exception as err:
+        print("Error fetching adshare pending submissions:", err)
         
     return render_template('admin_adshear.html', pending_submissions=pending)
 
