@@ -2230,7 +2230,7 @@ def admin_adshear():
     return render_template('admin_adshear.html', pending_submissions=pending)
 
 
-# ৫. এডমিন অ্যাডস ক্লেইম এপ্রুভ/রিজেক্ট অ্যাকশন রাউট
+# ৫. এডমিন অ্যাডস শেয়ার এপ্রুভ / রিজেক্ট অ্যাকশন রাউট (/admin/adshear/action)
 @app.route('/admin/adshear/action', methods=['POST'])
 def admin_adshear_action():
     if not check_admin_auth():
@@ -2239,33 +2239,53 @@ def admin_adshear_action():
     submission_id = request.form.get('submission_id')
     action = request.form.get('action') # 'approve' or 'reject'
     
-    submission = supabase.table("adshear_submissions").select("*, adshear_tasks(reward, title)").eq("id", submission_id).execute().data
-    if not submission:
-        flash("রেকর্ড পাওয়া যায়নি।", "danger")
+    if not submission_id or not action:
+        flash("অবৈধ অনুরোধ।", "danger")
         return redirect(url_for('admin_adshear'))
         
-    sub = submission[0]
-    target_user_id = sub['user_id']
-    reward = float(sub['adshear_tasks']['reward'])
-    task_title = sub['adshear_tasks']['title']
-    
-    if action == 'approve':
-        supabase.table("adshear_submissions").update({"status": "Approved"}).eq("id", submission_id).execute()
-        supabase.rpc("increment_balance", {"user_id": target_user_id, "amount": reward}).execute()
+    try:
+        # ১. সাবমিশন রেকর্ড রিট্রিভ করা
+        sub_query = supabase.table("adshear_submissions").select("*").eq("id", submission_id).execute().data
+        if not sub_query:
+            flash("রেকর্ড খুঁজে পাওয়া যায়নি।", "danger")
+            return redirect(url_for('admin_adshear'))
+            
+        sub = sub_query[0]
+        target_user_id = sub['user_id']
+        task_id = sub['task_id']
         
-        # লেনদেন হিস্ট্রি লগ সেভ
-        supabase.table("transactions").insert({
-            "user_id": target_user_id,
-            "title": f"Ad Share Approved: {task_title}",
-            "amount": reward
-        }).execute()
-        flash("অ্যাডস শেয়ারিং কাজ সফলভাবে এপ্রুভ এবং রিওয়ার্ড যোগ করা হয়েছে।", "success")
-    elif action == 'reject':
-        supabase.table("adshear_submissions").update({"status": "Rejected"}).eq("id", submission_id).execute()
-        flash("কাজটি রিজেক্ট করা হয়েছে।", "success")
+        # ২. সম্পর্কিত টাস্কের রিওয়ার্ড ও টাইটেল ম্যানুয়ালি টেনে আনা (Foreign Key error মুক্ত)
+        task_query = supabase.table("adshear_tasks").select("title, reward").eq("id", task_id).execute().data
+        reward = float(task_query[0]['reward']) if task_query else 0.00
+        task_title = task_query[0]['title'] if task_query else "Ad Share Task"
+        
+        if action == 'approve':
+            # ক. ডাটাবেজে স্ট্যাটাস Approved করা
+            supabase.table("adshear_submissions").update({"status": "Approved"}).eq("id", submission_id).execute()
+            
+            # খ. ইউজারের মূল ব্যালেন্সে রিওয়ার্ড বোনাস যোগ করা
+            if reward > 0:
+                supabase.rpc("increment_balance", {"user_id": target_user_id, "amount": reward}).execute()
+                
+                # গ. ট্রানজেকশন হিস্ট্রি সেভ করা
+                supabase.table("transactions").insert({
+                    "user_id": target_user_id,
+                    "title": f"Ad Share Approved: {task_title}",
+                    "amount": reward
+                }).execute()
+                
+            flash("কাজটি সফলভাবে এপ্রুভ করা হয়েছে এবং ইউজারের ব্যালেন্সে রিওয়ার্ড যোগ হয়েছে।", "success")
+            
+        elif action == 'reject':
+            # স্ট্যাটাস Rejected করা
+            supabase.table("adshear_submissions").update({"status": "Rejected"}).eq("id", submission_id).execute()
+            flash("কাজটি বাতিল (Rejected) করা হয়েছে।", "success")
+            
+    except Exception as e:
+        print("AdShare Action Error:", str(e))
+        flash("অ্যাকশন প্রসেস করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।", "danger")
         
     return redirect(url_for('admin_adshear'))
-    
 
 
 # app.py ফাইলের /reviews রাউটটি এটি দিয়ে প্রতিস্থাপন করুন:
