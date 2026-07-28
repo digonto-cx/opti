@@ -2131,7 +2131,6 @@ def adshear_detail(task_id):
     return render_template('adshear_detail.html', task=task, status=status, proof_link=proof_link, sub_count=current_subs, is_limit_reached=is_limit_reached)
 
 
-# ৩. অ্যাডস পোস্ট লিংক সাবমিট এপিআই
 @app.route('/adshear/submit', methods=['POST'])
 def submit_adshear():
     user_id = session.get('user_id')
@@ -2141,37 +2140,52 @@ def submit_adshear():
     task_id = request.form.get('task_id')
     proof_link = request.form.get('proof_link', '').strip()
     
-    if not proof_link or not (proof_link.startswith("http://") or proof_link.startswith("https://")):
+    # ১. ইউজার https:// না লিখলেও স্বয়ংক্রিয়ভাবে https:// যোগ করে নেওয়া
+    if proof_link and not (proof_link.startswith("http://") or proof_link.startswith("https://")):
+        proof_link = "https://" + proof_link
+        
+    if not proof_link or len(proof_link) < 8:
         flash("দয়া করে একটি সঠিক পোস্ট লিংক (URL) প্রদান করুন।", "danger")
         return redirect(url_for('adshear_detail', task_id=task_id))
 
-    # লিমিট চেক
-    task = supabase.table("adshear_tasks").select("*").eq("id", task_id).execute().data[0]
-    max_limit = task.get('max_submissions') or 0
-    if max_limit > 0:
-        sub_count_res = supabase.table("adshear_submissions").select("id", count="exact").eq("task_id", task_id).neq("status", "Rejected").execute()
-        current_subs = sub_count_res.count if sub_count_res.count is not None else 0
-        if current_subs >= max_limit:
-            flash("দুঃখিত, এই কাজের নির্ধারিত লিমিট পূর্ণ হয়ে গেছে!", "danger")
-            return redirect(url_for('adshear_list'))
-
     try:
-        supabase.table("adshear_submissions").delete() \
-            .eq("user_id", user_id).eq("task_id", task_id).eq("status", "Rejected").execute()
+        # ২. টাস্ক অস্তিত্ব ও লিমিট চেক
+        task_res = supabase.table("adshear_tasks").select("*").eq("id", task_id).execute().data
+        if not task_res:
+            flash("টাস্ক আইডি খুঁজে পাওয়া যায়নি।", "danger")
+            return redirect(url_for('adshear_list'))
             
-        supabase.table("adshear_submissions").insert({
+        task = task_res[0]
+        max_limit = task.get('max_submissions') or 0
+        if max_limit > 0:
+            sub_count_res = supabase.table("adshear_submissions").select("id", count="exact").eq("task_id", task_id).neq("status", "Rejected").execute()
+            current_subs = sub_count_res.count if sub_count_res.count is not None else 0
+            if current_subs >= max_limit:
+                flash("দুঃখিত, এই কাজের নির্ধারিত লিমিট পূর্ণ হয়ে গেছে!", "danger")
+                return redirect(url_for('adshear_list'))
+
+        # ৩. এই টাস্ক ও ইউজারের আগের সব পুরোনো ইনপুট ডিলিট করে নেওয়া (ডুপ্লিকেট কি এরর সম্পূর্ণ বন্ধ)
+        supabase.table("adshear_submissions").delete() \
+            .eq("user_id", user_id).eq("task_id", task_id).execute()
+            
+        # 4. ডাটাবেজ সেফ ইনসার্ট (সকল কলাম ব্যাকআপসহ)
+        insert_payload = {
             "user_id": user_id,
-            "task_id": task_id,
+            "task_id": int(task_id) if str(task_id).isdigit() else task_id,
             "proof_link": proof_link,
+            "proof_image_url": proof_link,
             "status": "Pending"
-        }).execute()
-        flash("পোস্ট লিংক সফলভাবে জমা দেওয়া হয়েছে। এডমিন ভেরিফাই করবে।", "success")
-    except Exception:
-        flash("এই কাজটি ইতিমধ্যে প্রক্রিয়াধীন (Pending) অথবা অনুমোদিত (Approved) আছে।", "danger")
+        }
         
-    return redirect(url_for('adshear_list'))
-
-
+        supabase.table("adshear_submissions").insert(insert_payload).execute()
+        flash("পোস্ট লিংক সফলভাবে জমা দেওয়া হয়েছে। এডমিন দ্রুত ভেরিফাই করবে।", "success")
+        return redirect(url_for('adshear_list'))
+        
+    except Exception as e:
+        print("CRITICAL AdShare Submit Error:", str(e))
+        flash("লিংক সাবমিট করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।", "danger")
+        return redirect(url_for('adshear_detail', task_id=task_id))
+        
 # ৪. এডমিন অ্যাডস টাস্ক ম্যানেজার
 @app.route('/admin/adshear', methods=['GET', 'POST'])
 def admin_adshear():
