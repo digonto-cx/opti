@@ -640,24 +640,37 @@ def admin_task_bulk_action():
     flash(f"বাল্ক অটো-ভেরিফিকেশন সম্পন্ন! {approved_count}টি টাস্ক Approved এবং {rejected_count}টি টাস্ক Rejected করা হয়েছে।", "success")
     return redirect(url_for('admin_add_task'))
     
-# app.py ফাইলের /reviews রাউটটি এটি দিয়ে প্রতিস্থাপন করে নিন:
-
-# (অন্যান্য কোডের সাথে নিচের নতুন আপডেট এবং এডমিন পোস্ট রাউট দুটি যুক্ত করুন)
-
-# ১. মেম্বার প্যানেল আপডেট পেজ রাউট (/updates)
+  
 @app.route('/updates')
 def updates_page():
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
         
-    user = supabase.table("users").select("*").eq("id", user_id).execute().data[0]
+    user = supabase.table("users").select("username, is_admin").eq("id", user_id).execute().data[0]
+    is_admin = user.get('is_admin', False)
     
-    # সর্বশেষ পোস্টটি সবার আগে পেতে ডিক্রিজিং বা ডেসেন্ডিং অর্ডারে সাজানো
     all_updates = supabase.table("updates").select("*").order("created_at", desc=True).execute().data or []
     
-    return render_template('updates.html', user=user, updates=all_updates)
+    return render_template('updates.html', user=user, updates=all_updates, is_admin=is_admin)
 
+
+# ২. এডমিন কতৃক চ্যানেল আপডেট পোস্ট ডিলিট করার রাউট (/admin/delete-update)
+@app.route('/admin/delete-update', methods=['POST'])
+def admin_delete_update():
+    if not check_admin_auth():
+        return "Unauthorized Action", 403
+        
+    update_id = request.form.get('update_id')
+    if update_id:
+        try:
+            supabase.table("updates").delete().eq("id", update_id).execute()
+            flash("আপডেট নোটিশটি সফলভাবে মুছে ফেলা হয়েছে।", "success")
+        except Exception as e:
+            print("Error deleting update:", e)
+            flash("আপডেট নোটিশটি মুছতে ত্রুটি ঘটেছে।", "danger")
+            
+    return redirect(url_for('updates_page'))    
 
 # ২. এডমিন কতৃক নতুন আপডেট নোটিশ যুক্ত করার রাউট
 @app.route('/admin/add-update', methods=['POST'])
