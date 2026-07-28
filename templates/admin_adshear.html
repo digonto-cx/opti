@@ -13,7 +13,7 @@
         {% endif %}
     {% endwith %}
 
-    <!-- ১. নতুন অ্যাডস শেয়ার ক্যাম্পেইন ফরম -->
+    <!-- ১. নতুন টাস্ক তৈরি ফরম -->
     <div class="blockio-card p-6 bg-white border border-slate-200 rounded-3xl space-y-4">
         <h2 class="text-xs font-black uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
             <i class="fa-solid fa-rectangle-ad text-purple-600"></i> নতুন অ্যাডস শেয়ার ক্যাম্পেইন যুক্ত করুন
@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            <!-- 🔒 নতুন: লিমিট ও লকড আইডি কনফিগারেশন -->
+            <!-- লিমিট ও লকড আইডি ফিল্ড -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">সর্বোচ্চ সাবমিশন লিমিট (0 = আনলিমিটেড)</label>
@@ -69,7 +69,7 @@
         </form>
     </div>
 
-    <!-- ২. পেন্ডিং পোস্ট লিংক ভেরিফিকেশন প্যানেল -->
+    <!-- ২. পেন্ডিং লিঙ্ক ভেরিফিকেশন লিস্ট -->
     <div class="blockio-card p-6 bg-white border border-slate-200 rounded-3xl space-y-4">
         <h2 class="text-xs font-black uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
             <i class="fa-solid fa-hourglass-half text-amber-500"></i> পেন্ডিং পোস্ট লিংক ভেরিফিকেশন প্যানেল
@@ -82,9 +82,8 @@
                     <p class="font-extrabold text-slate-900 text-xs">{{ sub.adshear_tasks.title }}</p>
                     <p class="text-[10px] text-slate-500">ইউজার: <span class="font-bold text-slate-800">{{ sub.users.username }}</span> (UID: {{ sub.users.uid }})</p>
                     <p class="text-[10px] text-emerald-600 font-bold">রিওয়ার্ড: ৳ {{ sub.adshear_tasks.reward }}</p>
-                    <!-- লিঙ্ক ভিউ বাটন -->
-                    <a href="{{ sub.proof_link }}" target="_blank" class="inline-flex items-center gap-1.5 text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1 rounded-xl text-[10px] font-black hover:underline mt-1">
-                        <i class="fa-solid fa-link"></i> পোস্ট লিংক চেক করুন (Click to Open)
+                    <a href="{{ sub.proof_link or sub.proof_image_url }}" target="_blank" class="inline-flex items-center gap-1.5 text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1 rounded-xl text-[10px] font-black hover:underline mt-1">
+                        <i class="fa-solid fa-external-link"></i> পোস্ট লিংক চেক করুন (Click to Open)
                     </a>
                 </div>
                 
