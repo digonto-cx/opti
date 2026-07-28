@@ -1,12 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- কাস্টম ৩ডি গ্লসি সাইন এবং পালস গ্লো অ্যানিমেশন স্টাইলস -->
+<!-- কাস্টম ৩ডি গ্লসি অ্যানিমেশন স্টাইলস -->
 <style>
     @keyframes shine {
-        100% {
-            left: 125%;
-        }
+        100% { left: 125%; }
     }
     .shine-card {
         position: relative;
@@ -17,8 +15,8 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .shine-card:hover {
-        border-color: rgba(251, 168, 47, 0.2);
-        box-shadow: 0 10px 30px rgba(251, 168, 47, 0.03);
+        border-color: rgba(251, 168, 47, 0.25);
+        box-shadow: 0 10px 30px rgba(251, 168, 47, 0.04);
         transform: translateY(-2px);
     }
     .shine-card:hover::after {
@@ -39,7 +37,7 @@
 <div class="space-y-4 max-w-2xl mx-auto pb-10">
     
     <!-- হেডার কার্ড -->
-    <div class="blockio-card p-5 flex justify-between items-center bg-white border border-slate-200 shadow-sm">
+    <div class="blockio-card p-5 flex justify-between items-center bg-white border border-slate-200 rounded-3xl shadow-sm">
         <div class="space-y-1">
             <h2 class="text-sm font-extrabold text-slate-800 flex items-center gap-1.5">
                 <i class="fa-solid fa-bullhorn text-[#fba82f] animate-pulse"></i> অফিশিয়াল ঘোষণা ও আপডেটসমূহ
@@ -48,10 +46,20 @@
         </div>
     </div>
 
-    <!-- ================= ১. পিন করা গুরুত্বপূর্ণ নোটিশ (২২vh আল্ট্রা-কম্প্যাক্ট সাইজ) ================= -->
+    <!-- 🔔 ফ্ল্যাশ সাকসেস/এরর মেসেজ -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="p-3.5 text-xs text-center rounded-2xl border font-bold shadow-sm {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-200{% else %}bg-red-50 text-red-600 border-red-200{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- ================= ১. পিন করা গুরুত্বপূর্ণ নোটিশ (২২vh সাইজ) ================= -->
     <div class="shine-card p-5 rounded-3xl border-l-4 border-[#fba82f] space-y-4 relative flex flex-col items-center">
         
-        <!-- পিন নোটিশ হেডার -->
         <div class="w-full flex justify-between items-center border-b border-slate-100 pb-3 text-[10px] font-bold">
             <div class="flex items-center gap-2">
                 <span id="must-read-dot" class="w-2 h-2 bg-red-500 rounded-full shadow-[0_0_8px_#ef4444] animate-ping"></span>
@@ -61,9 +69,7 @@
             <span class="text-slate-500 uppercase tracking-wider text-[9px] font-extrabold"><i class="fa-solid fa-thumbtack text-[#fba82f]"></i> PINNED POST</span>
         </div>
         
-        <!-- আল্ট্রা-লিমিটেড হাইট কন্টেইনার (২২vh সর্বোচ্চ) -->
         <div id="pinned-container" class="w-full max-h-[22vh] overflow-hidden relative transition-all duration-500 ease-in-out">
-            <!-- ফেইড-আউট মাস্ক ইফেক্ট -->
             <div id="pinned-fade-overlay" class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white via-white/80 to-transparent z-10 pointer-events-none"></div>
 
             <div class="w-full flex justify-center bg-slate-50/50 p-2 rounded-2xl border border-slate-100 overflow-hidden">
@@ -75,21 +81,18 @@
             </div>
         </div>
 
-        <!-- কন্ট্রোল বোতাম গ্রুপ -->
         <div class="w-full pt-1.5 flex flex-col sm:flex-row justify-between items-center gap-2 border-t border-slate-100">
-            <!-- বিস্তারিত পড়ুন বোতাম -->
             <button id="read-more-btn" onclick="togglePinnedHeight()" class="text-xs text-blue-500 hover:text-blue-600 font-extrabold flex items-center gap-1.5 focus:outline-none">
                 <i id="read-more-icon" class="fa-solid fa-angles-down text-[10px]"></i> <span id="read-more-text">বিস্তারিত পড়ুন (Read More)</span>
             </button>
             
-            <!-- আমি পড়েছি বোতাম -->
             <button id="mark-read-btn" onclick="markAsRead()" class="bg-black hover:opacity-90 text-white text-[9px] font-black uppercase tracking-wider px-4 py-2 rounded-full transition shadow-sm">
-                मैं পড়েছি (Mark as Read)
+                পড়েছি (Mark as Read)
             </button>
         </div>
     </div>
 
-    <!-- ================= ২. ডাইনামিক আপডেট ফিড ================= -->
+    <!-- ================= ২. ডাইনামিক আপডেট ফিড (এডমিন ডিলিট বাটন সহ) ================= -->
     <div class="space-y-4">
         {% for item in updates %}
         {% if item.post_path != 'ortiwokr/49' %}
@@ -111,18 +114,32 @@
                 </script>
             </div>
 
-            <a href="https://t.me/{{ item.post_path }}" target="_blank" class="bg-black hover:opacity-90 text-white text-[9px] font-black uppercase tracking-wider px-5 py-2.5 rounded-full transition flex items-center gap-1.5 shadow">
-                <i class="fa-brands fa-telegram text-xs text-[#fba82f]"></i> View in Channel
-            </a>
+            <div class="w-full flex justify-between items-center pt-2 border-t border-slate-100">
+                <a href="https://t.me/{{ item.post_path }}" target="_blank" class="bg-black hover:opacity-90 text-white text-[9px] font-black uppercase tracking-wider px-5 py-2.5 rounded-full transition flex items-center gap-1.5 shadow">
+                    <i class="fa-brands fa-telegram text-xs text-[#fba82f]"></i> View in Channel
+                </a>
+
+                <!-- 🗑️ কেবল এডমিনদের জন্য ডিলিট বাটন -->
+                {% if is_admin %}
+                <form action="/admin/delete-update" method="POST" onsubmit="return confirm('আপনি কি নিশ্চিত যে এই আপডেট নোটিশটি মুছে ফেলতে চান?');">
+                    <input type="hidden" name="update_id" value="{{ item.id }}">
+                    <button type="submit" class="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 text-[10px] font-black uppercase tracking-wider px-4 py-2 rounded-full transition flex items-center gap-1.5 shadow-2xs">
+                        <i class="fa-regular fa-trash-can"></i> Delete
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+
         </div>
         {% endif %}
+        {% else %}
+        <p class="text-xs text-slate-400 text-center py-6 font-bold">বর্তমানে কোনো অতিরিক্ত আপডেট নোটিশ নেই।</p>
         {% endfor %}
     </div>
 
 </div>
 
 <script>
-// পিন করা নোটিফিকেশন ২২vh সাইজে বড়-ছোট করার টগল স্ক্রিপ্ট
 function togglePinnedHeight() {
     const container = document.getElementById('pinned-container');
     const overlay = document.getElementById('pinned-fade-overlay');
@@ -144,7 +161,6 @@ function togglePinnedHeight() {
     }
 }
 
-// লোকাল স্টোরেজ ওয়ান-টাইম ভিউ ট্র্যাকিং স্ক্রিপ্ট
 document.addEventListener("DOMContentLoaded", function() {
     const isRead = localStorage.getItem('opti_pinned_post_49_read');
     if (isRead === 'true') {
@@ -155,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function markAsRead() {
     localStorage.setItem('opti_pinned_post_49_read', 'true');
     applyReadState();
-    alert("আপডেটটি পড়ার জন্য ধন্যবাদ। আপনার ভেরিফিকেশন সফল হয়েছে।");
+    alert("আপডেটটি পড়ার জন্য ধন্যবাদ।");
 }
 
 function applyReadState() {
