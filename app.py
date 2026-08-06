@@ -918,20 +918,31 @@ def admin_delete_task():
     flash("টাস্কটি ডাটাবেজ থেকে মুছে ফেলা হয়েছে।", "success")
     return redirect(url_for('admin_task_hub'))
     
-# ১. এডমিন উইথড্রয়াল লিস্ট রাউট
+    
+# app.py ফাইলের /admin/withdrawals রাউটটি এটি দিয়ে প্রতিস্থাপন করুন
 @app.route('/admin/withdrawals')
 def admin_withdrawals():
     if not check_admin_auth():
         return "Unauthorized Access", 403
         
-    # পেন্ডিং থাকা উইথড্রয়ালগুলো এবং ইউজারের ডেটা রিট্রিভ করা (Postgrest standard join)
     pending = supabase.table("withdrawals") \
         .select("*, users:user_id(username, email, uid)") \
         .eq("status", "Pending") \
         .order("created_at", desc=True).execute().data or []
         
+    # প্রতিটি পেন্ডিং রিকোয়েস্টের বিপরীতে ওই ইউজারের পূর্ববর্তী 'Rejected' সংখ্যা রিয়েল-টাইমে বের করা
+    for item in pending:
+        target_user_id = item['user_id']
+        reject_query = supabase.table("withdrawals") \
+            .select("id", count="exact") \
+            .eq("user_id", target_user_id) \
+            .eq("status", "Rejected").execute()
+            
+        reject_count = reject_query.count if reject_query.count is not None else 0
+        item['reject_count'] = reject_count # রিয়েল-টাইম কাউন্ট অ্যাপেন্ড করা হলো
+        
     return render_template('admin_withdraw.html', pending_withdrawals=pending)
-
+    
 
 # ২. উইথড্র এপ্রুভ/রিজেক্ট অ্যাকশন এবং অটোমেটিক টেলিগ্রাম নোটিফিকেশন ট্রিগার
 @app.route('/admin/withdraw-action', methods=['POST'])
