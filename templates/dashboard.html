@@ -1,85 +1,88 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- কাস্টম কুড়াল খোদাই অ্যানিমেশন (Pickaxe Digging Animation) ও গ্লাস স্টাইল -->
+<!-- কাস্টম মাইনিং কুড়াল খোদাই ও স্পার্ক অ্যানিমেশন -->
 <style>
     @keyframes digPickaxe {
         0% { transform: rotate(0deg) translate(0, 0); }
-        35% { transform: rotate(-35deg) translate(-2px, -3px); }
-        70% { transform: rotate(18deg) translate(2px, 3px); }
+        30% { transform: rotate(-38deg) translate(-2px, -3px); }
+        65% { transform: rotate(20deg) translate(3px, 4px); }
         100% { transform: rotate(0deg) translate(0, 0); }
     }
     @keyframes rockSpark {
-        0%, 100% { opacity: 0; transform: scale(0.6); }
-        50% { opacity: 1; transform: scale(1.2); }
+        0%, 100% { opacity: 0; transform: scale(0.5); }
+        50% { opacity: 1; transform: scale(1.3); }
     }
     .mining-pickaxe {
         display: inline-block;
         transform-origin: bottom left;
-        animation: digPickaxe 1.1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        animation: digPickaxe 1.05s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     }
     .sparkle-particle {
-        animation: rockSpark 0.9s ease-in-out infinite;
+        animation: rockSpark 0.85s ease-in-out infinite;
     }
 </style>
 
 <div class="space-y-5 pb-10">
 
     <!-- ============================================== -->
-    <!-- 1. ULTRA-LUXURY WELCOME CARD                   -->
+    <!-- 1. LUXURY WELCOME CARD                         -->
     <!-- ============================================== -->
-    <div class="glass-panel p-5 rounded-3xl shadow-card-soft flex items-center justify-between border border-white relative overflow-hidden" data-aos="fade-down">
-        <!-- ব্যাকগ্রাউন্ড গ্লো ডিজাইন -->
+    <div class="glass-panel p-4 sm:p-5 rounded-3xl shadow-card-soft flex items-center justify-between border border-white relative overflow-hidden" data-aos="fade-down">
+        <!-- সফট ব্যাকগ্রাউন্ড গ্লো -->
         <div class="absolute -right-8 -top-8 w-28 h-28 bg-rose-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
         <div class="flex items-center gap-3.5 z-10">
             <div class="relative">
-                <div class="w-13 h-13 rounded-2xl p-0.5 bg-gradient-to-tr from-ruby-600 to-rose-400 shadow-sm">
+                <div class="w-13 h-13 rounded-2xl p-0.5 bg-gradient-to-tr from-ruby-600 to-rose-400 shadow-xs">
                     <img src="{{ user.avatar_url or 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80' }}" alt="Avatar" class="w-12 h-12 rounded-[14px] object-cover border-2 border-white">
                 </div>
-                <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full shadow-sm"></span>
+                <span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full shadow-xs"></span>
             </div>
             <div>
-                <div class="flex items-center gap-1.5">
-                    <span class="text-[9px] font-black uppercase tracking-widest text-ruby-600 bg-ruby-50 border border-ruby-100 px-2 py-0.5 rounded-md">PRO MINER</span>
-                </div>
+                <span class="text-[9px] font-black uppercase tracking-widest text-ruby-600 bg-ruby-50 border border-ruby-100 px-2 py-0.5 rounded-md">VERIFIED MINER</span>
                 <h2 class="text-base font-black text-slate-900 leading-tight mt-0.5">{{ user.username }}</h2>
             </div>
         </div>
 
         <div class="text-right z-10">
-            <span class="px-3 py-1.5 rounded-2xl bg-white border border-rose-200 shadow-xs text-xs font-black text-slate-800 font-mono inline-block">
+            <span class="px-3 py-1.5 rounded-2xl bg-white border border-rose-200/80 shadow-xs text-xs font-black text-slate-800 font-mono inline-block">
                 #{{ user.uid }}
             </span>
         </div>
     </div>
 
-    <!-- স্ক্রলিং নোটিশ বার -->
+    <!-- ============================================== -->
+    <!-- 2. ULTRA-SLICK NOTICE BAR                      -->
+    <!-- ============================================== -->
     <div class="glass-panel p-2.5 px-4 rounded-2xl flex items-center gap-2.5 border-l-4 border-ruby-600 shadow-card-soft overflow-hidden" data-aos="fade-up">
-        <i class="fa-solid fa-bullhorn text-xs text-ruby-600 animate-bounce"></i>
+        <span class="flex h-2 w-2 relative shrink-0">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-ruby-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-ruby-600"></span>
+        </span>
         <marquee class="font-bold text-xs tracking-wide text-slate-800" scrollamount="4">{{ notice }}</marquee>
     </div>
 
     <!-- ============================================== -->
-    <!-- 2. PREMIUM CLEAN 3D BALANCE CARD               -->
+    <!-- 3. PREMIUM BALANCE CARD (WITH TASK BUTTON)     -->
     <!-- ============================================== -->
-    <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-card-soft relative overflow-hidden bg-gradient-to-br from-white via-rose-50/20 to-ruby-50/30" data-tilt data-tilt-max="3" data-tilt-speed="400" data-aos="fade-up">
+    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft relative overflow-hidden bg-gradient-to-br from-white via-rose-50/20 to-ruby-50/30" data-tilt data-tilt-max="3" data-tilt-speed="400" data-aos="fade-up">
         <!-- ব্যাকগ্রাউন্ড ডিপ গ্লো -->
         <div class="absolute -right-12 -top-12 w-48 h-48 bg-gradient-to-br from-rose-500/15 via-red-500/10 to-ruby-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative z-10">
             <div>
-                <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest block">Available Balance</span>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Available Balance</span>
                 <div class="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight mt-1 flex items-baseline gap-1.5">
                     <span class="text-ruby-600 font-extrabold text-3xl sm:text-4xl">৳</span>
                     <span class="tracking-tight">{{ user.balance }}</span>
                 </div>
             </div>
 
-            <!-- অ্যাকশন বাটনস (ট্যাক্টাইল মাইক্রো-ইন্টারঅ্যাকশন) -->
+            <!-- অ্যাকশন বাটনস: এড মানির বদলে 'টাস্ক করুন' বাটন -->
             <div class="flex items-center gap-3">
-                <a href="/add-money" class="px-5 py-3 rounded-2xl bg-white border border-rose-200 text-slate-800 hover:bg-rose-50 font-extrabold text-xs shadow-sm transition active:scale-95 duration-150 flex items-center gap-1.5">
-                    <i class="fa-solid fa-plus-circle text-ruby-600 text-sm"></i> এড মানি
+                <a href="/tasks" class="px-5 py-3 rounded-2xl bg-white border border-rose-200 text-slate-800 hover:bg-rose-50 font-extrabold text-xs shadow-sm transition active:scale-95 duration-150 flex items-center gap-1.5">
+                    <i class="fa-solid fa-list-check text-ruby-600 text-sm"></i> টাস্ক করুন
                 </a>
                 <a href="/withdraw" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-ruby-600 via-rose-600 to-red-600 text-white font-extrabold text-xs shadow-glow-ruby hover:scale-105 active:scale-95 transition-all duration-150 flex items-center gap-1.5">
                     <i class="fa-solid fa-money-bill-transfer text-sm"></i> উইথড্র
@@ -89,18 +92,18 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- 3. ANIMATED MINING TERMINAL (PICKAXE DIGGING)  -->
+    <!-- 4. ANIMATED MINING CARD WITH DIGGING PICKAXE   -->
     <!-- ============================================== -->
     <div class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-4" data-aos="fade-up">
         <div class="flex items-center justify-between border-b border-rose-100 pb-3">
             <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
-                <!-- জীবন্ত কুড়াল অ্যানিমেশন -->
+                <!-- লাইভ অ্যানিমেটেড কুড়াল আইকন -->
                 <span class="mining-pickaxe text-ruby-600 text-sm">
                     <i class="fa-solid fa-hammer"></i>
                 </span>
                 <span>সক্রিয় ক্লাউড মাইনিং প্রসেসর</span>
             </h3>
-            <a href="/store" class="text-[11px] font-black text-ruby-600 hover:underline flex items-center gap-1 active:scale-95 transition duration-150">
+            <a href="/store" class="text-[11px] font-black text-ruby-600 hover:underline flex items-center gap-1 active:scale-95 duration-150">
                 + আপগ্রেড স্টোর
             </a>
         </div>
@@ -112,12 +115,12 @@
             <div class="bg-gradient-to-r from-rose-50/50 via-white to-rose-50/30 border border-rose-200/90 p-4.5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative overflow-hidden shadow-xs">
                 
                 <div class="flex items-center gap-3.5 z-10">
-                    <!-- অ্যানিমেটেড মাইনিং ক্রাফট আইকন বক্স -->
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-rose-50 border border-rose-200 flex items-center justify-center relative shadow-sm overflow-hidden">
+                    <!-- অ্যানিমেটেড মাইনিং কুড়াল ও পাথর বক্স -->
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-rose-50 border border-rose-200 flex items-center justify-center relative shadow-xs overflow-hidden shrink-0">
                         <span class="mining-pickaxe text-ruby-600 text-lg">
                             <i class="fa-solid fa-hammer"></i>
                         </span>
-                        <!-- পাথরের স্পার্কল ইফেক্ট -->
+                        <!-- নিওন স্পার্কল অ্যানিমেশন -->
                         <span class="sparkle-particle absolute bottom-2 right-2 text-amber-500 text-[10px]">✨</span>
                     </div>
 
@@ -130,9 +133,9 @@
                     </div>
                 </div>
 
-                <!-- টাইমার ও ক্লেইম বাটন -->
+                <!-- কাউন্টডাউন টাইমার ও ক্লেইম বাটন -->
                 <div class="flex items-center justify-between w-full sm:w-auto gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-rose-100 z-10">
-                    <div class="flex items-center gap-1.5 bg-white border border-rose-200 px-3.5 py-2 rounded-xl text-xs font-black font-mono shadow-xs">
+                    <div class="flex items-center gap-1.5 bg-white border border-rose-200 px-3 py-2 rounded-xl text-xs font-black font-mono shadow-xs">
                         <i id="clock-{{ item.id }}" class="fa-regular fa-clock text-slate-400 text-[11px]"></i>
                         <span class="countdown-timer text-slate-800" 
                               id="timer-{{ item.id }}"
@@ -154,7 +157,7 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- 4. DAILY CLAIM WIDGET                          -->
+    <!-- 5. DAILY CLAIM WIDGET                          -->
     <!-- ============================================== -->
     {% if is_daily_eligible %}
     <div class="glass-panel p-5 sm:p-6 rounded-3xl shadow-card-soft flex flex-col sm:flex-row items-center justify-between gap-4 border border-white" data-aos="fade-up">
@@ -173,7 +176,7 @@
     {% endif %}
 
     <!-- ============================================== -->
-    <!-- 5. COMPLETE QUICK NAVS GRID (ALL SERVICES)     -->
+    <!-- 6. COMPLETE QUICK NAVS GRID (ALL SERVICES)     -->
     <!-- ============================================== -->
     <div class="grid grid-cols-4 gap-3 text-center" data-aos="fade-up">
         
@@ -244,7 +247,7 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- 6. SPEED BOOSTER CTA (HARDWARE STORE)          -->
+    <!-- 7. SPEED BOOSTER CTA                           -->
     <!-- ============================================== -->
     <div class="glass-panel p-5 rounded-3xl shadow-card-soft border border-rose-200/80 bg-gradient-to-r from-rose-50/50 via-white to-ruby-50/40 relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-4" data-aos="fade-up">
         <div class="flex items-center gap-3.5">
@@ -264,7 +267,7 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- 7. PLATFORM RULES SECTION                      -->
+    <!-- 8. PLATFORM RULES SECTION                      -->
     <!-- ============================================== -->
     <div class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-3.5" data-aos="fade-up">
         <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2 border-b border-rose-100 pb-2.5">
@@ -303,7 +306,7 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- 8. VIDEO TUTORIAL CARD                         -->
+    <!-- 9. VIDEO TUTORIAL CARD                         -->
     <!-- ============================================== -->
     <div class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-3.5" data-aos="fade-up">
         <div class="flex items-center justify-between border-b border-rose-100 pb-2.5">
@@ -333,7 +336,7 @@
 </div>
 
 <!-- ============================================== -->
-<!-- 9. WELCOME POPUP MODAL (FIXED AUTO SHOW)       -->
+<!-- 10. WELCOME POPUP MODAL                        -->
 <!-- ============================================== -->
 <div id="opti-welcome-modal" class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="glass-panel p-6 rounded-3xl max-w-xs w-full text-center relative shadow-2xl border border-white space-y-4" data-aos="zoom-in">
@@ -347,10 +350,10 @@
         </div>
 
         <div class="space-y-2 pt-1 text-xs font-bold">
-            <a href="/tutorial" class="block w-full py-2.5 rounded-xl bg-ruby-50 hover:bg-ruby-100 text-ruby-700 transition">
+            <a href="/tutorial" class="block w-full py-2.5 rounded-xl bg-ruby-50 hover:bg-ruby-100 text-ruby-700 transition active:scale-95 duration-150">
                 <i class="fa-solid fa-circle-play mr-1 text-red-500"></i> টিউটোরিয়াল ভিডিও
             </a>
-            <a href="https://t.me/ortiwokr" target="_blank" class="block w-full py-2.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 transition">
+            <a href="https://t.me/ortiwokr" target="_blank" class="block w-full py-2.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 transition active:scale-95 duration-150">
                 <i class="fa-brands fa-telegram mr-1 text-sky-500"></i> মেইন চ্যানেল জয়েন
             </a>
         </div>
@@ -365,7 +368,7 @@
 <!-- JAVASCRIPT: TIMERS, CLAIM, CONFETTI & POPUP    -->
 <!-- ============================================== -->
 <script>
-// ১. ওয়েলকাম পপআপ অটো-ওপেন স্ক্রিপ্ট (৪ ঘণ্টার স্মার্ট টাইমার সহ)
+// ১. ওয়েলকাম পপআপ অটো-ওপেন স্ক্রিপ্ট
 document.addEventListener("DOMContentLoaded", function() {
     const lastPopup = localStorage.getItem('opti_last_popup_time');
     const now = new Date().getTime();
@@ -381,7 +384,7 @@ function closeWelcomeModal() {
     localStorage.setItem('opti_last_popup_time', new Date().getTime());
 }
 
-// ২. ডেইলি চেক-ইন ক্লেইম + Confetti Animation
+// ২. ডেইলি চেক-ইন ক্লেইম + Confetti
 async function runDailyCheckin() {
     const btn = document.getElementById('daily-claim-btn');
     const btnText = document.getElementById('daily-btn-text');
