@@ -1,202 +1,180 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- কাস্টম ৩ডি গ্লসি সাইন এবং পালস গ্লো অ্যানিমেশন স্টাইলস -->
-<style>
-    @keyframes shine {
-        100% { left: 125%; }
-    }
-    .premium-shine-card {
-        position: relative;
-        overflow: hidden;
-        background: #FFFFFF;
-        border: 1px solid rgba(226, 232, 240, 0.9);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.01);
-        transition: all 0.3s ease;
-    }
-    .premium-shine-card::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -75%;
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 100%);
-        transform: skewX(-25deg);
-    }
-    .premium-shine-card:hover {
-        border-color: rgba(251, 168, 47, 0.25);
-        box-shadow: 0 10px 30px rgba(251, 168, 47, 0.03);
-        transform: translateY(-2px);
-    }
-    .premium-shine-card:hover::after {
-        animation: shine 0.8s ease-in-out;
-    }
-</style>
+<div class="space-y-6 max-w-4xl mx-auto pb-12">
 
-<div class="space-y-6 max-w-3xl mx-auto pb-10 px-4">
-    
-    <!-- ১. লাইভ রেফারেল পরিসংখ্যান (মিনিমাল ৩-কলাম গ্রিড) -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <!-- মোট আয় -->
-        <div class="premium-shine-card p-5 rounded-2xl flex flex-col justify-between min-h-[90px]">
-            <span class="text-[9px] text-slate-400 uppercase tracking-widest font-black">মোট রেফারেল আয়</span>
-            <p class="text-xl font-black text-emerald-600 mt-2">৳ {{ total_earnings }}</p>
+    <!-- ============================================== -->
+    <!-- 1. REFERRAL STATS SUMMARY (3-COLUMN METRICS)   -->
+    <!-- ============================================== -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5" data-aos="fade-down">
+        <!-- মোট রেফারেল আয় -->
+        <div class="glass-panel p-5 rounded-3xl shadow-card-soft border border-white flex flex-col justify-between min-h-[95px] relative overflow-hidden">
+            <div class="absolute -right-6 -top-6 w-20 h-20 bg-emerald-500/10 rounded-full blur-xl pointer-events-none"></div>
+            <span class="text-[9px] text-slate-400 uppercase tracking-widest font-black block">মোট রেফারেল আয়</span>
+            <p class="text-2xl font-black text-emerald-600 mt-2 tracking-tight">৳ {{ total_earnings }}</p>
         </div>
+
         <!-- সফল আমন্ত্রণ -->
-        <div class="premium-shine-card p-5 rounded-2xl flex flex-col justify-between min-h-[90px]">
-            <span class="text-[9px] text-slate-400 uppercase tracking-widest font-black">সফল আমন্ত্রণ</span>
-            <p class="text-xl font-black text-slate-800 mt-2 flex items-center gap-1.5">
-                <span class="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_6px_#10b981]"></span> {{ success_count }}
+        <div class="glass-panel p-5 rounded-3xl shadow-card-soft border border-white flex flex-col justify-between min-h-[95px] relative overflow-hidden">
+            <div class="absolute -right-6 -top-6 w-20 h-20 bg-ruby-600/10 rounded-full blur-xl pointer-events-none"></div>
+            <span class="text-[9px] text-slate-400 uppercase tracking-widest font-black block">সফল আমন্ত্রণ</span>
+            <p class="text-2xl font-black text-slate-900 mt-2 flex items-center gap-2 tracking-tight">
+                <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981] animate-pulse"></span>
+                <span>{{ success_count }} জন</span>
             </p>
         </div>
+
         <!-- ব্যর্থ আমন্ত্রণ -->
-        <div class="premium-shine-card p-5 rounded-2xl flex flex-col justify-between min-h-[90px]">
-            <span class="text-[9px] text-slate-400 uppercase tracking-widest font-black">ব্যর্থ আমন্ত্রণ</span>
-            <p class="text-xl font-black text-red-500 mt-2 flex items-center gap-1.5">
-                <span class="w-2 h-2 bg-red-500 rounded-full"></span> {{ failed_count }}
+        <div class="glass-panel p-5 rounded-3xl shadow-card-soft border border-white flex flex-col justify-between min-h-[95px] relative overflow-hidden">
+            <div class="absolute -right-6 -top-6 w-20 h-20 bg-rose-500/10 rounded-full blur-xl pointer-events-none"></div>
+            <span class="text-[9px] text-slate-400 uppercase tracking-widest font-black block">ব্যর্থ আমন্ত্রণ</span>
+            <p class="text-2xl font-black text-rose-500 mt-2 flex items-center gap-2 tracking-tight">
+                <span class="w-2.5 h-2.5 bg-rose-500 rounded-full"></span>
+                <span>{{ failed_count }} জন</span>
             </p>
         </div>
     </div>
 
-    <!-- ২. ধাপ-ভিত্তিক রেফারেল গাইড এবং পলিসি প্যানেল -->
-    <div class="premium-card p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm bg-white">
-        <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-6">
-            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-850 flex items-center gap-2">
-                <i class="fa-solid fa-gift text-[#fba82f]"></i> রেফার করার নিয়ম এবং কমিশন পলিসি
-            </h3>
-        </div>
+    <!-- ============================================== -->
+    <!-- 2. REFERRAL LINK INVITATION CARD (CONFETTI)    -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft border border-white relative overflow-hidden bg-gradient-to-br from-white via-rose-50/20 to-ruby-50/30" data-aos="fade-up">
+        <!-- ব্যাকগ্রাউন্ড নিয়ন গ্লো -->
+        <div class="absolute -right-10 -top-10 w-44 h-44 bg-gradient-to-br from-rose-500/15 to-ruby-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="relative flex flex-col gap-8 pl-8">
-            <!-- কানেক্টিং টাইমলাইন লাইন -->
-            <div class="absolute left-3 top-5 bottom-5 w-[1px] bg-slate-200 z-0"></div>
-
-            <!-- ================= ১ম ধাপ: লিংক কপি করুন ================= -->
-            <div class="relative z-10 space-y-3.5">
-                <div class="absolute -left-[25px] top-0.5 w-4 h-4 rounded-full border border-slate-900 bg-white flex items-center justify-center text-[9px] font-bold text-slate-900 z-10">
-                    1
+        <div class="space-y-4 relative z-10">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-rose-100">
+                <div class="space-y-0.5">
+                    <span class="px-2.5 py-0.5 rounded-lg bg-ruby-100 text-ruby-700 text-[10px] font-black uppercase tracking-wider">
+                        Partner Link
+                    </span>
+                    <h3 class="text-base font-black text-slate-900 pt-1">আপনার ব্যক্তিগত রেফারেল লিংক</h3>
                 </div>
-                
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-black text-slate-900">১ম ধাপ: আপনার আমন্ত্রণ লিংক কপি করুন</span>
-                </div>
-
-                <!-- প্রিমিয়াম ব্ল্যাক ও গোল্ডেন রেফারেল ব্যানার উইজেট -->
-                <div class="bg-black text-white p-5 rounded-2xl shadow-lg relative overflow-hidden">
-                    <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-[#fba82f]/10 rounded-full blur-2xl"></div>
-                    
-                    <div class="flex justify-between items-start z-10 relative">
-                        <div>
-                            <h4 class="text-xs font-black">রেফারেল লিংক</h4>
-                            <p class="text-[9px] text-white/80 pt-0.5">বন্ধুদের সাথে লিংকটি শেয়ার করুন</p>
-                        </div>
-                        <div class="bg-[#fba82f]/15 text-[#fba82f] border border-[#fba82f]/25 px-2.5 py-0.5 rounded-full text-[9px] font-black">
-                            ৳ ৫০ Welcome Bonus
-                        </div>
-                    </div>
-                    
-                    <div class="mt-4 flex gap-2 z-10 relative">
-                        <input type="text" id="referral-link" readonly value="{{ ref_link }}" 
-                               class="w-full bg-white/10 border border-white/15 p-2.5 rounded-xl text-xs text-white placeholder-white/50 font-bold focus:outline-none select-all font-mono">
-                        
-                        <button id="copy-btn" onclick="copyLink()" 
-                                class="bg-[#fba82f] hover:opacity-95 text-white text-xs font-black px-4 py-2 rounded-xl transition flex items-center gap-1.5 whitespace-nowrap">
-                            <i id="copy-icon" class="fa-solid fa-copy"></i> <span id="copy-text">Copy</span>
-                        </button>
-                    </div>
-                </div>
+                <span class="text-xs font-black text-ruby-600 bg-white border border-rose-200 px-3 py-1.5 rounded-xl shadow-xs w-max">
+                    ৳৫০ Welcome Bonus
+                </span>
             </div>
 
-            <!-- ================= ২য় ধাপ: বন্ধু আমন্ত্রণ ও রেফারেল কমিশন ================= -->
-            <div class="relative z-10 space-y-3">
-                <div class="absolute -left-[25px] top-0.5 w-4 h-4 rounded-full border border-slate-900 bg-white flex items-center justify-center text-[9px] font-bold text-slate-900 z-10">
-                    2
-                </div>
-                
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-black text-slate-900">২য় ধাপ: সফল রেফারেল কমিশন ও বোনাস</span>
+            <p class="text-xs text-slate-500 font-medium leading-relaxed">
+                নিচের লিংকটি কপি করে বন্ধুদের সাথে শেয়ার করুন। বন্ধু অ্যাকাউন্ট খুললে পাবেন <strong class="text-emerald-600 font-black">৳৫০</strong> এবং আপনি পাবেন <strong class="text-ruby-600 font-black">৳১৫</strong> ইনস্ট্যান্ট বোনাস।
+            </p>
+
+            <!-- ইনপুট ও কপি বাটন গ্রুপ -->
+            <div class="flex flex-col sm:flex-row gap-2.5 pt-1">
+                <div class="relative w-full">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                        <i class="fa-solid fa-link text-xs"></i>
+                    </span>
+                    <input type="text" id="referral-link" readonly value="{{ ref_link }}" 
+                           class="w-full pl-9 pr-4 py-3 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-800 font-mono font-bold focus:outline-none select-all shadow-xs">
                 </div>
 
-                <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-2.5 text-xs text-slate-600 font-bold">
-                    <div class="flex justify-between border-b border-slate-200/40 pb-2">
-                        <span class="text-slate-400">আপনার বন্ধু পাবেন (Welcome Bonus)</span>
-                        <span class="text-blue-600 font-black">৳ ৫০.০০</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-400">আপনি পাবেন (Referral Bonus)</span>
-                        <span class="text-emerald-600 font-black">৳ ১৫.০০</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ================= ৩য় ধাপ: সতর্কবার্তা ও অ্যাকাউন্টের নিরাপত্তা ================= -->
-            <div class="relative z-10 space-y-3">
-                <div class="absolute -left-[25px] top-0.5 w-4 h-4 rounded-full border border-red-500 bg-white flex items-center justify-center text-[9px] font-bold text-red-500 z-10">
-                    3
-                </div>
-                
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-black text-red-600">৩য় ধাপ: সততা ও কঠোর অ্যাকাউন্ট নিরাপত্তা নিয়মাবলী</span>
-                </div>
-
-                <div class="bg-red-50/40 border border-red-100 rounded-xl p-4 space-y-2 text-[10px] text-red-700 font-bold leading-relaxed">
-                    <ul class="space-y-1.5 leading-relaxed">
-                        <li class="flex items-start gap-1.5 leading-relaxed">
-                            <span class="w-1 h-1 bg-red-500 rounded-full shrink-0 mt-1.5"></span>
-                            <span><strong>ফেক রেফার সম্পূর্ণ নিষিদ্ধ:</strong> কোনো প্রকার অসৎ উপায়ে করা ফেক, সেলফ বা বট রেফার করা সম্পূর্ণ নিষিদ্ধ।</span>
-                        </li>
-                        <li class="flex items-start gap-1.5 leading-relaxed">
-                            <span class="w-1 h-1 bg-red-500 rounded-full shrink-0 mt-1.5"></span>
-                            <span><strong>এক ডিভাইসে একাধিক অ্যাকাউন্ট নিষিদ্ধ:</strong> নিয়ম অমান্য করলে সব অ্যাকাউন্ট চিরতরে ব্যান করা হবে।</span>
-                        </li>
-                    </ul>
-                </div>
+                <button id="copy-btn" onclick="copyReferralLink()" 
+                        class="px-6 py-3 rounded-2xl bg-gradient-to-r from-ruby-600 to-rose-600 hover:opacity-95 text-white text-xs font-black shadow-glow-ruby transition active:scale-95 duration-150 flex items-center justify-center gap-1.5 shrink-0 cursor-pointer">
+                    <i id="copy-icon" class="fa-solid fa-copy"></i>
+                    <span id="copy-text">কপি লিংক</span>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- ৩. রেফারেল তালিকা টেবিল -->
-    <div class="premium-card p-5 bg-white border border-slate-200 rounded-3xl">
-        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-4 border-b border-slate-50 pb-3 flex items-center gap-1.5">
-            <i class="fa-solid fa-list text-slate-400"></i> আমার রেফারেল তালিকা
+    <!-- ============================================== -->
+    <!-- 3. HOW IT WORKS (3-STEP TIMELINE)              -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2 border-b border-rose-100 pb-3">
+            <i class="fa-solid fa-circle-question text-ruby-600"></i> রেফার করার নিয়ম ও কমিশন পলিসি
         </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs font-semibold text-slate-700">
+            <!-- ধাপ ১ -->
+            <div class="bg-white border border-rose-100 p-4 rounded-2xl space-y-1.5 shadow-xs">
+                <div class="w-7 h-7 rounded-xl bg-ruby-50 text-ruby-600 flex items-center justify-center text-xs font-black">
+                    ১
+                </div>
+                <h4 class="text-xs font-black text-slate-900 pt-1">লিংক শেয়ার করুন</h4>
+                <p class="text-[11px] text-slate-500 font-medium leading-relaxed">আপনার রেফারেল লিংকটি বন্ধু বা সোশ্যাল মিডিয়ায় শেয়ার করুন।</p>
+            </div>
+
+            <!-- ধাপ ২ -->
+            <div class="bg-white border border-rose-100 p-4 rounded-2xl space-y-1.5 shadow-xs">
+                <div class="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs font-black">
+                    ২
+                </div>
+                <h4 class="text-xs font-black text-slate-900 pt-1">বন্ধু পাবে ৳ ৫০</h4>
+                <p class="text-[11px] text-slate-500 font-medium leading-relaxed">আপনার লিংকে রেজিস্ট্রেশন সম্পন্ন করলেই বন্ধু পাবে ৫০ টাকা বোনাস।</p>
+            </div>
+
+            <!-- ধাপ ৩ -->
+            <div class="bg-white border border-rose-100 p-4 rounded-2xl space-y-1.5 shadow-xs">
+                <div class="w-7 h-7 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xs font-black">
+                    ৩
+                </div>
+                <h4 class="text-xs font-black text-slate-900 pt-1">আপনি পাবেন ৳ ১৫</h4>
+                <p class="text-[11px] text-slate-500 font-medium leading-relaxed">প্রতিটি সফল নিবন্ধনে আপনার একাউন্টে ১৫ টাকা ইনস্ট্যান্ট যোগ হবে।</p>
+            </div>
+        </div>
+
+        <!-- সতর্কতা বক্স -->
+        <div class="p-3.5 rounded-2xl bg-rose-50/60 border border-rose-200/80 text-[11px] text-rose-800 font-medium leading-relaxed flex items-start gap-2.5 mt-2">
+            <i class="fa-solid fa-triangle-exclamation text-rose-600 text-sm mt-0.5 shrink-0"></i>
+            <div>
+                <strong class="font-bold text-slate-900">সতর্কবার্তা:</strong> একই ডিভাইস ব্যবহার করে নিজের রেফারে নিজে একাউন্ট খোলা বা কোনো প্রকার ফেক/বট রেফার করা সম্পূর্ণ নিষিদ্ধ। অমান্য করলে সিস্টেম স্থায়ীভাবে আপনার একাউন্ট ব্যান করবে।
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 4. REFERRED MEMBERS LIST TABLE                 -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
+        <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-users text-slate-400"></i> আমার রেফারেল তালিকা
+            </h3>
+            <span class="text-[10px] font-black text-slate-500 font-mono">মোট: {{ referrals|length }} জন</span>
+        </div>
+
         <div class="overflow-x-auto text-[11px] font-bold">
             <table class="w-full text-left">
                 <thead>
-                    <tr class="bg-slate-50 border-b border-slate-100 text-slate-400 font-extrabold uppercase">
-                        <th class="p-3">সদস্য</th>
-                        <th class="p-3">তারিখ</th>
+                    <tr class="bg-rose-50/40 border-b border-rose-100 text-slate-400 font-extrabold uppercase">
+                        <th class="p-3">সদস্য তথ্য</th>
+                        <th class="p-3">যোগদানের তারিখ</th>
                         <th class="p-3 text-right">স্ট্যাটাস</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-50">
+                <tbody class="divide-y divide-rose-50">
                     {% for ref in referrals %}
                     <tr class="text-slate-700">
                         <td class="p-3">
-                            <span class="font-extrabold text-slate-800">{{ ref.users.username }}</span><br>
-                            <span class="text-[9px] text-slate-400 mt-0.5 block font-bold">{{ ref.users.email | mask_email }}</span>
+                            <span class="font-black text-slate-900 text-xs">{{ ref.users.username }}</span><br>
+                            <span class="text-[10px] text-slate-400 font-mono">{{ ref.users.email | mask_email }}</span>
                         </td>
-                        <td class="p-3 text-slate-400 font-medium">{{ ref.created_at[:10] }}</td>
+                        <td class="p-3 text-slate-400 font-mono">{{ ref.created_at[:10] }}</td>
                         <td class="p-3 text-right">
-                            <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wide {% if ref.status == 'Success' %}bg-emerald-50 text-emerald-600 border border-emerald-100{% else %}bg-red-50 text-red-600 border-red-100{% endif %}">
+                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider {% if ref.status == 'Success' %}bg-emerald-50 text-emerald-600 border border-emerald-200{% else %}bg-rose-50 text-rose-600 border border-rose-200{% endif %}">
                                 {{ ref.status }}
                             </span>
                         </td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="3" class="p-5 text-center text-slate-400 font-medium">এখনো কোনো রেফারেল তথ্য পাওয়া যায়নি।</td>
+                        <td colspan="3" class="p-6 text-center text-slate-400 font-medium">এখনো কোনো রেফারেল রেকর্ড তৈরি হয়নি। লিংক শেয়ার করে ইনভাইট করুন!</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+
 </div>
 
+<!-- ============================================== -->
+<!-- JAVASCRIPT: CLIPBOARD & CONFETTI CELEBRATION   -->
+<!-- ============================================== -->
 <script>
-// কপি লিংক স্ক্রিপ্ট
-function copyLink() {
+function copyReferralLink() {
     const linkInput = document.getElementById('referral-link');
     linkInput.select();
     linkInput.setSelectionRange(0, 99999);
@@ -206,17 +184,23 @@ function copyLink() {
     const icon = document.getElementById('copy-icon');
     const text = document.getElementById('copy-text');
 
-    text.innerText = "Copied!";
+    text.innerText = "কপি সম্পন্ন!";
     icon.className = "fa-solid fa-check";
-    btn.classList.remove('bg-white', 'text-[#FF5C01]');
-    btn.classList.add('bg-emerald-500', 'text-white');
+    btn.className = "px-6 py-3 rounded-2xl bg-emerald-600 text-white text-xs font-black shadow-sm transition active:scale-95 duration-150 flex items-center justify-center gap-1.5 shrink-0 cursor-pointer";
+
+    // আতশবাজি কনফেটি অ্যানিমেশন
+    confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.7 },
+        colors: ['#E11D48', '#10B981', '#F59E0B']
+    });
 
     setTimeout(() => {
-        text.innerText = "Copy";
+        text.innerText = "কপি লিংক";
         icon.className = "fa-solid fa-copy";
-        btn.classList.remove('bg-emerald-500', 'text-white');
-        btn.classList.add('bg-white', 'text-[#FF5C01]');
-    }, 1500);
+        btn.className = "px-6 py-3 rounded-2xl bg-gradient-to-r from-ruby-600 to-rose-600 hover:opacity-95 text-white text-xs font-black shadow-glow-ruby transition active:scale-95 duration-150 flex items-center justify-center gap-1.5 shrink-0 cursor-pointer";
+    }, 1800);
 }
 </script>
 
