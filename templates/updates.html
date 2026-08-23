@@ -1,78 +1,62 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- কাস্টম ৩ডি গ্লসি অ্যানিমেশন স্টাইলস -->
-<style>
-    @keyframes shine {
-        100% { left: 125%; }
-    }
-    .shine-card {
-        position: relative;
-        overflow: hidden;
-        background: linear-gradient(135deg, #FFFFFF 0%, #F5F9FC 100%);
-        border: 1px solid rgba(226, 232, 240, 0.9);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.01);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .shine-card:hover {
-        border-color: rgba(251, 168, 47, 0.25);
-        box-shadow: 0 10px 30px rgba(251, 168, 47, 0.04);
-        transform: translateY(-2px);
-    }
-    .shine-card:hover::after {
-        animation: shine 0.8s ease-in-out;
-    }
-    .shine-card::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -75%;
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 100%);
-        transform: skewX(-25deg);
-    }
-</style>
-
-<div class="space-y-4 max-w-2xl mx-auto pb-10">
+<div class="space-y-6 max-w-3xl mx-auto pb-12">
     
-    <!-- হেডার কার্ড -->
-    <div class="blockio-card p-5 flex justify-between items-center bg-white border border-slate-200 rounded-3xl shadow-sm">
-        <div class="space-y-1">
-            <h2 class="text-sm font-extrabold text-slate-800 flex items-center gap-1.5">
-                <i class="fa-solid fa-bullhorn text-[#fba82f] animate-pulse"></i> অফিশিয়াল ঘোষণা ও আপডেটসমূহ
-            </h2>
-            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Opti Work - Live Channel Announcements</p>
+    <!-- ============================================== -->
+    <!-- 1. UPDATES HERO HEADER                         -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft relative overflow-hidden bg-gradient-to-br from-white via-rose-50/30 to-ruby-50/40 border border-white" data-aos="fade-down">
+        <div class="absolute -right-10 -top-10 w-36 h-36 bg-ruby-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="flex items-center justify-between gap-4 relative z-10">
+            <div class="space-y-1">
+                <span class="px-2.5 py-0.5 rounded-lg bg-ruby-100 text-ruby-700 text-[10px] font-black uppercase tracking-wider inline-block">
+                    Official Announcements
+                </span>
+                <h1 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">ঘোষণা ও আপডেট নোটিশ বোর্ড</h1>
+                <p class="text-[11px] text-slate-500 font-medium">প্ল্যাটফর্মের গুরুত্বপূর্ণ নোটিশ, পেমেন্ট আপডেট এবং নতুন ফিচার সম্পর্কে জেনে নিন।</p>
+            </div>
+
+            <a href="https://t.me/ortiwokr" target="_blank" class="px-4 py-2.5 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs shadow-sm transition active:scale-95 duration-150 flex items-center gap-1.5 shrink-0">
+                <i class="fa-brands fa-telegram text-sm"></i>
+                <span class="hidden sm:inline">টেলিগ্রাম চ্যানেল</span>
+            </a>
         </div>
     </div>
 
-    <!-- 🔔 ফ্ল্যাশ সাকসেস/এরর মেসেজ -->
+    <!-- ফ্ল্যাশ মেসেজ নোটিফিকেশন -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
-                <div class="p-3.5 text-xs text-center rounded-2xl border font-bold shadow-sm {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-200{% else %}bg-red-50 text-red-600 border-red-200{% endif %}">
+                <div class="p-3 text-xs text-center rounded-2xl border font-bold shadow-xs {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-200{% else %}bg-red-50 text-red-600 border-red-200{% endif %}">
                     {{ message }}
                 </div>
             {% endfor %}
         {% endif %}
     {% endwith %}
 
-    <!-- ================= ১. পিন করা গুরুত্বপূর্ণ নোটিশ (২২vh সাইজ) ================= -->
-    <div class="shine-card p-5 rounded-3xl border-l-4 border-[#fba82f] space-y-4 relative flex flex-col items-center">
+    <!-- ============================================== -->
+    <!-- 2. PINNED IMPORTANT NOTICE CARD                -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 rounded-3xl shadow-card-soft border-l-4 border-ruby-600 space-y-4 border border-white relative" data-aos="fade-up">
         
-        <div class="w-full flex justify-between items-center border-b border-slate-100 pb-3 text-[10px] font-bold">
+        <div class="flex items-center justify-between border-b border-rose-100 pb-3 text-[10px] font-bold">
             <div class="flex items-center gap-2">
-                <span id="must-read-dot" class="w-2 h-2 bg-red-500 rounded-full shadow-[0_0_8px_#ef4444] animate-ping"></span>
-                <span id="must-read-text" class="text-red-500 uppercase tracking-widest text-[8px] font-black">🔴 নতুন নোটিশ (পড়া বাধ্যতামূলক)</span>
-                <span id="read-success-text" class="hidden text-emerald-600 uppercase tracking-widest text-[8px] font-black">✓ ভেরিফাইড পঠিত</span>
+                <span id="must-read-dot" class="w-2.5 h-2.5 bg-ruby-600 rounded-full shadow-[0_0_8px_#e11d48] animate-ping"></span>
+                <span id="must-read-text" class="text-ruby-600 uppercase tracking-widest text-[9px] font-black">🔴 জরুরি নোটিশ (পড়া আবশ্যক)</span>
+                <span id="read-success-text" class="hidden text-emerald-600 uppercase tracking-widest text-[9px] font-black">✓ পঠিত হয়েছে</span>
             </div>
-            <span class="text-slate-500 uppercase tracking-wider text-[9px] font-extrabold"><i class="fa-solid fa-thumbtack text-[#fba82f]"></i> PINNED POST</span>
+            <span class="text-slate-400 uppercase tracking-wider text-[9px] font-extrabold font-mono flex items-center gap-1">
+                <i class="fa-solid fa-thumbtack text-ruby-600"></i> PINNED POST
+            </span>
         </div>
         
-        <div id="pinned-container" class="w-full max-h-[22vh] overflow-hidden relative transition-all duration-500 ease-in-out">
+        <!-- পিন করা টেলিগ্রাম পোস্ট উইজেট -->
+        <div id="pinned-container" class="w-full max-h-[26vh] overflow-hidden relative transition-all duration-500 ease-in-out">
             <div id="pinned-fade-overlay" class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white via-white/80 to-transparent z-10 pointer-events-none"></div>
 
-            <div class="w-full flex justify-center bg-slate-50/50 p-2 rounded-2xl border border-slate-100 overflow-hidden">
+            <div class="w-full flex justify-center bg-white p-2 rounded-2xl border border-rose-100 overflow-hidden shadow-xs">
                 <script async 
                         src="https://telegram.org/js/telegram-widget.js?22" 
                         data-telegram-post="ortiwokr/49" 
@@ -81,32 +65,39 @@
             </div>
         </div>
 
-        <div class="w-full pt-1.5 flex flex-col sm:flex-row justify-between items-center gap-2 border-t border-slate-100">
-            <button id="read-more-btn" onclick="togglePinnedHeight()" class="text-xs text-blue-500 hover:text-blue-600 font-extrabold flex items-center gap-1.5 focus:outline-none">
-                <i id="read-more-icon" class="fa-solid fa-angles-down text-[10px]"></i> <span id="read-more-text">বিস্তারিত পড়ুন (Read More)</span>
+        <!-- অ্যাকশন বাটনস -->
+        <div class="pt-2 flex flex-col sm:flex-row justify-between items-center gap-2.5 border-t border-rose-100">
+            <button id="read-more-btn" onclick="togglePinnedHeight()" class="text-xs text-ruby-600 hover:text-ruby-700 font-extrabold flex items-center gap-1.5 focus:outline-none active:scale-95 duration-150">
+                <i id="read-more-icon" class="fa-solid fa-angles-down text-[10px]"></i>
+                <span id="read-more-text">সম্পূর্ণ পড়ুন (Read More)</span>
             </button>
             
-            <button id="mark-read-btn" onclick="markAsRead()" class="bg-black hover:opacity-90 text-white text-[9px] font-black uppercase tracking-wider px-4 py-2 rounded-full transition shadow-sm">
+            <button id="mark-read-btn" onclick="markAsRead()" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white text-[10px] font-black uppercase tracking-wider transition active:scale-95 duration-150 shadow-xs">
                 পড়েছি (Mark as Read)
             </button>
         </div>
     </div>
 
-    <!-- ================= ২. ডাইনামিক আপডেট ফিড (এডমিন ডিলিট বাটন সহ) ================= -->
-    <div class="space-y-4">
+    <!-- ============================================== -->
+    <!-- 3. DYNAMIC ANNOUNCEMENTS FEED                  -->
+    <!-- ============================================== -->
+    <div class="space-y-4" data-aos="fade-up">
         {% for item in updates %}
         {% if item.post_path != 'ortiwokr/49' %}
-        <div class="shine-card p-5 rounded-3xl flex flex-col items-center space-y-4">
+        <div class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-4 border border-white relative overflow-hidden">
             
-            <div class="w-full flex justify-between items-center border-b border-slate-100 pb-3 text-[10px] font-bold">
+            <div class="flex items-center justify-between border-b border-rose-100 pb-3 text-[10px] font-bold">
                 <div class="flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 bg-[#fba82f] rounded-full shadow-[0_0_6px_#fba82f] animate-pulse"></span>
-                    <span class="text-slate-500 uppercase tracking-widest text-[8px]">Official Announcement</span>
+                    <span class="w-2 h-2 bg-ruby-600 rounded-full shadow-[0_0_6px_#e11d48]"></span>
+                    <span class="text-slate-500 uppercase tracking-widest text-[9px]">Official Notice</span>
                 </div>
-                <span class="text-slate-400 font-mono flex items-center gap-1"><i class="fa-regular fa-calendar-days"></i> {{ item.created_at[:10] }}</span>
+                <span class="text-slate-400 font-mono flex items-center gap-1">
+                    <i class="fa-regular fa-calendar-days text-[10px]"></i> {{ item.created_at[:10] }}
+                </span>
             </div>
             
-            <div class="w-full flex justify-center bg-slate-50/50 p-2 rounded-2xl border border-slate-100 overflow-hidden">
+            <!-- টেলিগ্রাম এমবেড -->
+            <div class="w-full flex justify-center bg-white p-2 rounded-2xl border border-rose-100 overflow-hidden shadow-xs">
                 <script async 
                         src="https://telegram.org/js/telegram-widget.js?22" 
                         data-telegram-post="{{ item.post_path }}" 
@@ -114,17 +105,19 @@
                 </script>
             </div>
 
-            <div class="w-full flex justify-between items-center pt-2 border-t border-slate-100">
-                <a href="https://t.me/{{ item.post_path }}" target="_blank" class="bg-black hover:opacity-90 text-white text-[9px] font-black uppercase tracking-wider px-5 py-2.5 rounded-full transition flex items-center gap-1.5 shadow">
-                    <i class="fa-brands fa-telegram text-xs text-[#fba82f]"></i> View in Channel
+            <div class="flex justify-between items-center pt-2 border-t border-rose-100">
+                <a href="https://t.me/{{ item.post_path }}" target="_blank" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white text-[10px] font-black uppercase tracking-wider transition active:scale-95 duration-150 flex items-center gap-1.5 shadow-xs">
+                    <i class="fa-brands fa-telegram text-sky-400"></i>
+                    <span>চ্যানেলে দেখুন</span>
                 </a>
 
-                <!-- 🗑️ কেবল এডমিনদের জন্য ডিলিট বাটন -->
+                <!-- অ্যাডমিন ডিলিট বাটন -->
                 {% if is_admin %}
-                <form action="/admin/delete-update" method="POST" onsubmit="return confirm('আপনি কি নিশ্চিত যে এই আপডেট নোটিশটি মুছে ফেলতে চান?');">
+                <form action="/admin/delete-update" method="POST" onsubmit="return confirm('আপনি কি নিশ্চিত যে এই নোটিশটি ডিলিট করতে চান?');">
                     <input type="hidden" name="update_id" value="{{ item.id }}">
-                    <button type="submit" class="bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 text-[10px] font-black uppercase tracking-wider px-4 py-2 rounded-full transition flex items-center gap-1.5 shadow-2xs">
-                        <i class="fa-regular fa-trash-can"></i> Delete
+                    <button type="submit" class="px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-[10px] font-black uppercase tracking-wider transition active:scale-95 duration-150 flex items-center gap-1">
+                        <i class="fa-regular fa-trash-can text-xs"></i>
+                        <span>Delete</span>
                     </button>
                 </form>
                 {% endif %}
@@ -133,12 +126,17 @@
         </div>
         {% endif %}
         {% else %}
-        <p class="text-xs text-slate-400 text-center py-6 font-bold">বর্তমানে কোনো অতিরিক্ত আপডেট নোটিশ নেই।</p>
+        <div class="glass-panel p-8 rounded-3xl text-center space-y-2 border border-white">
+            <p class="text-xs text-slate-400 font-medium">বর্তমানে কোনো অতিরিক্ত আপডেট নোটিশ নেই।</p>
+        </div>
         {% endfor %}
     </div>
 
 </div>
 
+<!-- ============================================== -->
+<!-- JAVASCRIPT: READ STATE & HEIGHT TOGGLE         -->
+<!-- ============================================== -->
 <script>
 function togglePinnedHeight() {
     const container = document.getElementById('pinned-container');
@@ -146,17 +144,17 @@ function togglePinnedHeight() {
     const btnText = document.getElementById('read-more-text');
     const btnIcon = document.getElementById('read-more-icon');
 
-    if (container.classList.contains('max-h-[22vh]')) {
-        container.classList.remove('max-h-[22vh]');
+    if (container.classList.contains('max-h-[26vh]')) {
+        container.classList.remove('max-h-[26vh]');
         container.classList.add('max-h-full');
         overlay.classList.add('hidden');
         btnText.innerText = "সংকুচিত করুন (Show Less)";
         btnIcon.className = "fa-solid fa-angles-up text-[10px]";
     } else {
         container.classList.remove('max-h-full');
-        container.classList.add('max-h-[22vh]');
+        container.classList.add('max-h-[26vh]');
         overlay.classList.remove('hidden');
-        btnText.innerText = "বিস্তারিত পড়ুন (Read More)";
+        btnText.innerText = "সম্পূর্ণ পড়ুন (Read More)";
         btnIcon.className = "fa-solid fa-angles-down text-[10px]";
     }
 }
@@ -171,7 +169,6 @@ document.addEventListener("DOMContentLoaded", function() {
 function markAsRead() {
     localStorage.setItem('opti_pinned_post_49_read', 'true');
     applyReadState();
-    alert("আপডেটটি পড়ার জন্য ধন্যবাদ।");
 }
 
 function applyReadState() {
@@ -186,8 +183,8 @@ function applyReadState() {
     
     if (markBtn) {
         markBtn.setAttribute('disabled', 'true');
-        markBtn.className = "bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed text-[9px] font-bold px-4 py-2 rounded-full shadow-none";
-        markBtn.innerText = "Announcement Read";
+        markBtn.className = "px-5 py-2 rounded-xl bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed text-[10px] font-bold";
+        markBtn.innerText = "নোটিশটি পঠিত";
     }
 }
 </script>
