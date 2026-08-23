@@ -1,102 +1,90 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<style>
-    @keyframes shine {
-        100% {
-            left: 125%;
-        }
-    }
-    .shine-card {
-        position: relative;
-        overflow: hidden;
-        background: linear-gradient(135deg, #FFFFFF 0%, #F5F9FC 100%);
-        border: 1px solid rgba(226, 232, 240, 0.9);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.01);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .shine-card:hover {
-        border-color: rgba(251, 168, 47, 0.2);
-        box-shadow: 0 10px 30px rgba(251, 168, 47, 0.03);
-        transform: translateY(-2px);
-    }
-    .shine-card:hover::after {
-        animation: shine 0.8s ease-in-out;
-    }
-    .shine-card::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -75%;
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 100%);
-        transform: skewX(-25deg);
-    }
-</style>
+<div class="space-y-6 max-w-4xl mx-auto pb-12">
 
-<div class="space-y-4">
-    <!-- ১. ৩-কলাম ইনকাম মিটার গ্রিড -->
-    <div class="grid grid-cols-3 gap-3">
-        <div class="shine-card p-4 flex flex-col justify-center rounded-2xl">
-            <span class="text-[8px] text-slate-400 uppercase font-black tracking-wider leading-none">আজকের ইনকাম</span>
-            <p class="text-base font-black text-emerald-600 mt-1.5 leading-none">৳ {{ today_income }}</p>
+    <!-- ============================================== -->
+    <!-- 1. THREE-COLUMN INCOME METRICS HEADER          -->
+    <!-- ============================================== -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5" data-aos="fade-down">
+        <!-- আজকের আয় -->
+        <div class="glass-panel p-5 rounded-3xl shadow-card-soft border border-white flex flex-col justify-between min-h-[95px] relative overflow-hidden">
+            <div class="absolute -right-6 -top-6 w-20 h-20 bg-emerald-500/10 rounded-full blur-xl pointer-events-none"></div>
+            <span class="text-[9px] text-slate-400 uppercase tracking-widest font-black block">আজকের আয় (Today)</span>
+            <p class="text-2xl font-black text-emerald-600 mt-2 tracking-tight">৳ {{ today_income }}</p>
         </div>
-        <div class="shine-card p-4 flex flex-col justify-center rounded-2xl">
-            <span class="text-[8px] text-slate-400 uppercase font-black tracking-wider leading-none">গতকালকের ইনকাম</span>
-            <p class="text-base font-black text-slate-800 mt-1.5 leading-none">৳ {{ yesterday_income }}</p>
+
+        <!-- গতকালের আয় -->
+        <div class="glass-panel p-5 rounded-3xl shadow-card-soft border border-white flex flex-col justify-between min-h-[95px] relative overflow-hidden">
+            <div class="absolute -right-6 -top-6 w-20 h-20 bg-rose-500/10 rounded-full blur-xl pointer-events-none"></div>
+            <span class="text-[9px] text-slate-400 uppercase tracking-widest font-black block">গতকালের আয় (Yesterday)</span>
+            <p class="text-2xl font-black text-slate-900 mt-2 tracking-tight">৳ {{ yesterday_income }}</p>
         </div>
-        <div class="shine-card p-4 flex flex-col justify-center rounded-2xl">
-            <span class="text-[8px] text-slate-400 uppercase font-black tracking-wider leading-none">সর্বমোট ইনকাম</span>
-            <p class="text-base font-black text-[#fba82f] mt-1.5 leading-none">৳ {{ total_income }}</p>
+
+        <!-- সর্বমোট আয় -->
+        <div class="glass-panel p-5 rounded-3xl shadow-card-soft border border-white flex flex-col justify-between min-h-[95px] relative overflow-hidden">
+            <div class="absolute -right-6 -top-6 w-20 h-20 bg-ruby-600/10 rounded-full blur-xl pointer-events-none"></div>
+            <span class="text-[9px] text-slate-400 uppercase tracking-widest font-black block">সর্বমোট আয় (Total)</span>
+            <p class="text-2xl font-black text-ruby-600 mt-2 tracking-tight">৳ {{ total_income }}</p>
         </div>
     </div>
 
-    <!-- ২. ৩-ট্যাব নেভিগেশন বার (Income Log, Task History, Withdraws) -->
-    <div class="flex border border-slate-200 bg-white p-1 rounded-xl shadow-sm">
-        <!-- ট্যাব ১: ইনকাম লগ -->
-        <button id="income-btn" onclick="showTab('income')" class="tab-btn w-full py-2 text-center text-xs font-bold border-b-2 border-[#fba82f] text-[#fba82f] transition flex items-center justify-center gap-1 focus:outline-none">
-            <i class="fa-solid fa-chart-line text-[10px]"></i> Income
+    <!-- ============================================== -->
+    <!-- 2. THREE-TAB NAVIGATION SWITCHER               -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-1.5 rounded-2xl shadow-card-soft border border-white flex items-center gap-1.5" data-aos="fade-up">
+        <!-- ট্যাব ১: ইনকাম -->
+        <button id="tab-income-btn" onclick="switchHistoryTab('income')" class="w-full py-2.5 rounded-xl bg-slate-900 text-white font-extrabold text-xs transition active:scale-95 duration-150 flex items-center justify-center gap-1.5 shadow-xs">
+            <i class="fa-solid fa-chart-line text-[11px]"></i>
+            <span>ইনকাম লগ</span>
         </button>
-        <!-- ট্যাব ২: টাস্ক হিস্ট্রি -->
-        <button id="task-btn" onclick="showTab('task')" class="tab-btn w-full py-2 text-center text-xs font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-700 transition flex items-center justify-center gap-1 focus:outline-none">
-            <i class="fa-solid fa-list-check text-[10px]"></i> Tasks
+
+        <!-- ট্যাব ২: টাস্ক হিস্টোরি -->
+        <button id="tab-task-btn" onclick="switchHistoryTab('task')" class="w-full py-2.5 rounded-xl bg-white border border-rose-200 text-slate-600 hover:border-ruby-300 font-extrabold text-xs transition active:scale-95 duration-150 flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-list-check text-[11px]"></i>
+            <span>টাস্ক হিস্টোরি</span>
         </button>
-        <!-- ট্যাব ৩: উইথড্র হিস্ট্রি -->
-        <button id="withdraw-btn" onclick="showTab('withdraw')" class="tab-btn w-full py-2 text-center text-xs font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-700 transition flex items-center justify-center gap-1 focus:outline-none">
-            <i class="fa-solid fa-minus-circle text-[10px]"></i> Withdraws
+
+        <!-- ট্যাব ৩: উইথড্র হিস্টোরি -->
+        <button id="tab-withdraw-btn" onclick="switchHistoryTab('withdraw')" class="w-full py-2.5 rounded-xl bg-white border border-rose-200 text-slate-600 hover:border-ruby-300 font-extrabold text-xs transition active:scale-95 duration-150 flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-money-bill-transfer text-[11px]"></i>
+            <span>উইথড্রয়াল</span>
         </button>
     </div>
 
-    <!-- ৩. ৩-ট্যাব প্যানেল কন্টেইনারস -->
-    <div class="space-y-4">
+    <!-- ============================================== -->
+    <!-- 3. TAB PANELS CONTAINER                        -->
+    <!-- ============================================== -->
+    <div class="space-y-4" data-aos="fade-up">
         
-        <!-- প্যানেল ১: বিস্তারিত ইনকাম লগ -->
-        <div id="income-pane" class="premium-card p-5 bg-white border border-slate-200 shadow-sm transition-all duration-300">
-            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-3 border-b border-slate-100 pb-2 flex items-center gap-1.5">
-                <i class="fa-solid fa-receipt text-[#fba82f]"></i> ইনকাম রেভিনিউ লগ
-            </h3>
-            <div class="overflow-x-auto text-[10px] font-bold">
+        <!-- ================= প্যানেল ১: ইনকাম রেভিনিউ লগ ================= -->
+        <div id="pane-income" class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-4 border border-white">
+            <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-receipt text-ruby-600"></i> বিস্তারিত ইনকাম বিবরণী
+                </h3>
+                <span class="text-[10px] font-black text-slate-400 font-mono">মোট রেকর্ড: {{ transactions|length }}টি</span>
+            </div>
+
+            <div class="overflow-x-auto text-[11px] font-bold">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="bg-slate-50 border-b border-slate-100 text-slate-400 font-bold uppercase">
-                            <th class="p-2">উৎস বিবরণ</th>
-                            <th class="p-2">পরিমাণ</th>
-                            <th class="p-2 text-right">তারিখ ও সময়</th>
+                        <tr class="bg-rose-50/40 border-b border-rose-100 text-slate-400 font-extrabold uppercase">
+                            <th class="p-3">উৎস বিবরণ</th>
+                            <th class="p-3">পরিমাণ</th>
+                            <th class="p-3 text-right">তারিখ ও সময়</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-rose-50">
                         {% for tx in transactions %}
-                        <tr class="border-b border-slate-50 text-slate-600">
-                            <td class="p-2.5">
-                                <span class="font-extrabold text-slate-800 text-[11px]">{{ tx.title }}</span>
-                            </td>
-                            <td class="p-2.5 font-black text-emerald-600">+ ৳ {{ tx.amount }}</td>
-                            <td class="p-2.5 text-right text-slate-400 font-mono">{{ tx.created_at[:16].replace('T', ' ') }}</td>
+                        <tr class="text-slate-700">
+                            <td class="p-3 font-extrabold text-slate-900 text-xs">{{ tx.title }}</td>
+                            <td class="p-3 font-black text-emerald-600">+ ৳ {{ tx.amount }}</td>
+                            <td class="p-3 text-right text-slate-400 font-mono">{{ tx.created_at[:16].replace('T', ' ') }}</td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="3" class="p-4 text-center text-slate-400 font-normal">কোনো আয়ের হিস্ট্রি এখনও তৈরি হয়নি।</td>
+                            <td colspan="3" class="p-6 text-center text-slate-400 font-medium">কোনো আয়ের হিস্ট্রি এখনও তৈরি হয়নি।</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -104,37 +92,41 @@
             </div>
         </div>
 
-        <!-- প্যানেল ২: টাস্ক সাবমিশন রেকর্ড (নতুন যুক্ত করা হয়েছে) -->
-        <div id="task-pane" class="premium-card p-5 bg-white border border-slate-200 shadow-sm transition-all duration-300 hidden">
-            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-3 border-b border-slate-100 pb-2 flex items-center gap-1.5">
-                <i class="fa-solid fa-list-check text-emerald-500"></i> টাস্ক সাবমিশন হিস্ট্রি
-            </h3>
-            <div class="overflow-x-auto text-[10px] font-bold">
+        <!-- ================= প্যানেল ২: টাস্ক সাবমিশন রেকর্ড ================= -->
+        <div id="pane-task" class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-4 border border-white hidden">
+            <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-ruby-600"></i> টাস্ক সাবমিশন হিস্ট্রি
+                </h3>
+                <span class="text-[10px] font-black text-slate-400 font-mono">মোট সাবমিশন: {{ task_history|length }}টি</span>
+            </div>
+
+            <div class="overflow-x-auto text-[11px] font-bold">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="bg-slate-50 border-b border-slate-100 text-slate-400 font-bold uppercase">
-                            <th class="p-2">কাজের বিবরণ</th>
-                            <th class="p-2">তারিখ</th>
-                            <th class="p-2 text-right">স্ট্যাটাস</th>
+                        <tr class="bg-rose-50/40 border-b border-rose-100 text-slate-400 font-extrabold uppercase">
+                            <th class="p-3">কাজের বিবরণ</th>
+                            <th class="p-3">তারিখ</th>
+                            <th class="p-3 text-right">স্ট্যাটাস</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-rose-50">
                         {% for item in task_history %}
-                        <tr class="border-b border-slate-50 text-slate-600">
-                            <td class="p-2.5">
-                                <span class="font-extrabold text-slate-800 text-[11px]">{{ item.tasks.title }}</span><br>
-                                <span class="text-[9px] text-[#fba82f] font-bold">পুরস্কার: ৳ {{ item.tasks.reward }}</span>
+                        <tr class="text-slate-700">
+                            <td class="p-3">
+                                <span class="font-extrabold text-slate-900 text-xs">{{ item.tasks.title }}</span><br>
+                                <span class="text-[10px] text-emerald-600 font-black">পুরস্কার: ৳ {{ item.tasks.reward }}</span>
                             </td>
-                            <td class="p-2.5 text-slate-400 font-mono">{{ item.created_at[:10] }}</td>
-                            <td class="p-2.5 text-right">
-                                <span class="px-2.5 py-1 rounded-full font-bold text-[8px] uppercase {% if item.status == 'Pending' %}bg-yellow-50 text-yellow-600 border border-yellow-100{% elif item.status == 'Approved' %}bg-emerald-50 text-emerald-600 border-emerald-100{% else %}bg-red-50 text-red-600 border-red-100{% endif %}">
+                            <td class="p-3 text-slate-400 font-mono">{{ item.created_at[:10] }}</td>
+                            <td class="p-3 text-right">
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider {% if item.status == 'Pending' %}bg-amber-50 text-amber-600 border border-amber-200{% elif item.status == 'Approved' %}bg-emerald-50 text-emerald-600 border border-emerald-200{% else %}bg-rose-50 text-rose-600 border border-rose-200{% endif %}">
                                     {{ item.status }}
                                 </span>
                             </td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="3" class="p-4 text-center text-slate-400 font-normal">কোনো কাজের হিস্ট্রি পাওয়া যায়নি।</td>
+                            <td colspan="3" class="p-6 text-center text-slate-400 font-medium">কোনো কাজের হিস্ট্রি পাওয়া যায়নি।</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -142,46 +134,41 @@
             </div>
         </div>
 
-        <!-- প্যানেল ৩: উইথড্র হিস্ট্রি -->
-        <div id="withdraw-pane" class="premium-card p-5 bg-white border border-slate-200 shadow-sm transition-all duration-300 hidden">
-            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-3 border-b border-slate-100 pb-2 flex items-center gap-1.5">
-                <i class="fa-solid fa-money-bill-transfer text-slate-400"></i> উইথড্রয়াল ক্যাশ-আউট হিস্ট্রি
-            </h3>
-            <div class="overflow-x-auto text-[10px] font-bold">
+        <!-- ================= প্যানেল ৩: উইথড্রয়াল ক্যাশ-আউট হিস্ট্রি ================= -->
+        <div id="pane-withdraw" class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-4 border border-white hidden">
+            <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-money-bill-transfer text-ruby-600"></i> উইথড্রয়াল ক্যাশ-আউট হিস্ট্রি
+                </h3>
+                <span class="text-[10px] font-black text-slate-400 font-mono">মোট উইথড্র: {{ withdrawals|length }}টি</span>
+            </div>
+
+            <div class="overflow-x-auto text-[11px] font-bold">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="bg-slate-50 border-b border-slate-100 text-slate-400 font-bold uppercase">
-                            <th class="p-2">পরিমাণ</th>
-                            <th class="p-2">গেটওয়ে / নম্বর</th>
-                            <th class="p-2 text-right">স্ট্যাটাস</th>
+                        <tr class="bg-rose-50/40 border-b border-rose-100 text-slate-400 font-extrabold uppercase">
+                            <th class="p-3">পরিমাণ</th>
+                            <th class="p-3">গেটওয়ে / নম্বর</th>
+                            <th class="p-3 text-right">স্ট্যাটাস</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-rose-50">
                         {% for item in withdrawals %}
-                        <tr class="border-b border-slate-50 text-slate-600">
-                            <td class="p-2.5 font-bold text-slate-800">৳ {{ item.amount }}</td>
-                            <td class="p-2.5 flex items-center gap-1.5">
-                                {% if item.payment_method == 'Bkash' %}
-                                    <img src="https://images.seeklogo.com/logo-png/27/1/bkash-logo-png_seeklogo-273684.png" class="h-4 object-contain inline-block">
-                                {% elif item.payment_method == 'Nagad' %}
-                                    <img src="https://images.seeklogo.com/logo-png/41/1/nagad-logo-png_seeklogo-411803.png" class="h-4 object-contain inline-block">
-                                {% elif item.payment_method == 'Rocket' %}
-                                    <img src="https://images.seeklogo.com/logo-png/31/1/dutch-bangla-rocket-logo-png_seeklogo-317692.png" class="h-4 object-contain inline-block">
-                                {% endif %}
-                                <div class="leading-tight">
-                                    <span class="font-bold text-slate-700 text-[10px]">{{ item.payment_method }}</span><br>
-                                    <span class="text-[9px] text-slate-400 font-mono">{{ item.payment_number }}</span>
-                                </div>
+                        <tr class="text-slate-700">
+                            <td class="p-3 font-black text-slate-900 text-xs">৳ {{ item.amount }}</td>
+                            <td class="p-3">
+                                <span class="font-extrabold text-slate-900">{{ item.payment_method }}</span><br>
+                                <span class="text-[9px] text-slate-400 font-mono">{{ item.payment_number }}</span>
                             </td>
-                            <td class="p-2.5 text-right">
-                                <span class="px-2 py-0.5 rounded-full font-bold text-[8px] uppercase {% if item.status == 'Pending' %}bg-yellow-50 text-yellow-600 border border-yellow-100{% elif item.status == 'Approved' %}bg-emerald-50 text-emerald-600 border-emerald-100{% else %}bg-red-50 text-red-600 border-red-100{% endif %}">
+                            <td class="p-3 text-right">
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider {% if item.status == 'Pending' %}bg-amber-50 text-amber-600 border border-amber-200{% elif item.status == 'Approved' %}bg-emerald-50 text-emerald-600 border border-emerald-200{% else %}bg-rose-50 text-rose-600 border border-rose-200{% endif %}">
                                     {{ item.status }}
                                 </span>
                             </td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="3" class="p-4 text-center text-slate-400 font-normal">কোনো উইথড্র রেকর্ড পাওয়া যায়নি।</td>
+                            <td colspan="3" class="p-6 text-center text-slate-400 font-medium">কোনো উইথড্র রেকর্ড পাওয়া যায়নি।</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -190,25 +177,28 @@
         </div>
 
     </div>
+
 </div>
 
+<!-- ============================================== -->
+<!-- JAVASCRIPT: INSTANT TAB SWITCHER               -->
+<!-- ============================================== -->
 <script>
-// ৩-ট্যাব বিশিষ্ট ডাইনামিক সুইচিং স্ক্রিপ্ট
-function showTab(tabId) {
-    document.getElementById('income-pane').classList.add('hidden');
-    document.getElementById('task-pane').classList.add('hidden');
-    document.getElementById('withdraw-pane').classList.add('hidden');
+function switchHistoryTab(tabId) {
+    const panes = ['income', 'task', 'withdraw'];
     
-    const buttons = document.querySelectorAll('.tab-btn');
-    buttons.forEach(btn => {
-        btn.classList.remove('border-[#fba82f]', 'text-[#fba82f]', 'font-bold');
-        btn.classList.add('border-transparent', 'text-slate-400');
+    panes.forEach(id => {
+        const pane = document.getElementById(`pane-${id}`);
+        const btn = document.getElementById(`tab-${id}-btn`);
+        
+        if (id === tabId) {
+            pane.classList.remove('hidden');
+            btn.className = "w-full py-2.5 rounded-xl bg-slate-900 text-white font-extrabold text-xs transition active:scale-95 duration-150 flex items-center justify-center gap-1.5 shadow-xs";
+        } else {
+            pane.classList.add('hidden');
+            btn.className = "w-full py-2.5 rounded-xl bg-white border border-rose-200 text-slate-600 hover:border-ruby-300 font-extrabold text-xs transition active:scale-95 duration-150 flex items-center justify-center gap-1.5";
+        }
     });
-    
-    document.getElementById(`${tabId}-pane`).classList.remove('hidden');
-    const activeBtn = document.getElementById(`${tabId}-btn`);
-    activeBtn.classList.remove('border-transparent', 'text-slate-400');
-    activeBtn.classList.add('border-[#fba82f]', 'text-[#fba82f]', 'font-bold');
 }
 </script>
 
