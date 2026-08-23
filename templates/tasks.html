@@ -1,164 +1,289 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="space-y-6 max-w-3xl mx-auto pb-10">
+<div class="space-y-6 max-w-4xl mx-auto pb-12">
     
-    <!-- ১. ওয়ান-টাইম টাস্ক সেকশন (৩টি পূর্ণ হলে সম্পূর্ণ হাইড হবে) -->
+    <!-- ============================================== -->
+    <!-- 1. TASK HUB HERO & REWARD SUMMARY              -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft relative overflow-hidden bg-gradient-to-br from-white via-rose-50/20 to-ruby-50/30 border border-white" data-aos="fade-down">
+        <!-- ব্যাকগ্রাউন্ড সফট গ্লো -->
+        <div class="absolute -right-10 -top-10 w-40 h-40 bg-ruby-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+            <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 rounded-lg bg-ruby-100 text-ruby-700 text-[10px] font-black uppercase tracking-wider">
+                        EARN HUB
+                    </span>
+                    <span class="text-xs font-bold text-slate-400">প্রতিদিন নতুন কাজ</span>
+                </div>
+                <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">ডেইলি টাস্ক ও রিওয়ার্ড সেন্টার</h1>
+                <p class="text-xs text-slate-500 font-medium max-w-md">সহজ কাজ সম্পন্ন করে সরাসরি আপনার মেইন ওয়ালেটে রিওয়ার্ড জমা করুন।</p>
+            </div>
+
+            <!-- লাইভ কাউন্টার ব্যাজ -->
+            <div class="flex items-center gap-3 shrink-0">
+                <div class="bg-white border border-rose-200/80 p-3 rounded-2xl shadow-xs text-center min-w-[100px]">
+                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-wider block">উপলব্ধ কাজ</span>
+                    <span class="text-lg font-black text-ruby-600 leading-tight" id="task-available-count">{{ all_normal_tasks|length }}টি</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 2. ONE-TIME BONUS TASKS (IF INCOMPLETE)        -->
+    <!-- ============================================== -->
     {% if claimed_one_times|length < 3 %}
-    <div class="premium-card p-6 rounded-3xl border border-white/40 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-        <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-5 border-b border-slate-50 pb-3 flex items-center gap-2">
-            <i class="fa-solid fa-award text-blue-600 animate-pulse"></i> One-Time Tasks (বোনাস জোন)
-        </h2>
+    <div class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
+        <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-gift text-amber-500 text-sm animate-bounce"></i> ওয়ান-টাইম ওয়েলকাম বোনাস
+            </h3>
+            <span class="text-[10px] font-bold text-slate-400">৩টি কাজের মধ্যে {{ claimed_one_times|length }}টি সম্পন্ন</span>
+        </div>
         
-        <div id="ot-message" class="hidden p-3.5 text-xs rounded-2xl border text-center mb-5 font-bold"></div>
+        <div id="ot-message" class="hidden p-3 text-xs rounded-2xl text-center font-extrabold border"></div>
 
-        <div class="space-y-3">
-            <!-- প্রোফাইল আপডেট -->
-            <div class="flex justify-between items-center bg-slate-50 border border-slate-100 p-4 rounded-2xl text-xs font-bold">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            <!-- টাস্ক ১: প্রোফাইল আপডেট -->
+            <div class="bg-white border border-rose-200/80 p-4 rounded-2xl flex flex-col justify-between space-y-3 shadow-xs">
                 <div class="space-y-1">
-                    <p class="text-slate-800">১. প্রোফাইল আপডেট করুন</p>
-                    <p class="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider">শর্ত: নম্বর, বয়স এবং জেলা সেভ করুন</p>
+                    <div class="flex items-center justify-between">
+                        <span class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xs shadow-xs">
+                            <i class="fa-solid fa-user-pen"></i>
+                        </span>
+                        <span class="text-xs font-black text-emerald-600">+৳৫.০০</span>
+                    </div>
+                    <h4 class="text-xs font-black text-slate-900 pt-1">প্রোফাইল তথ্য আপডেট</h4>
+                    <p class="text-[10px] text-slate-500 font-medium">মোবাইল নম্বর, বয়স ও জেলা সেভ করুন</p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-xs font-black text-slate-900">৳ ৫.০০</span>
-                    {% if 'profile_update' in claimed_one_times %}
-                        <span class="text-[9px] bg-slate-100 text-slate-400 border border-slate-200 px-3.5 py-1.5 rounded-full font-bold flex items-center gap-1">Claimed</span>
+
+                {% if 'profile_update' in claimed_one_times %}
+                    <span class="w-full py-2 rounded-xl bg-slate-100 text-slate-400 font-bold text-[10px] text-center">
+                        <i class="fa-solid fa-check mr-1"></i> Claimed
+                    </span>
+                {% else %}
+                    {% if is_profile_complete %}
+                        <button onclick="claimOneTime('profile_update', this)" class="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] transition active:scale-95 shadow-sm">
+                            ক্লেইম করুন (৳৫)
+                        </button>
                     {% else %}
-                        {% if is_profile_complete %}
-                            <button onclick="claimOneTime('profile_update', this)" class="glow-btn-light bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] px-4.5 py-1.5 rounded-full transition font-extrabold shadow">Claim</button>
-                        {% else %}
-                            <span class="text-[9px] bg-red-50 text-red-500 border border-red-100 px-3.5 py-1.5 rounded-full font-bold flex items-center gap-1"><i class="fa-solid fa-lock text-[8px]"></i> Locked</span>
-                        {% endif %}
+                        <a href="/profile" class="w-full py-2 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-ruby-600 font-bold text-[10px] text-center transition">
+                            <i class="fa-solid fa-lock text-[9px] mr-1"></i> আগে তথ্য পূরণ করুন
+                        </a>
                     {% endif %}
-                </div>
+                {% endif %}
             </div>
 
-            <!-- টেলিগ্রাম জয়েন -->
-            <div class="flex justify-between items-center bg-slate-50 border border-slate-100 p-4 rounded-2xl text-xs font-bold">
+            <!-- টাস্ক ২: টেলিগ্রাম জয়েন -->
+            <div class="bg-white border border-rose-200/80 p-4 rounded-2xl flex flex-col justify-between space-y-3 shadow-xs">
                 <div class="space-y-1">
-                    <p class="text-slate-800">২. টেলিগ্রাম চ্যানেলে যুক্ত হন</p>
-                    <a href="https://t.me/ortiwokr" target="_blank" onclick="unlockClaim('join_channel')" class="text-[10px] text-blue-600 hover:underline font-extrabold flex items-center gap-1.5">অফিসিয়াল লিংক <i class="fa-solid fa-external-link text-[8px]"></i></a>
+                    <div class="flex items-center justify-between">
+                        <span class="w-8 h-8 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center text-xs shadow-xs">
+                            <i class="fa-brands fa-telegram"></i>
+                        </span>
+                        <span class="text-xs font-black text-emerald-600">+৳৫.০০</span>
+                    </div>
+                    <h4 class="text-xs font-black text-slate-900 pt-1">অফিসিয়াল টেলিগ্রাম</h4>
+                    <a href="https://t.me/ortiwokr" target="_blank" onclick="unlockClaim('join_channel')" class="text-[10px] text-sky-600 hover:underline font-bold inline-block">
+                        চ্যানেলে জয়েন করুন <i class="fa-solid fa-external-link text-[8px]"></i>
+                    </a>
                 </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-xs font-black text-slate-900">৳ ৫.০০</span>
-                    {% if 'join_channel' in claimed_one_times %}
-                        <span class="text-[9px] bg-slate-100 text-slate-400 border border-slate-200 px-3.5 py-1.5 rounded-full font-bold flex items-center gap-1">Claimed</span>
-                    {% else %}
-                        <button id="claim-join_channel" disabled data-claimed="false" onclick="claimOneTime('join_channel', this)" class="bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed text-[10px] px-4.5 py-1.5 rounded-full transition font-extrabold">Claim</button>
-                    {% endif %}
-                </div>
+
+                {% if 'join_channel' in claimed_one_times %}
+                    <span class="w-full py-2 rounded-xl bg-slate-100 text-slate-400 font-bold text-[10px] text-center">
+                        <i class="fa-solid fa-check mr-1"></i> Claimed
+                    </span>
+                {% else %}
+                    <button id="claim-join_channel" disabled data-claimed="false" onclick="claimOneTime('join_channel', this)" class="w-full py-2 rounded-xl bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed font-bold text-[10px] transition">
+                        আগে জয়েন করুন
+                    </button>
+                {% endif %}
             </div>
 
-            <!-- টিউটোরিয়াল ভিডিও -->
-            <div class="flex justify-between items-center bg-slate-50 border border-slate-100 p-4 rounded-2xl text-xs font-bold">
+            <!-- টাস্ক ৩: ভিডিও টিউটোরিয়াল -->
+            <div class="bg-white border border-rose-200/80 p-4 rounded-2xl flex flex-col justify-between space-y-3 shadow-xs">
                 <div class="space-y-1">
-                    <p class="text-slate-800">৩. টিউটোরিয়াল ভিডিওটি দেখুন</p>
-                    <a href="https://youtube.com" target="_blank" onclick="unlockClaim('watch_tutorial')" class="text-[10px] text-red-500 hover:underline font-extrabold flex items-center gap-1.5">ভিডিও লিংক <i class="fa-solid fa-external-link text-[8px]"></i></a>
+                    <div class="flex items-center justify-between">
+                        <span class="w-8 h-8 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-xs shadow-xs">
+                            <i class="fa-solid fa-play"></i>
+                        </span>
+                        <span class="text-xs font-black text-emerald-600">+৳৫.০০</span>
+                    </div>
+                    <h4 class="text-xs font-black text-slate-900 pt-1">টিউটোরিয়াল গাইড</h4>
+                    <a href="/tutorial" target="_blank" onclick="unlockClaim('watch_tutorial')" class="text-[10px] text-red-600 hover:underline font-bold inline-block">
+                        ভিডিওটি ওপেন করুন <i class="fa-solid fa-external-link text-[8px]"></i>
+                    </a>
                 </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-xs font-black text-slate-900">৳ ৫.০০</span>
-                    {% if 'watch_tutorial' in claimed_one_times %}
-                        <span class="text-[9px] bg-slate-100 text-slate-400 border border-slate-200 px-3.5 py-1.5 rounded-full font-bold flex items-center gap-1">Claimed</span>
-                    {% else %}
-                        <button id="claim-watch_tutorial" disabled data-claimed="false" onclick="claimOneTime('watch_tutorial', this)" class="bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed text-[10px] px-4.5 py-1.5 rounded-full transition font-extrabold">Claim</button>
-                    {% endif %}
-                </div>
+
+                {% if 'watch_tutorial' in claimed_one_times %}
+                    <span class="w-full py-2 rounded-xl bg-slate-100 text-slate-400 font-bold text-[10px] text-center">
+                        <i class="fa-solid fa-check mr-1"></i> Claimed
+                    </span>
+                {% else %}
+                    <button id="claim-watch_tutorial" disabled data-claimed="false" onclick="claimOneTime('watch_tutorial', this)" class="w-full py-2 rounded-xl bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed font-bold text-[10px] transition">
+                        আগে ভিডিও দেখুন
+                    </button>
+                {% endif %}
             </div>
         </div>
     </div>
     {% endif %}
 
-    <!-- ২. নরমাল টাস্ক পুল সেকশন (শুধুমাত্র কাজের তালিকা ও ওপেন বাটন) -->
-    <div class="premium-card p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
-        <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-5 border-b border-slate-50 pb-3 flex items-center gap-1.5">
-            <i class="fa-solid fa-list-check text-blue-600"></i> Daily Task Pool (নরমাল টাস্কসমূহ)
-        </h2>
+    <!-- ============================================== -->
+    <!-- 3. DAILY TASK POOL & FILTER TABS               -->
+    <!-- ============================================== -->
+    <div class="space-y-4" data-aos="fade-up">
         
+        <!-- ক্যাটাগরি ফিল্টার বাটন গ্রুপ -->
+        <div class="flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-bold w-full sm:w-auto">
+                <button onclick="filterTaskCategory('all', this)" class="filter-tab-btn px-4 py-2 rounded-xl bg-slate-900 text-white shadow-sm active:scale-95 transition duration-150">
+                    সকল কাজ
+                </button>
+                <button onclick="filterTaskCategory('social', this)" class="filter-tab-btn px-4 py-2 rounded-xl bg-white border border-rose-200 text-slate-600 hover:border-ruby-300 active:scale-95 transition duration-150">
+                    সোশ্যাল টাস্ক
+                </button>
+                <button onclick="filterTaskCategory('video', this)" class="filter-tab-btn px-4 py-2 rounded-xl bg-white border border-rose-200 text-slate-600 hover:border-ruby-300 active:scale-95 transition duration-150">
+                    ভিডিও ওয়াচ
+                </button>
+                <button onclick="filterTaskCategory('web', this)" class="filter-tab-btn px-4 py-2 rounded-xl bg-white border border-rose-200 text-slate-600 hover:border-ruby-300 active:scale-95 transition duration-150">
+                    ওয়েব ভিজিট
+                </button>
+            </div>
+        </div>
+
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="p-3 mb-4 text-[10px] font-black rounded-2xl border text-center {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-100{% else %}bg-red-50 text-red-600 border-red-100{% endif %}">
+                    <div class="p-3 text-xs text-center rounded-2xl border font-bold shadow-xs {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-200{% else %}bg-red-50 text-red-600 border-red-200{% endif %}">
                         {{ message }}
                     </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
-        <div class="space-y-4">
+        <!-- রেগুলার টাস্ক কার্ড লিস্ট -->
+        <div id="taskListGrid" class="space-y-3">
             {% for task in all_normal_tasks %}
             
             {% set t_title_lower = task.title | lower %}
             {% set t_desc_lower = task.description | lower %}
             
-            {% if 'google' in t_title_lower or 'google' in t_desc_lower %}
-                {% set task_icon = '<i class="fa-brands fa-google text-red-500 text-lg"></i>' %}
-            {% elif 'fb' in t_title_lower or 'fb' in t_desc_lower or 'facebook' in t_title_lower or 'facebook' in t_desc_lower %}
-                {% set task_icon = '<i class="fa-brands fa-facebook text-blue-600 text-lg"></i>' %}
-            {% elif 'tiktok' in t_title_lower or 'tiktok' in t_desc_lower %}
-                {% set task_icon = '<i class="fa-brands fa-tiktok text-slate-900 text-lg"></i>' %}
-            {% elif 'web' in t_title_lower or 'web' in t_desc_lower or 'website' in t_title_lower or 'website' in t_desc_lower %}
-                {% set task_icon = '<i class="fa-solid fa-globe text-cyan-500 text-lg"></i>' %}
-            {% elif 'share' in t_title_lower or 'share' in t_desc_lower %}
-                {% set task_icon = '<i class="fa-solid fa-share-nodes text-indigo-500 text-lg"></i>' %}
+            {% if 'youtube' in t_title_lower or 'video' in t_title_lower or 'watch' in t_title_lower %}
+                {% set task_cat = 'video' %}
+                {% set task_icon = '<i class="fa-brands fa-youtube text-red-600 text-lg"></i>' %}
+                {% set task_tag = 'Video Task' %}
+            {% elif 'fb' in t_title_lower or 'facebook' in t_title_lower or 'telegram' in t_title_lower or 'tiktok' in t_title_lower or 'share' in t_title_lower %}
+                {% set task_cat = 'social' %}
+                {% set task_icon = '<i class="fa-solid fa-share-nodes text-blue-600 text-lg"></i>' %}
+                {% set task_tag = 'Social Job' %}
+            {% elif 'web' in t_title_lower or 'website' in t_title_lower or 'link' in t_title_lower %}
+                {% set task_cat = 'web' %}
+                {% set task_icon = '<i class="fa-solid fa-globe text-cyan-600 text-lg"></i>' %}
+                {% set task_tag = 'Web Task' %}
             {% else %}
-                {% set task_icon = '<i class="fa-solid fa-cloud-arrow-up text-emerald-500 text-lg"></i>' %}
+                {% set task_cat = 'social' %}
+                {% set task_icon = '<i class="fa-solid fa-cloud-arrow-up text-ruby-600 text-lg"></i>' %}
+                {% set task_tag = 'Regular' %}
             {% endif %}
 
-            <div class="flex justify-between items-center bg-slate-50 border border-slate-100/80 p-4 rounded-2xl shadow-sm hover:border-blue-200 transition-colors duration-300">
-                <div class="flex items-center gap-3.5">
-                    <div class="w-11 h-11 rounded-xl bg-white border border-slate-200/80 flex items-center justify-center shadow-sm">
+            <div class="task-item-card glass-panel p-4 sm:p-5 rounded-3xl shadow-card-soft hover:border-ruby-300 transition-all duration-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4" data-category="{{ task_cat }}">
+                <div class="flex items-start sm:items-center gap-3.5">
+                    <div class="w-12 h-12 rounded-2xl bg-white border border-rose-200/90 flex items-center justify-center shadow-xs shrink-0 mt-0.5 sm:mt-0">
                         {{ task_icon | safe }}
                     </div>
-                    <div class="space-y-1.5">
-                        <h3 class="text-xs font-extrabold text-slate-900 flex items-center gap-2">
-                            {{ task.title }}
+
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[8px] font-black uppercase px-2 py-0.5 rounded-md bg-slate-100 text-slate-500 font-mono">
+                                {{ task_tag }}
+                            </span>
+
                             {% if task.id in submission_map and submission_map[task.id] == 'Rejected' %}
-                                <span class="bg-red-50 text-red-600 text-[8px] font-extrabold px-2 py-0.5 rounded border border-red-100 leading-none uppercase">Resubmit</span>
+                                <span class="bg-red-50 text-red-600 text-[8px] font-black px-2 py-0.5 rounded-md border border-red-200 uppercase flex items-center gap-1">
+                                    <i class="fa-solid fa-rotate-left"></i> Resubmit
+                                </span>
                             {% endif %}
-                        </h3>
-                        <p class="text-[10px] text-slate-500 font-extrabold uppercase tracking-wider leading-none">পুরস্কার: ৳ {{ task.reward }}</p>
+                        </div>
+
+                        <h3 class="text-xs font-black text-slate-900">{{ task.title }}</h3>
+                        <p class="text-[11px] text-slate-500 font-medium line-clamp-1 max-w-md">{{ task.description }}</p>
                     </div>
                 </div>
-                
-                <!-- এই নির্দিষ্ট কাজের বিস্তারিত পেজের লিংক -->
-                <a href="/tasks/{{ task.id }}" class="glow-btn-light bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-black px-5 py-2.5 rounded-full shadow cursor-pointer transition duration-300">
-                    View Task
-                </a>
+
+                <div class="flex items-center justify-between w-full sm:w-auto gap-4 pt-2 sm:pt-0 border-t sm:border-t-0 border-rose-100">
+                    <div class="text-left sm:text-right">
+                        <span class="text-[9px] font-bold text-slate-400 uppercase block">পুরস্কার</span>
+                        <span class="text-sm font-black text-emerald-600">৳ {{ task.reward }}</span>
+                    </div>
+
+                    <a href="/tasks/{{ task.id }}" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white font-extrabold text-xs transition active:scale-95 duration-150 shadow-sm flex items-center gap-1.5 shrink-0">
+                        <span>কাজ করুন</span>
+                        <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                    </a>
+                </div>
             </div>
             {% else %}
-            <p class="text-xs text-slate-400 text-center py-5 font-bold">বর্তমানে কোনো নরমাল টাস্ক উপলব্ধ নেই।</p>
+            <!-- কোনো টাস্ক না থাকলে -->
+            <div class="glass-panel p-10 rounded-3xl text-center space-y-2 border border-white">
+                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-ruby-600 flex items-center justify-center mx-auto text-lg shadow-xs">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+                <h4 class="text-xs font-black text-slate-800">বর্তমানে কোনো কাজ বাকি নেই</h4>
+                <p class="text-[11px] text-slate-400 font-medium">নতুন কাজ যুক্ত হলে ড্যাশবোর্ডে নোটিফিকেশন দেওয়া হবে।</p>
+            </div>
             {% endfor %}
         </div>
     </div>
+
 </div>
 
+<!-- ============================================== -->
+<!-- JAVASCRIPT: ONE-TIME CLAIM & INSTANT FILTER    -->
+<!-- ============================================== -->
 <script>
+// ১. ওয়ান-টাইম টাস্ক ক্লেইম স্ক্রিপ্ট + Confetti
 async function claimOneTime(taskName, btnElement) {
     const msg = document.getElementById('ot-message');
     msg.classList.add('hidden');
     
     btnElement.setAttribute('disabled', 'true');
-    btnElement.innerText = "Claiming...";
+    btnElement.innerText = "যাচাই হচ্ছে...";
     
-    const res = await fetch('/tasks/claim-one-time', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ task_name: taskName })
-    });
-    const data = await res.json();
-    
-    msg.classList.remove('hidden', 'bg-red-50', 'text-red-600', 'border-red-100', 'bg-emerald-50', 'text-emerald-600', 'border-emerald-100');
-    msg.classList.add('border');
-    
-    if (data.status === 'success') {
-        msg.classList.add('bg-emerald-50', 'text-emerald-600', 'border-emerald-100');
-        msg.innerText = data.message;
-        btnElement.setAttribute('data-claimed', 'true');
-        setTimeout(() => { location.reload(); }, 1500);
-    } else {
-        msg.classList.add('bg-red-50', 'text-red-600', 'border-red-100');
-        msg.innerText = data.message;
+    try {
+        const res = await fetch('/tasks/claim-one-time', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ task_name: taskName })
+        });
+        const data = await res.json();
         
+        msg.classList.remove('hidden', 'bg-red-50', 'text-red-600', 'border-red-200', 'bg-emerald-50', 'text-emerald-600', 'border-emerald-200');
+        msg.classList.add('border');
+        
+        if (data.status === 'success') {
+            msg.classList.add('bg-emerald-50', 'text-emerald-600', 'border-emerald-200');
+            msg.innerText = data.message;
+            
+            confetti({
+                particleCount: 80,
+                spread: 60,
+                origin: { y: 0.7 },
+                colors: ['#10B981', '#E11D48', '#F59E0B']
+            });
+
+            setTimeout(() => { location.reload(); }, 1400);
+        } else {
+            msg.classList.add('bg-red-50', 'text-red-600', 'border-red-200');
+            msg.innerText = data.message;
+            btnElement.removeAttribute('disabled');
+            btnElement.innerText = "Claim";
+        }
+    } catch (e) {
+        alert("কানেকশন ত্রুটি!");
         btnElement.removeAttribute('disabled');
         btnElement.innerText = "Claim";
     }
@@ -168,8 +293,35 @@ function unlockClaim(taskName) {
     const btn = document.getElementById(`claim-${taskName}`);
     if (btn && btn.getAttribute('data-claimed') !== 'true') {
         btn.removeAttribute('disabled');
-        btn.className = "bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] font-extrabold px-4.5 py-1.5 rounded-full transition cursor-pointer shadow-[0_4px_14px_rgba(16,185,129,0.3)]";
+        btn.className = "w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] transition active:scale-95 shadow-sm";
+        btn.innerText = "ক্লেইম করুন (৳৫)";
     }
+}
+
+// ২. ক্যাটাগরি ভিত্তিক লাইভ ফিল্টার স্ক্রিপ্ট
+function filterTaskCategory(category, activeBtn) {
+    const buttons = document.querySelectorAll('.filter-tab-btn');
+    buttons.forEach(btn => {
+        btn.className = "filter-tab-btn px-4 py-2 rounded-xl bg-white border border-rose-200 text-slate-600 hover:border-ruby-300 active:scale-95 transition duration-150";
+    });
+
+    activeBtn.className = "filter-tab-btn px-4 py-2 rounded-xl bg-slate-900 text-white shadow-sm active:scale-95 transition duration-150";
+
+    const cards = document.querySelectorAll('.task-item-card');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+        const itemCat = card.getAttribute('data-category');
+        if (category === 'all' || itemCat === category) {
+            card.style.display = 'flex';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    const countLabel = document.getElementById('task-available-count');
+    if (countLabel) countLabel.innerText = visibleCount + 'টি';
 }
 </script>
 
