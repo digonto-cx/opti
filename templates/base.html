@@ -1,238 +1,283 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opti Work</title>
+    <title>OptiWork - Cloud Mining & Earning Platform</title>
     
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+    <!-- Font Awesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts (Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- AOS Animation CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <!-- Tailwind Ruby Crimson Theme Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        ruby: {
+                            50: '#FFF1F2',
+                            100: '#FFE4E6',
+                            200: '#FECDD3',
+                            500: '#F43F5E',
+                            600: '#E11D48', // Primary Crimson Red
+                            700: '#BE123C',
+                            800: '#9F1239',
+                            900: '#881337',
+                        }
+                    },
+                    boxShadow: {
+                        'glow-ruby': '0 10px 30px -5px rgba(225, 29, 72, 0.35)',
+                        'card-soft': '0 15px 35px -10px rgba(225, 29, 72, 0.07), 0 1px 3px rgba(0,0,0,0.03)',
+                        'nav-float': '0 15px 35px -5px rgba(15, 23, 42, 0.12)',
                     }
                 }
             }
         }
     </script>
+
     <style>
-        /* হাই-কন্ট্রাস্ট লাইট অ্যাম্বিয়েন্ট ব্যাকগ্রাউন্ড */
         body {
-            background-color: #f6f8fd;
+            background-color: #FFF8F8;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.06) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
-                radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
+                radial-gradient(at 0% 0%, rgba(225, 29, 72, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.04) 0px, transparent 50%),
+                radial-gradient(#FCA5A5 1px, transparent 1px);
             background-size: 100% 100%, 100% 100%, 24px 24px;
             background-attachment: fixed;
         }
-
-        /* কার্ডের উন্নত গ্রেডিয়েন্ট বর্ডার ও নিওন গ্লো শ্যাডো */
-        .premium-card {
-            background: rgba(255, 255, 255, 0.9);
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.90);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(226, 232, 240, 0.9);
-            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.06), 0 8px 16px -6px rgba(15, 23, 42, 0.04);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.95);
         }
-        .premium-card:hover {
-            border-color: rgba(37, 99, 235, 0.35);
-            /* প্রফেশনাল ব্লু-ইন্ডিগো গ্লো শ্যাডো */
-            box-shadow: 0 20px 35px -8px rgba(37, 99, 235, 0.12), 0 12px 20px -10px rgba(99, 102, 241, 0.08);
-            transform: translateY(-3px);
+        .glass-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(254, 205, 211, 0.5);
         }
-
-        /* গ্রেডিয়েন্ট গ্লো বাটন */
-        .glow-btn-light {
-            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
-            box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.45);
-            transition: all 0.3s ease-in-out;
+        .glass-bottom-nav {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(254, 205, 211, 0.8);
         }
-        .glow-btn-light:hover {
-            box-shadow: 0 12px 25px -2px rgba(37, 99, 235, 0.6);
-            transform: translateY(-1.5px);
-        }
-
-        .minimal-select {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%231e293b"><path d="M7 10l5 5 5-5z"/></svg>');
-            background-size: 18px;
-            background-position: right 12px center;
-            background-repeat: no-repeat;
-            appearance: none;
-        }
-        
-        /* মসৃণ ট্রানজিশন */
-        .sidebar-link {
-            transition: all 0.25s ease-in-out;
-        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #FFF1F2; }
+        ::-webkit-scrollbar-thumb { background: #FDA4AF; border-radius: 10px; }
     </style>
 </head>
-<body class="text-[#0F172A] min-h-screen flex flex-col md:flex-row pb-28 md:pb-0 antialiased">
+<body class="text-slate-800 font-sans antialiased overflow-x-hidden pb-28 selection:bg-ruby-600 selection:text-white">
 
-    <!-- ================= ১. ডেস্কটপ সাইডবার (উন্নত লাক্সারি লাইট থিম) ================= -->
-    <aside class="hidden md:flex flex-col justify-between w-64 bg-white/80 backdrop-blur-xl border-r border-slate-200/80 h-screen fixed left-0 top-0 p-6 z-40 shadow-[4px_0_24px_rgba(15,23,42,0.02)]">
-        <div class="space-y-8">
-            <!-- ব্র্যান্ড লোগো এবং লাইভ নিওন ডট -->
-            <a href="/dashboard" class="flex items-center space-x-3 px-1">
-                <div class="relative flex h-3 w-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.6)]"></span>
+    <!-- Ambient Mesh Glow Lights -->
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-rose-200/30 via-red-100/20 to-pink-200/30 blur-[130px] pointer-events-none -z-10"></div>
+    <div class="fixed bottom-10 right-[-100px] w-[450px] h-[350px] bg-rose-100/40 blur-[140px] pointer-events-none -z-10"></div>
+
+    <!-- ============================================== -->
+    <!-- 1. TOP HEADER                                  -->
+    <!-- ============================================== -->
+    <header class="sticky top-0 z-40 glass-header px-4 sm:px-8 py-3 flex items-center justify-between shadow-sm">
+        <!-- Left: Toggle Menu + Brand Logo -->
+        <div class="flex items-center gap-3">
+            <button id="drawer-toggle-btn" class="w-10 h-10 rounded-2xl bg-white border border-rose-200 shadow-sm flex items-center justify-center text-slate-700 hover:text-ruby-600 hover:border-ruby-300 transition active:scale-95">
+                <i class="fa-solid fa-bars-staggered text-base"></i>
+            </button>
+            
+            <a href="/dashboard" class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-xl bg-ruby-600 flex items-center justify-center text-white shadow-glow-ruby">
+                    <i class="fa-solid fa-fire text-sm"></i>
                 </div>
-                <span class="text-xl font-extrabold tracking-wider text-[#0F172A] drop-shadow-sm">
-                    OPTI<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">WORK</span>
+                <span class="text-lg font-black tracking-tight text-slate-900">
+                    OPTI<span class="text-ruby-600">WORK</span>
                 </span>
             </a>
-
-            <!-- প্রিমিয়াম ক্যাটাগরি মেনু -->
-            <div class="space-y-1 text-xs font-bold uppercase tracking-wider text-slate-500">
-                <a href="/dashboard" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 hover:text-[#0F172A]">
-                    <i class="fa-solid fa-chart-line text-sm text-slate-500"></i> Dashboard
-                </a>
-                <a href="/tasks" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 hover:text-[#0F172A]">
-                    <i class="fa-solid fa-list-check text-sm text-slate-500"></i> Task Pool
-                </a>
-                <a href="/withdraw" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 hover:text-[#0F172A]">
-                    <i class="fa-solid fa-money-bill-transfer text-sm text-slate-500"></i> Withdrawal
-                </a>
-                <a href="/referrals" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 hover:text-[#0F172A]">
-                    <i class="fa-solid fa-gift text-sm text-slate-500"></i> Referrals
-                </a>
-                <a href="/store" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-100 hover:text-[#0F172A]">
-                    <i class="fa-solid fa-store text-sm text-slate-500"></i> Hardware Store
-                </a>
-            </div>
         </div>
 
-        <!-- সাইডবার প্রোফাইল সেকশন -->
-        {% if user %}
-        <div class="border-t border-slate-100 pt-5 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="{{ user.avatar_url }}" alt="Profile" class="w-10 h-10 rounded-full object-cover ring-2 ring-blue-500/10 shadow-sm">
-                <div>
-                    <h4 class="text-xs font-extrabold text-[#0F172A] leading-none">{{ user.username }}</h4>
-                    <span class="text-[9px] text-slate-400 font-bold block mt-1.5">UID: {{ user.uid }}</span>
-                </div>
-            </div>
-            <a href="/logout" class="text-slate-400 hover:text-red-500 transition-colors text-sm p-2 rounded-lg hover:bg-red-50" title="Logout">
-                <i class="fa-solid fa-sign-out-alt"></i>
-            </a>
-        </div>
-        {% endif %}
-    </aside>
-
-    <!-- ================= ২. মোবাইল হেডার বার (গ্লাস মরফিজম) ================= -->
-    <nav class="bg-white/80 border-b border-slate-200/50 sticky top-0 z-50 md:hidden w-full backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-        <div class="px-5 py-4 flex justify-between items-center">
-            <a href="/dashboard" class="flex items-center space-x-2.5">
-                <span class="text-base font-extrabold tracking-tight text-[#0F172A]">
-                    OPTI<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">WORK</span>
-                </span>
+        <!-- Right: Balance Pill + Notifications + Profile Pic -->
+        <div class="flex items-center gap-2.5">
+            {% if user %}
+            <!-- Balance Pill -->
+            <a href="/history" class="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-white border border-rose-200 shadow-sm text-xs font-bold text-slate-700 hover:border-ruby-300 transition">
+                <i class="fa-solid fa-coins text-amber-500 text-[11px]"></i>
+                <span>৳<strong class="text-slate-900 ml-0.5">{{ user.balance }}</strong></span>
             </a>
             
-            <button onclick="toggleTopMenu()" class="text-[#0F172A] focus:outline-none p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
-                <i id="menu-icon" class="fa-solid fa-bars text-lg"></i>
-            </button>
+            <!-- Notification Bell -->
+            <a href="/updates" class="relative w-9 h-9 rounded-2xl bg-white border border-rose-200 shadow-sm flex items-center justify-center text-slate-600 hover:text-ruby-600 transition active:scale-95">
+                <i class="fa-solid fa-bell text-xs"></i>
+                <span class="absolute top-2 right-2 w-2 h-2 bg-ruby-600 rounded-full animate-ping"></span>
+                <span class="absolute top-2 right-2 w-2 h-2 bg-ruby-600 rounded-full"></span>
+            </a>
+
+            <!-- Profile Avatar -->
+            <a href="/profile" class="relative group">
+                <img src="{{ user.avatar_url or 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80' }}" alt="Avatar" class="w-9 h-9 rounded-2xl object-cover ring-2 ring-ruby-500/20 group-hover:ring-ruby-500 transition shadow-sm">
+                <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full"></span>
+            </a>
+            {% else %}
+            <a href="/login" class="px-4 py-2 rounded-xl bg-ruby-600 text-white font-extrabold text-xs shadow-glow-ruby">লগইন</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- ============================================== -->
+    <!-- 2. SLIDE-OUT DRAWER MENU                       -->
+    <!-- ============================================== -->
+    <div id="drawer-backdrop" class="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <aside id="side-drawer" class="fixed top-0 left-0 bottom-0 w-72 sm:w-80 bg-white z-50 shadow-2xl transform -translate-x-full transition-transform duration-300 flex flex-col justify-between p-6">
+        <div>
+            <!-- Drawer Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-ruby-600 flex items-center justify-center text-white shadow-glow-ruby">
+                        <i class="fa-solid fa-fire text-sm"></i>
+                    </div>
+                    <span class="text-lg font-black text-slate-900">OPTI<span class="text-ruby-600">WORK</span></span>
+                </div>
+                <button id="drawer-close-btn" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 hover:bg-rose-100 hover:text-ruby-600 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Drawer Links -->
+            <nav class="mt-5 space-y-1 text-xs font-bold text-slate-600">
+                <a href="/dashboard" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                    <i class="fa-solid fa-house text-sm w-5"></i> ড্যাশবোর্ড হোম
+                </a>
+                <a href="/tasks" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                    <i class="fa-solid fa-list-check text-sm w-5"></i> সকল টাস্ক
+                </a>
+                <a href="/store" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                    <i class="fa-solid fa-store text-sm w-5"></i> হার্ডওয়্যার স্টোর
+                </a>
+                <a href="/history" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                    <i class="fa-solid fa-clock-rotate-left text-sm w-5"></i> আয় ও ট্রানজেকশন
+                </a>
+                <a href="/referrals" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                    <i class="fa-solid fa-gift text-sm w-5"></i> রেফারেল সেন্টার
+                </a>
+                <a href="/profile" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                    <i class="fa-solid fa-user-gear text-sm w-5"></i> প্রোফাইল সেটিংস
+                </a>
+                <a href="https://t.me/Optiworkhelp" target="_blank" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                    <i class="fa-brands fa-telegram text-sm text-sky-500 w-5"></i> টেলিগ্রাম হেল্প সাপোর্ট
+                </a>
+            </nav>
         </div>
 
-        <!-- মোবাইল মেনু টগল ড্রপডাউন -->
-        <div id="top-dropdown-menu" class="hidden border-b border-slate-200/50 bg-white/95 backdrop-blur-xl px-6 py-4 space-y-2 text-xs font-bold uppercase tracking-wider text-slate-600 w-full mx-auto shadow-inner">
-            <a href="/dashboard" class="block py-2.5 px-3 hover:bg-slate-50 rounded-lg hover:text-blue-600 transition-colors"><i class="fa-solid fa-chart-line mr-2.5"></i> Dashboard</a>
-            <a href="/store" class="block py-2.5 px-3 hover:bg-slate-50 rounded-lg hover:text-blue-600 transition-colors"><i class="fa-solid fa-store mr-2.5"></i> Store</a>
-            <a href="/withdraw" class="block py-2.5 px-3 hover:bg-slate-50 rounded-lg hover:text-blue-600 transition-colors"><i class="fa-solid fa-money-bill-transfer mr-2.5"></i> Withdrawal</a>
-            <a href="/referrals" class="block py-2.5 px-3 hover:bg-slate-50 rounded-lg hover:text-blue-600 transition-colors"><i class="fa-solid fa-users mr-2.5"></i> Referrals</a>
-            <a href="/profile" class="block py-2.5 px-3 hover:bg-slate-50 rounded-lg hover:text-blue-600 transition-colors"><i class="fa-solid fa-user-gear mr-2.5"></i> Account</a>
-            <a href="/logout" class="block py-2.5 px-3 text-red-500 hover:bg-red-50 rounded-lg transition-colors"><i class="fa-solid fa-sign-out-alt mr-2.5"></i> Logout</a>
-        </div>
-    </nav>
-
-    <!-- ================= ৩. ফ্লোটিং টেলিগ্রাম কাস্টমার সাপোর্ট বাটন (গ্লোয়িং) ================= -->
-    <div class="fixed bottom-24 right-4 z-50 md:bottom-6 md:right-6">
-        <a href="https://t.me/Optiworkhelp" target="_blank" class="w-12 h-12 bg-gradient-to-tr from-[#229ED9] to-[#1d82c4] text-white rounded-full flex items-center justify-center shadow-[0_8px_25px_rgba(34,158,217,0.45)] hover:shadow-[0_12px_30px_rgba(34,158,217,0.6)] transition-all duration-300 hover:scale-105 relative">
-            <span class="absolute inset-0 rounded-full bg-[#229ED9]/25 animate-ping"></span>
-            <i class="fa-brands fa-telegram text-2xl relative z-10"></i>
-        </a>
-    </div>
-
-    <!-- ================= ৪. ফ্লোটিং মোবাইল বটম ক্যাপসুল-ডক (প্রিমিয়াম শ্যাডো) ================= -->
-    <div class="fixed bottom-5 left-0 right-0 z-40 px-4 max-w-sm mx-auto md:hidden">
-        <div class="bg-white/90 backdrop-blur-lg border border-slate-200/80 py-2.5 rounded-full shadow-[0_15px_35px_-4px_rgba(15,23,42,0.12)] flex justify-around text-[10px] uppercase font-extrabold text-slate-500">
-            <!-- হোম -->
-            <a href="/dashboard" class="bottom-nav-link flex flex-col items-center gap-1 hover:text-blue-600 transition-all text-slate-500 relative py-1 px-3.5 rounded-full">
-                <i class="fa-solid fa-chart-line text-base"></i> Home
-            </a>
-            <!-- টাস্ক -->
-            <a href="/tasks" class="bottom-nav-link flex flex-col items-center gap-1 hover:text-blue-600 transition-all text-slate-500 relative py-1 px-3.5 rounded-full">
-                <i class="fa-solid fa-list-check text-base"></i> Task
-            </a>
-            <!-- উইথড্র -->
-            <a href="/withdraw" class="bottom-nav-link flex flex-col items-center gap-1 hover:text-blue-600 transition-all text-slate-500 relative py-1 px-3.5 rounded-full">
-                <i class="fa-solid fa-money-bill-transfer text-base"></i> Withdraw
-            </a>
-            <!-- রেফার -->
-            <a href="/referrals" class="bottom-nav-link flex flex-col items-center gap-1 hover:text-blue-600 transition-all text-slate-500 relative py-1 px-3.5 rounded-full">
-                <i class="fa-solid fa-gift text-base"></i> Refer
-            </a>
-            <!-- প্রোফাইল -->
-            <a href="/profile" class="bottom-nav-link flex flex-col items-center gap-1 hover:text-blue-600 transition-all text-slate-500 relative py-1 px-3.5 rounded-full">
-                <i class="fa-solid fa-circle-user text-base"></i> Account
+        <!-- Drawer Bottom User Status -->
+        <div class="pt-4 border-t border-slate-100">
+            <a href="/logout" class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-rose-50 text-xs font-bold text-slate-700 hover:text-ruby-600 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-right-from-bracket"></i> লগআউট করুন
             </a>
         </div>
-    </div>
+    </aside>
 
-    <!-- মেইন কন্টেন্ট উইন্ডো -->
-    <main class="max-w-5xl mx-auto p-4 mt-2 w-full flex-grow md:pl-64 lg:pl-64 shadow-none">
+    <!-- ============================================== -->
+    <!-- 3. MAIN PAGE INJECTED CONTENT                  -->
+    <!-- ============================================== -->
+    <main class="max-w-4xl mx-auto px-4 pt-5">
         {% block content %}{% endblock %}
     </main>
 
+    <!-- ============================================== -->
+    <!-- 4. FLOATING GLASS BOTTOM NAVIGATION BAR        -->
+    <!-- ============================================== -->
+    <nav class="fixed bottom-4 left-4 right-4 z-40 max-w-md mx-auto glass-bottom-nav rounded-full shadow-nav-float px-3 py-2">
+        <div class="flex items-center justify-around text-center">
+            
+            <!-- Tab 1: Home -->
+            <a href="/dashboard" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-ruby-600 font-bold text-[10px] transition group py-1 px-2.5">
+                <i class="fa-solid fa-house text-base group-hover:scale-110 transition-transform"></i>
+                <span>হোম</span>
+            </a>
+
+            <!-- Tab 2: Tasks -->
+            <a href="/tasks" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-ruby-600 font-bold text-[10px] transition group py-1 px-2.5">
+                <i class="fa-solid fa-list-check text-base group-hover:scale-110 transition-transform"></i>
+                <span>টাস্ক</span>
+            </a>
+
+            <!-- Center Fast Action Button (Withdraw) -->
+            <a href="/withdraw" class="flex flex-col items-center -mt-6 group">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-ruby-700 via-ruby-600 to-rose-500 text-white flex items-center justify-center text-lg shadow-glow-ruby group-hover:scale-110 active:scale-95 transition-all">
+                    <i class="fa-solid fa-money-bill-transfer"></i>
+                </div>
+                <span class="text-[9px] font-black text-ruby-600 mt-1 uppercase tracking-wider">উইথড্র</span>
+            </a>
+
+            <!-- Tab 3: Refer -->
+            <a href="/referrals" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-ruby-600 font-bold text-[10px] transition group py-1 px-2.5">
+                <i class="fa-solid fa-gift text-base group-hover:scale-110 transition-transform"></i>
+                <span>রেফার</span>
+            </a>
+
+            <!-- Tab 4: Account -->
+            <a href="/profile" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-ruby-600 font-bold text-[10px] transition group py-1 px-2.5">
+                <i class="fa-solid fa-circle-user text-base group-hover:scale-110 transition-transform"></i>
+                <span>একাউন্ট</span>
+            </a>
+            
+        </div>
+    </nav>
+
+    <!-- ============================================== -->
+    <!-- 5. GLOBAL JAVASCRIPT LIBS & SCRIPTS            -->
+    <!-- ============================================== -->
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <!-- Confetti JS -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <!-- Vanilla Tilt JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
     <script>
-        function toggleTopMenu() {
-            const menu = document.getElementById('top-dropdown-menu');
-            const icon = document.getElementById('menu-icon');
-            if (menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden');
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-xmark');
+        // Init AOS
+        AOS.init({ once: true, duration: 600 });
+
+        // Drawer Toggle Handlers
+        const drawer = document.getElementById('side-drawer');
+        const backdrop = document.getElementById('drawer-backdrop');
+        const openBtn = document.getElementById('drawer-toggle-btn');
+        const closeBtn = document.getElementById('drawer-close-btn');
+
+        function toggleDrawer(open) {
+            if (open) {
+                drawer.classList.remove('-translate-x-full');
+                backdrop.classList.remove('opacity-0', 'pointer-events-none');
             } else {
-                menu.classList.add('hidden');
-                icon.classList.remove('fa-xmark');
-                icon.classList.add('fa-bars');
+                drawer.classList.add('-translate-x-full');
+                backdrop.classList.add('opacity-0', 'pointer-events-none');
             }
         }
 
-        // ব্রাউজারের লাইভ URL ট্র্যাক করে একটিভ আইটেম গ্রেডিয়েন্ট ও শ্যাডো সহ হাইলাইট করার স্ক্রিপ্ট
-        document.addEventListener("DOMContentLoaded", function() {
-            const path = window.location.pathname;
-            const navLinks = document.querySelectorAll('.bottom-nav-link');
-            const sidebarLinks = document.querySelectorAll('.sidebar-link');
-            
-            // মোবাইল বটম ন্যাভ একটিভ স্টাইল (গ্রেডিয়েন্ট ব্যাকগ্রাউন্ড গ্লো)
-            navLinks.forEach(link => {
-                const href = link.getAttribute('href');
-                if (path === href || (path === '/' && href === '/dashboard')) {
-                    link.classList.remove('text-slate-500');
-                    link.classList.add('text-white', 'bg-gradient-to-tr', 'from-blue-600', 'to-indigo-600', 'shadow-[0_4px_12px_rgba(37,99,235,0.3)]');
-                }
-            });
+        if (openBtn) openBtn.addEventListener('click', () => toggleDrawer(true));
+        if (closeBtn) closeBtn.addEventListener('click', () => toggleDrawer(false));
+        if (backdrop) backdrop.addEventListener('click', () => toggleDrawer(false));
 
-            // ডেস্কটপ সাইডবার একটিভ স্টাইল (বর্ডার গ্লো ও শ্যাডো)
-            sidebarLinks.forEach(link => {
-                const href = link.getAttribute('href');
-                if (path === href || (path === '/' && href === '/dashboard')) {
-                    link.classList.add('bg-gradient-to-r', 'from-blue-50/80', 'to-indigo-50/40', 'border-l-4', 'border-blue-600', 'text-[#0F172A]', 'shadow-[0_4px_12px_rgba(37,99,235,0.04)]');
-                    const icon = link.querySelector('i');
-                    if (icon) {
-                        icon.classList.remove('text-slate-500');
-                        icon.classList.add('text-blue-600');
-                    }
+        // Active Bottom Nav Highlighter
+        document.addEventListener("DOMContentLoaded", function() {
+            const currentPath = window.location.pathname;
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                const href = item.getAttribute('href');
+                if (currentPath === href || (currentPath === '/' && href === '/dashboard')) {
+                    item.classList.remove('text-slate-400');
+                    item.classList.add('text-ruby-600', 'font-black');
                 }
             });
         });
