@@ -640,20 +640,25 @@ def admin_task_bulk_action():
     flash(f"বাল্ক অটো-ভেরিফিকেশন সম্পন্ন! {approved_count}টি টাস্ক Approved এবং {rejected_count}টি টাস্ক Rejected করা হয়েছে।", "success")
     return redirect(url_for('admin_add_task'))
     
-  
 @app.route('/updates')
 def updates_page():
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
         
-    user = supabase.table("users").select("username, is_admin").eq("id", user_id).execute().data[0]
+    # select("*") দিয়ে ইউজারের সমস্ত প্রোফাইল ও ব্যালেন্স ডাটা নেওয়া হচ্ছে
+    user_query = supabase.table("users").select("*").eq("id", user_id).execute().data
+    if not user_query:
+        session.clear()
+        return redirect(url_for('login'))
+        
+    user = user_query[0]
     is_admin = user.get('is_admin', False)
     
     all_updates = supabase.table("updates").select("*").order("created_at", desc=True).execute().data or []
     
     return render_template('updates.html', user=user, updates=all_updates, is_admin=is_admin)
-
+    
 
 # ২. এডমিন কতৃক চ্যানেল আপডেট পোস্ট ডিলিট করার রাউট (/admin/delete-update)
 @app.route('/admin/delete-update', methods=['POST'])
