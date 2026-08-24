@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- কাস্টম লোডিং শিমার ও পালস স্টাইল -->
+<!-- কাস্টম সুপার-ফাস্ট লোডিং শিমার -->
 <style>
     @keyframes shimmerAnim {
         0% { background-position: -200% 0; }
@@ -10,7 +10,7 @@
     .skeleton-loader {
         background: linear-gradient(90deg, rgba(255, 241, 242, 0.6) 25%, rgba(254, 205, 211, 0.8) 50%, rgba(255, 241, 242, 0.6) 75%);
         background-size: 200% 100%;
-        animation: shimmerAnim 1.5s infinite;
+        animation: shimmerAnim 1.2s infinite;
     }
 </style>
 
@@ -70,24 +70,17 @@
             </span>
         </div>
         
-        <!-- পিন করা টেলিগ্রাম পোস্ট ও লোডার -->
+        <!-- পিন করা টেলিগ্রাম পোস্ট ও সুপার-ফাস্ট লোডার -->
         <div id="pinned-container" class="w-full max-h-[26vh] overflow-hidden relative transition-all duration-500 ease-in-out">
             <div id="pinned-fade-overlay" class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white via-white/80 to-transparent z-10 pointer-events-none"></div>
 
-            <!-- লোডিং অ্যানিমেশন বক্স -->
-            <div id="pinned-loader" class="w-full h-36 skeleton-loader rounded-2xl flex flex-col items-center justify-center text-center p-4 border border-rose-100">
-                <i class="fa-solid fa-spinner fa-spin text-ruby-600 text-xl mb-2"></i>
-                <span class="text-[10px] font-black text-ruby-700 tracking-wider">টেলিগ্রাম নোটিশ লোড হচ্ছে...</span>
-            </div>
-
-            <!-- আসল টেলিগ্রাম উইজেট -->
-            <div class="w-full flex justify-center bg-white p-2 rounded-2xl border border-rose-100 overflow-hidden shadow-xs">
-                <script async 
-                        src="https://telegram.org/js/telegram-widget.js?22" 
-                        data-telegram-post="ortiwokr/49" 
-                        data-width="100%"
-                        onload="document.getElementById('pinned-loader').style.display='none';">
-                </script>
+            <div class="w-full flex justify-center bg-white p-2 rounded-2xl border border-rose-100 overflow-hidden shadow-xs min-h-[140px] relative">
+                <!-- লোডার -->
+                <div id="loader-pinned" class="absolute inset-0 skeleton-loader rounded-2xl flex items-center justify-center text-ruby-700 text-[10px] font-black z-0">
+                    <i class="fa-solid fa-spinner fa-spin mr-1.5 text-xs"></i> নোটিশ লোড হচ্ছে...
+                </div>
+                <!-- টেলিগ্রাম উইজেট কন্টেইনার -->
+                <div class="telegram-post-target w-full z-10" data-post="ortiwokr/49" data-loader="loader-pinned"></div>
             </div>
         </div>
 
@@ -105,7 +98,7 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- 3. DYNAMIC ANNOUNCEMENTS FEED WITH LOADERS     -->
+    <!-- 3. DYNAMIC ANNOUNCEMENTS FEED                  -->
     <!-- ============================================== -->
     <div class="space-y-4" data-aos="fade-up">
         {% for item in updates %}
@@ -122,20 +115,14 @@
                 </span>
             </div>
             
-            <!-- ফিড লোডার অ্যানিমেশন -->
-            <div id="loader-{{ item.id }}" class="w-full h-32 skeleton-loader rounded-2xl flex flex-col items-center justify-center text-center p-4 border border-rose-100">
-                <i class="fa-solid fa-circle-notch fa-spin text-ruby-600 text-lg mb-1.5"></i>
-                <span class="text-[9px] font-black text-ruby-700 tracking-wider">পোস্ট লোড হচ্ছে...</span>
-            </div>
-
-            <!-- টেলিগ্রাম এমবেড -->
-            <div class="w-full flex justify-center bg-white p-2 rounded-2xl border border-rose-100 overflow-hidden shadow-xs">
-                <script async 
-                        src="https://telegram.org/js/telegram-widget.js?22" 
-                        data-telegram-post="{{ item.post_path }}" 
-                        data-width="100%"
-                        onload="document.getElementById('loader-{{ item.id }}').style.display='none';">
-                </script>
+            <!-- টেলিগ্রাম এমবেড দ্রুত কন্টেইনার -->
+            <div class="w-full flex justify-center bg-white p-2 rounded-2xl border border-rose-100 overflow-hidden shadow-xs min-h-[120px] relative">
+                <!-- লোডার -->
+                <div id="loader-{{ item.id }}" class="absolute inset-0 skeleton-loader rounded-2xl flex items-center justify-center text-ruby-700 text-[10px] font-black z-0">
+                    <i class="fa-solid fa-spinner fa-spin mr-1.5 text-xs"></i> পোস্ট লোড হচ্ছে...
+                </div>
+                <!-- টেলিগ্রাম উইজেট কন্টেইনার -->
+                <div class="telegram-post-target w-full z-10" data-post="{{ item.post_path }}" data-loader="loader-{{ item.id }}"></div>
             </div>
 
             <div class="flex justify-between items-center pt-2 border-t border-rose-100">
@@ -168,15 +155,37 @@
 </div>
 
 <!-- ============================================== -->
-<!-- JAVASCRIPT: READ STATE, TIMEOUT & TOGGLE       -->
+<!-- 4. ULTRA-FAST TELEGRAM ASYNC LOADER ENGINE     -->
 <!-- ============================================== -->
 <script>
-// লোডার ফেইলওভার টাইমআউট (টেলিগ্রাম সার্ভার স্লো থাকলে ৩ সেকেন্ড পর স্বয়ংক্রিয়ভাবে লোডার হাইড হবে)
-window.addEventListener('load', function() {
-    setTimeout(function() {
-        const loaders = document.querySelectorAll('.skeleton-loader');
-        loaders.forEach(loader => loader.style.display = 'none');
-    }, 2800);
+// পেজ লোড ব্লক না করে সেকেন্ডের মধ্যে ব্যাকগ্রাউন্ডে টেলিগ্রাম উইজেট লোড করার অপ্টিমাইজড স্ক্রিপ্ট
+document.addEventListener("DOMContentLoaded", function() {
+    const targets = document.querySelectorAll('.telegram-post-target');
+    
+    targets.forEach(target => {
+        const postPath = target.getAttribute('data-post');
+        const loaderId = target.getAttribute('data-loader');
+        
+        const script = document.createElement('script');
+        script.src = "https://telegram.org/js/telegram-widget.js?22";
+        script.setAttribute('data-telegram-post', postPath);
+        script.setAttribute('data-width', '100%');
+        script.async = true;
+        
+        script.onload = function() {
+            if (loaderId) {
+                const loader = document.getElementById(loaderId);
+                if (loader) loader.style.display = 'none';
+            }
+        };
+        
+        target.appendChild(script);
+    });
+
+    // ফেইলওভার সেইফটি: ১.৫ সেকেন্ড পর স্বয়ংক্রিয়ভাবে লোডার হাইড
+    setTimeout(() => {
+        document.querySelectorAll('.skeleton-loader').forEach(l => l.style.display = 'none');
+    }, 1500);
 });
 
 function togglePinnedHeight() {
