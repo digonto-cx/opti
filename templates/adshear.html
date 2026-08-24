@@ -1,72 +1,111 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="space-y-6 max-w-3xl mx-auto pb-10">
+<div class="space-y-6 max-w-4xl mx-auto pb-12">
     
-    <div class="premium-card p-5 rounded-3xl flex justify-between items-center border border-white/40 shadow-sm relative overflow-hidden bg-white">
-        <div class="space-y-1">
-            <span class="bg-purple-50 text-purple-700 border border-purple-100 text-[8px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Campaign Hub</span>
-            <h2 class="text-sm font-extrabold text-slate-800 mt-1.5 flex items-center gap-1.5">
-                <i class="fa-solid fa-rectangle-ad text-purple-500"></i> Facebook Ad Share Jobs
-            </h2>
+    <!-- ============================================== -->
+    <!-- 1. CAMPAIGN HERO & EARNING HEADER              -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft relative overflow-hidden bg-gradient-to-br from-white via-rose-50/30 to-ruby-50/40 border border-white" data-aos="fade-down">
+        <div class="absolute -right-10 -top-10 w-36 h-36 bg-ruby-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+            <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 rounded-lg bg-ruby-100 text-ruby-700 text-[10px] font-black uppercase tracking-wider">
+                        Social Promotion Hub
+                    </span>
+                    <span class="text-xs font-bold text-slate-400">ফেসবুক পোস্ট শেয়ার</span>
+                </div>
+                <h1 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">ফেসবুক অ্যাডস শেয়ার ক্যাম্পেইন</h1>
+                <p class="text-[11px] text-slate-500 font-medium max-w-md">আমাদের ব্যানার ও ক্যাপশন ফেসবুকে পোস্ট করে সেই পোস্টের লিঙ্ক জমা দিন এবং নিশ্চিত রিওয়ার্ড নিন।</p>
+            </div>
+
+            <div class="bg-white border border-rose-200/90 p-3 rounded-2xl shadow-xs text-center sm:text-right shrink-0">
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">মোট ক্যাম্পেইন</span>
+                <span class="text-lg font-black text-ruby-600 leading-tight">{{ all_ads_tasks|length }}টি সক্রিয়</span>
+            </div>
         </div>
     </div>
 
-    <!-- টাস্ক লিস্ট -->
-    <div class="premium-card p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
-        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-800 border-b border-slate-50 pb-3 flex items-center gap-1.5">
-            <i class="fa-solid fa-list-ul text-slate-500"></i> অ্যাক্টিভ অ্যাডস শেয়ার কাজসমূহ
-        </h3>
+    <!-- ফ্ল্যাশ মেসেজ নোটিফিকেশন -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="p-3 text-xs text-center rounded-2xl border font-bold shadow-xs {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-200{% else %}bg-red-50 text-red-600 border-red-200{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- ============================================== -->
+    <!-- 2. ACTIVE AD CAMPAIGNS LIST                    -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
+        <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-rectangle-ad text-ruby-600"></i> সক্রিয় শেয়ার কাজসমূহ
+            </h3>
+            <span class="text-[10px] font-bold text-slate-400 font-mono">লাইভ টাস্ক</span>
+        </div>
 
         <div class="space-y-3.5">
             {% for task in all_ads_tasks %}
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50 border border-slate-100 p-4 rounded-2xl gap-3 shadow-xs">
-                <div class="flex items-center gap-3.5">
-                    <div class="w-11 h-11 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-purple-600 shadow-xs shrink-0">
-                        <i class="fa-solid fa-bullhorn text-base"></i>
+            <div class="bg-white border border-rose-200/80 p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-xs hover:border-ruby-300 transition duration-200">
+                
+                <div class="flex items-start sm:items-center gap-3.5">
+                    <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center text-lg shadow-xs shrink-0 mt-0.5 sm:mt-0">
+                        <i class="fa-solid fa-bullhorn"></i>
                     </div>
+
                     <div class="space-y-1">
-                        <h3 class="text-xs font-extrabold text-slate-900 flex items-center gap-2">
-                            {{ task.title }}
-                        </h3>
-                        <div class="flex items-center gap-2 text-[10px] text-slate-500 font-extrabold">
-                            <span class="text-emerald-600">৳ {{ task.reward }}</span>
+                        <h4 class="text-xs font-black text-slate-900">{{ task.title }}</h4>
+                        
+                        <div class="flex flex-wrap items-center gap-2 text-[10px] text-slate-500 font-bold">
+                            <span class="text-emerald-600 font-black">৳ {{ task.reward }}</span>
                             {% if task.max_submissions > 0 %}
-                                <span class="text-slate-400">• {{ task.sub_count }}/{{ task.max_submissions }} Filled</span>
+                                <span class="text-slate-400 font-mono">• {{ task.sub_count }}/{{ task.max_submissions }} জন সম্পন্ন করেছে</span>
                             {% endif %}
                         </div>
                     </div>
                 </div>
                 
-                <div class="w-full sm:w-auto text-right">
+                <!-- ডায়নামিক স্ট্যাটাস বাটন গ্রুপ -->
+                <div class="w-full sm:w-auto text-left sm:text-right shrink-0">
                     {% if task.is_locked %}
-                        <span class="bg-red-50 text-red-600 border border-red-100 text-[10px] font-black px-4 py-2 rounded-full inline-block">
-                            🔒 Locked (অন্য কাজ করায় লকড)
+                        <span class="px-4 py-2 rounded-xl bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-black inline-block">
+                            <i class="fa-solid fa-lock mr-1"></i> Locked (অন্য কাজ করায় লকড)
                         </span>
                     {% elif task.is_limit_reached %}
-                        <span class="bg-slate-200 text-slate-500 text-[10px] font-black px-4 py-2 rounded-full inline-block">
-                            Limit Full
+                        <span class="px-4 py-2 rounded-xl bg-slate-100 text-slate-400 border border-slate-200 text-[10px] font-black inline-block">
+                            <i class="fa-solid fa-ban mr-1"></i> লিমিট পূর্ণ
                         </span>
                     {% elif task.user_status == 'Pending' %}
-                        <span class="bg-amber-50 text-amber-600 border border-amber-100 text-[10px] font-black px-4 py-2 rounded-full inline-block">
-                            Pending Verification
+                        <span class="px-4 py-2 rounded-xl bg-amber-50 text-amber-600 border border-amber-200 text-[10px] font-black inline-block">
+                            <i class="fa-solid fa-hourglass-half mr-1"></i> যাচাই চলছে...
                         </span>
                     {% elif task.user_status == 'Approved' %}
-                        <span class="bg-emerald-50 text-emerald-600 border border-emerald-100 text-[10px] font-black px-4 py-2 rounded-full inline-block">
-                            ✓ Completed
+                        <span class="px-4 py-2 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-black inline-block">
+                            <i class="fa-solid fa-circle-check mr-1"></i> সম্পন্ন হয়েছে
                         </span>
                     {% else %}
-                        <a href="/adshear/{{ task.id }}" class="glow-btn-light bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-black px-5 py-2.5 rounded-full shadow inline-block">
-                            Start Job
+                        <a href="/adshear/{{ task.id }}" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-ruby-600 to-rose-600 hover:opacity-95 text-white text-xs font-black shadow-glow-ruby transition active:scale-95 duration-150 inline-flex items-center justify-center gap-1.5">
+                            <span>কাজটি করুন</span>
+                            <i class="fa-solid fa-arrow-right text-[9px]"></i>
                         </a>
                     {% endif %}
                 </div>
+
             </div>
             {% else %}
-            <p class="text-xs text-slate-400 text-center py-5 font-bold">বর্তমানে কোনো অ্যাডস শেয়ার টাস্ক নেই।</p>
+            <div class="p-8 text-center space-y-2">
+                <p class="text-xs text-slate-400 font-medium">বর্তমানে কোনো অ্যাডস শেয়ার টাস্ক সক্রিয় নেই।</p>
+            </div>
             {% endfor %}
         </div>
     </div>
+
 </div>
 
 {% endblock %}
