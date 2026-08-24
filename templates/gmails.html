@@ -1,147 +1,186 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="space-y-6 max-w-3xl mx-auto pb-10">
+<div class="space-y-6 max-w-3xl mx-auto pb-12">
     
-    <!-- ১. লাইভ জিমেইল প্রাইস এবং উইজেট (সফট গ্লো ও উন্নত কন্ট্রাস্ট) -->
-    <div class="premium-card p-5 rounded-3xl flex justify-between items-center border border-white/40 shadow-[0_8px_30px_rgba(37,99,235,0.04)] relative overflow-hidden">
-        <div class="absolute -right-8 -top-8 w-24 h-24 bg-blue-500/5 rounded-full blur-2xl animate-pulse"></div>
-        <div class="space-y-1">
-            <span class="bg-blue-50 text-blue-700 border border-blue-100 text-[8px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">Live rate</span>
-            <h2 class="text-sm font-extrabold text-slate-800 flex items-center gap-1.5 pt-1">
-                <i class="fa-solid fa-envelope text-red-500"></i> জিমেইল অ্যাকাউন্ট বিক্রয়
-            </h2>
-        </div>
-        <div class="text-right">
-            <span class="text-[8px] text-slate-400 uppercase font-black tracking-wider">প্রতি জিমেইলের মূল্য</span>
-            <p class="text-xl font-black text-emerald-600">৳ {{ gmail_price }}</p>
+    <!-- ============================================== -->
+    <!-- 1. GMAIL RATE HERO HEADER                      -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft relative overflow-hidden bg-gradient-to-br from-white via-rose-50/30 to-ruby-50/40 border border-white" data-aos="fade-down">
+        <div class="absolute -right-10 -top-10 w-36 h-36 bg-ruby-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+            <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 rounded-lg bg-ruby-100 text-ruby-700 text-[10px] font-black uppercase tracking-wider">
+                        Live Payout
+                    </span>
+                    <span class="text-xs font-bold text-slate-400">প্রতি একাউন্টে ইনস্ট্যান্ট ক্যাশ</span>
+                </div>
+                <h1 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">জিমেইল একাউন্ট বিক্রয় পোর্টাল</h1>
+                <p class="text-[11px] text-slate-500 font-medium">নতুন ও সচল জিমেইল একাউন্ট তৈরি করে সাবমিট করুন এবং সরাসরি ব্যালেন্সে টাকা নিন।</p>
+            </div>
+
+            <div class="bg-white border border-rose-200/90 p-3.5 rounded-2xl shadow-xs text-left sm:text-right shrink-0">
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">প্রতি জিমেইলের রেট</span>
+                <span class="text-2xl font-black text-emerald-600 tracking-tight">৳ {{ gmail_price }}</span>
+            </div>
         </div>
     </div>
 
-    <!-- ২. প্রিমিয়াম জিমেইল অ্যাকাউন্ট সাবমিশন নিয়মাবলী (Figma Style Rules Panel) -->
-    <div class="premium-card p-6 rounded-3xl border border-white/40 shadow-sm space-y-4">
-        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-800 border-b border-slate-50 pb-2.5 flex items-center gap-2">
-            <i class="fa-solid fa-circle-exclamation text-blue-600"></i> জিমেইল বিক্রয় করার নিয়মাবলী
+    <!-- ============================================== -->
+    <!-- 2. GMAIL SUBMISSION RULES (4-CARD GRID)        -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2 border-b border-rose-100 pb-3">
+            <i class="fa-solid fa-circle-exclamation text-ruby-600"></i> জিমেইল বিক্রয় করার নিয়মাবলী
         </h3>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-[11px] font-bold text-slate-700">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs font-semibold text-slate-700">
             <!-- নিয়ম ১ -->
-            <div class="flex items-start gap-2.5 p-3.5 bg-slate-50 border border-slate-100 rounded-2xl">
-                <div class="w-5 h-5 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0 mt-0.5"><i class="fa-solid fa-plus text-[8px]"></i></div>
-                <div class="space-y-0.5">
-                    <p class="text-slate-800 font-extrabold">১. নতুন জিমেইল অ্যাকাউন্ট</p>
-                    <p class="text-[9px] text-slate-400 font-medium leading-relaxed">আপনাকে সম্পূর্ণ নতুন জিমেইল অ্যাকাউন্ট খুলে আমাদের পোর্টালে সাবমিট করতে হবে।</p>
-                </div>
+            <div class="bg-white border border-rose-100 p-4 rounded-2xl space-y-1 shadow-xs">
+                <span class="text-[11px] font-black text-slate-900 flex items-center gap-1.5">
+                    <i class="fa-solid fa-plus-circle text-ruby-600"></i> ১. নতুন জিমেইল একাউন্ট
+                </span>
+                <p class="text-[10px] text-slate-500 font-medium leading-relaxed">আপনাকে সম্পূর্ণ ফ্রেশ ও নতুন জিমেইল খুলে আমাদের পোর্টালে সাবমিট করতে হবে।</p>
             </div>
 
             <!-- নিয়ম ২ -->
-            <div class="flex items-start gap-2.5 p-3.5 bg-slate-50 border border-slate-100 rounded-2xl">
-                <div class="w-5 h-5 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0 mt-0.5"><i class="fa-solid fa-lock text-[8px]"></i></div>
-                <div class="space-y-0.5">
-                    <p class="text-slate-800 font-extrabold">২. পাসওয়ার্ড পরিবর্তন নিষেধ</p>
-                    <p class="text-[9px] text-slate-400 font-medium leading-relaxed">জিমেইল অ্যাকাউন্ট সাবমিট করার পর ভেরিফিকেশন শেষ না হওয়া পর্যন্ত পাসওয়ার্ড পরিবর্তন করা যাবে না।</p>
-                </div>
+            <div class="bg-white border border-rose-100 p-4 rounded-2xl space-y-1 shadow-xs">
+                <span class="text-[11px] font-black text-slate-900 flex items-center gap-1.5">
+                    <i class="fa-solid fa-lock text-ruby-600"></i> ২. পাসওয়ার্ড পরিবর্তন নিষেধ
+                </span>
+                <p class="text-[10px] text-slate-500 font-medium leading-relaxed">জিমেইল জমা দেওয়ার পর এডমিন রিভিউ শেষ হওয়া পর্যন্ত পাসওয়ার্ড বদলানো যাবে না।</p>
             </div>
 
             <!-- নিয়ম ৩ -->
-            <div class="flex items-start gap-2.5 p-3.5 bg-slate-50 border border-slate-100 rounded-2xl">
-                <div class="w-5 h-5 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0 mt-0.5"><i class="fa-solid fa-shield-halved text-[8px]"></i></div>
-                <div class="space-y-0.5">
-                    <p class="text-slate-800 font-extrabold">৩. 2FA সিকিউরিটি অফ রাখুন</p>
-                    <p class="text-[9px] text-slate-400 font-medium leading-relaxed">অ্যাকাউন্টে কোনো প্রকার ২-ফ্যাক্টর অথেন্টিকেশন (2FA) বা দ্বি-স্তর নিরাপত্তা অন করা যাবে না।</p>
-                </div>
+            <div class="bg-white border border-rose-100 p-4 rounded-2xl space-y-1 shadow-xs">
+                <span class="text-[11px] font-black text-slate-900 flex items-center gap-1.5">
+                    <i class="fa-solid fa-shield-halved text-ruby-600"></i> ৩. 2FA সিকিউরিটি অফ রাখুন
+                </span>
+                <p class="text-[10px] text-slate-500 font-medium leading-relaxed">একাউন্টে কোনো ২-ফ্যাক্টর (2FA) অথেন্টিকেশন বা রিকভারি কোড অন করা যাবে না।</p>
             </div>
 
             <!-- নিয়ম ৪ -->
-            <div class="flex items-start gap-2.5 p-3.5 bg-slate-50 border border-slate-100 rounded-2xl">
-                <div class="w-5 h-5 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0 mt-0.5"><i class="fa-solid fa-clock text-[8px]"></i></div>
-                <div class="space-y-0.5">
-                    <p class="text-slate-800 font-extrabold">৪. রিভিউ সময়কাল</p>
-                    <p class="text-[9px] text-slate-400 font-medium leading-relaxed">জিমেইলটি ভেরিফাই করতে এবং সফলভাবে কেনার জন্য সাধারণত ৩ থেকে ২৪ ঘণ্টা সময় লাগতে পারে।</p>
-                </div>
+            <div class="bg-white border border-rose-100 p-4 rounded-2xl space-y-1 shadow-xs">
+                <span class="text-[11px] font-black text-slate-900 flex items-center gap-1.5">
+                    <i class="fa-solid fa-clock text-ruby-600"></i> ৪. রিভিউ ও অনুমোদন সময়
+                </span>
+                <p class="text-[10px] text-slate-500 font-medium leading-relaxed">জিমেইল ভেরিফাই করে ব্যালেন্সে টাকা যোগ হতে সাধারণত ৩ থেকে ২৪ ঘণ্টা সময় লাগতে পারে।</p>
             </div>
         </div>
     </div>
 
-    <!-- ৩. জিমেইল তথ্য জমা দেওয়ার ফরম -->
-    <div class="premium-card p-6 rounded-3xl border border-white/40 shadow-[0_12px_40px_rgba(0,0,0,0.02)]">
-        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-4 border-b border-slate-50 pb-2.5">
-            অ্যাকাউন্ট বিবরণী জমা দিন
+    <!-- ============================================== -->
+    <!-- 3. GMAIL DETAILS SUBMISSION FORM               -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 border-b border-rose-100 pb-3 flex items-center gap-2">
+            <i class="fa-solid fa-envelope text-ruby-600"></i> জিমেইল বিবরণী জমা দিন
         </h3>
-        
+
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="p-3 mb-4 text-[10px] font-black rounded-2xl border text-center {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-100{% else %}bg-red-50 text-red-600 border-red-100{% endif %}">
+                    <div class="p-3 text-xs text-center rounded-2xl border font-bold shadow-xs {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-200{% else %}bg-red-50 text-red-600 border-red-200{% endif %}">
                         {{ message }}
                     </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
-        <form action="/gmails" method="POST" class="space-y-4">
+        <form action="/gmails" method="POST" onsubmit="triggerGmailConfetti()" class="space-y-4">
+            
+            <!-- জিমেইল অ্যাড্রেস -->
             <div>
-                <label class="block text-[10px] font-black text-slate-500 uppercase mb-1.5">জিমেইল অ্যাড্রেস (Gmail Address)</label>
+                <label class="block text-[10px] font-black text-slate-500 uppercase mb-1.5 tracking-wider">জিমেইল অ্যাড্রেস (Gmail Address)</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                         <i class="fa-solid fa-at text-xs"></i>
                     </span>
-                    <input type="email" name="gmail_address" required placeholder="example@gmail.com" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-extrabold focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
+                    <input type="email" name="gmail_address" required placeholder="example@gmail.com" 
+                           class="w-full pl-10 pr-4 py-3 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-900 font-bold focus:outline-none focus:border-ruby-600 focus:ring-2 focus:ring-rose-100 transition shadow-xs">
                 </div>
             </div>
+
+            <!-- পাসওয়ার্ড -->
             <div>
-                <label class="block text-[10px] font-black text-slate-500 uppercase mb-1.5">পাসওয়ার্ড (Gmail Password)</label>
+                <label class="block text-[10px] font-black text-slate-500 uppercase mb-1.5 tracking-wider">পাসওয়ার্ড (Gmail Password)</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
                         <i class="fa-solid fa-key text-xs"></i>
                     </span>
-                    <input type="text" name="gmail_password" required placeholder="Account Password" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-extrabold focus:outline-none focus:border-blue-500 focus:bg-white transition-all">
+                    <input type="text" name="gmail_password" required placeholder="Account Password" 
+                           class="w-full pl-10 pr-4 py-3 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-900 font-bold font-mono focus:outline-none focus:border-ruby-600 focus:ring-2 focus:ring-rose-100 transition shadow-xs">
                 </div>
             </div>
 
-            <button type="submit" class="w-full glow-btn-light bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-xs py-3.5 rounded-2xl transition shadow">
-                অ্যাকাউন্ট জমা দিন
+            <!-- সাবমিট বাটন -->
+            <button type="submit" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-ruby-600 to-rose-600 hover:opacity-95 text-white font-black text-xs shadow-glow-ruby transition active:scale-95 duration-150 flex items-center justify-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>জিমেইল একাউন্ট সাবমিট করুন (৳{{ gmail_price }})</span>
             </button>
         </form>
     </div>
 
-    <!-- ৪. জিমেইল সেল হিস্ট্রি তালিকা -->
-    <div class="premium-card p-6 rounded-3xl bg-white border border-slate-200 shadow-sm">
-        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-4 border-b border-slate-50 pb-3 flex items-center gap-1.5">
-            <i class="fa-solid fa-list-check text-slate-500"></i> আপনার জমা দেওয়া জিমেইল রেকর্ড
-        </h3>
+    <!-- ============================================== -->
+    <!-- 4. GMAIL SUBMISSIONS HISTORY TABLE             -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
+        <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left text-slate-400"></i> আপনার জমা দেওয়া জিমেইল রেকর্ড
+            </h3>
+            <span class="text-[10px] font-black text-slate-500 font-mono">মোট: {{ submissions|length }}টি</span>
+        </div>
+
         <div class="overflow-x-auto text-[11px] font-bold">
             <table class="w-full text-left">
                 <thead>
-                    <tr class="bg-slate-50 border-b border-slate-100 text-slate-400 font-extrabold uppercase">
-                        <th class="p-3">অ্যাকাউন্ট বিবরণী</th>
+                    <tr class="bg-rose-50/40 border-b border-rose-100 text-slate-400 font-extrabold uppercase">
+                        <th class="p-3">অ্যাকাউন্ট তথ্য</th>
                         <th class="p-3">ক্রয়মূল্য</th>
                         <th class="p-3 text-right">স্ট্যাটাস</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-50">
+                <tbody class="divide-y divide-rose-50">
                     {% for item in submissions %}
-                    <tr class="text-slate-700 hover:bg-slate-50/50 transition">
-                        <td class="p-3.5">
-                            <span class="font-extrabold text-slate-800 text-xs leading-none block">{{ item.email }}</span>
-                            <span class="text-[9px] text-slate-400 font-bold block mt-1.5">Pass: {{ item.password }}</span>
+                    <tr class="text-slate-700">
+                        <td class="p-3">
+                            <span class="font-black text-slate-900 text-xs">{{ item.email }}</span><br>
+                            <span class="text-[9px] text-slate-400 font-mono">Pass: {{ item.password }}</span>
                         </td>
-                        <td class="p-3.5 text-emerald-600 font-black">৳ {{ item.price }}</td>
-                        <td class="p-3.5 text-right">
-                            <span class="inline-block px-2.5 py-1 rounded-full text-[8px] font-black uppercase tracking-wide {% if item.status == 'Pending' %}bg-yellow-50 text-yellow-600 border border-yellow-100{% elif item.status == 'Approved' %}bg-emerald-50 text-emerald-600 border-emerald-100{% else %}bg-red-50 text-red-600 border-red-100{% endif %}">
+                        <td class="p-3 text-emerald-600 font-black">৳ {{ item.price }}</td>
+                        <td class="p-3 text-right">
+                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-wider {% if item.status == 'Pending' %}bg-amber-50 text-amber-600 border border-amber-200{% elif item.status == 'Approved' %}bg-emerald-50 text-emerald-600 border border-emerald-200{% else %}bg-rose-50 text-rose-600 border border-rose-200{% endif %}">
                                 {{ item.status }}
                             </span>
                         </td>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="3" class="p-5 text-center text-slate-400 font-medium">আপনি এখনও কোনো অ্যাকাউন্ট জমা দেননি।</td>
+                        <td colspan="3" class="p-6 text-center text-slate-400 font-medium">আপনি এখনও কোনো জিমেইল একাউন্ট জমা দেননি।</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+
 </div>
+
+<!-- ============================================== -->
+<!-- JAVASCRIPT: SUBMIT CONFETTI ANIMATION          -->
+<!-- ============================================== -->
+<script>
+function triggerGmailConfetti() {
+    confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.7 },
+        colors: ['#E11D48', '#10B981', '#F59E0B']
+    });
+}
+</script>
 
 {% endblock %}
