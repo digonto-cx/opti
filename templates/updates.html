@@ -1,6 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<!-- কাস্টম লোডিং শিমার ও পালস স্টাইল -->
+<style>
+    @keyframes shimmerAnim {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+    .skeleton-loader {
+        background: linear-gradient(90deg, rgba(255, 241, 242, 0.6) 25%, rgba(254, 205, 211, 0.8) 50%, rgba(255, 241, 242, 0.6) 75%);
+        background-size: 200% 100%;
+        animation: shimmerAnim 1.5s infinite;
+    }
+</style>
+
 <div class="space-y-6 max-w-3xl mx-auto pb-12">
     
     <!-- ============================================== -->
@@ -57,15 +70,23 @@
             </span>
         </div>
         
-        <!-- পিন করা টেলিগ্রাম পোস্ট উইজেট -->
+        <!-- পিন করা টেলিগ্রাম পোস্ট ও লোডার -->
         <div id="pinned-container" class="w-full max-h-[26vh] overflow-hidden relative transition-all duration-500 ease-in-out">
             <div id="pinned-fade-overlay" class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white via-white/80 to-transparent z-10 pointer-events-none"></div>
 
+            <!-- লোডিং অ্যানিমেশন বক্স -->
+            <div id="pinned-loader" class="w-full h-36 skeleton-loader rounded-2xl flex flex-col items-center justify-center text-center p-4 border border-rose-100">
+                <i class="fa-solid fa-spinner fa-spin text-ruby-600 text-xl mb-2"></i>
+                <span class="text-[10px] font-black text-ruby-700 tracking-wider">টেলিগ্রাম নোটিশ লোড হচ্ছে...</span>
+            </div>
+
+            <!-- আসল টেলিগ্রাম উইজেট -->
             <div class="w-full flex justify-center bg-white p-2 rounded-2xl border border-rose-100 overflow-hidden shadow-xs">
                 <script async 
                         src="https://telegram.org/js/telegram-widget.js?22" 
                         data-telegram-post="ortiwokr/49" 
-                        data-width="100%">
+                        data-width="100%"
+                        onload="document.getElementById('pinned-loader').style.display='none';">
                 </script>
             </div>
         </div>
@@ -84,7 +105,7 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- 3. DYNAMIC ANNOUNCEMENTS FEED                  -->
+    <!-- 3. DYNAMIC ANNOUNCEMENTS FEED WITH LOADERS     -->
     <!-- ============================================== -->
     <div class="space-y-4" data-aos="fade-up">
         {% for item in updates %}
@@ -101,12 +122,19 @@
                 </span>
             </div>
             
+            <!-- ফিড লোডার অ্যানিমেশন -->
+            <div id="loader-{{ item.id }}" class="w-full h-32 skeleton-loader rounded-2xl flex flex-col items-center justify-center text-center p-4 border border-rose-100">
+                <i class="fa-solid fa-circle-notch fa-spin text-ruby-600 text-lg mb-1.5"></i>
+                <span class="text-[9px] font-black text-ruby-700 tracking-wider">পোস্ট লোড হচ্ছে...</span>
+            </div>
+
             <!-- টেলিগ্রাম এমবেড -->
             <div class="w-full flex justify-center bg-white p-2 rounded-2xl border border-rose-100 overflow-hidden shadow-xs">
                 <script async 
                         src="https://telegram.org/js/telegram-widget.js?22" 
                         data-telegram-post="{{ item.post_path }}" 
-                        data-width="100%">
+                        data-width="100%"
+                        onload="document.getElementById('loader-{{ item.id }}').style.display='none';">
                 </script>
             </div>
 
@@ -140,9 +168,17 @@
 </div>
 
 <!-- ============================================== -->
-<!-- JAVASCRIPT: READ STATE & HEIGHT TOGGLE         -->
+<!-- JAVASCRIPT: READ STATE, TIMEOUT & TOGGLE       -->
 <!-- ============================================== -->
 <script>
+// লোডার ফেইলওভার টাইমআউট (টেলিগ্রাম সার্ভার স্লো থাকলে ৩ সেকেন্ড পর স্বয়ংক্রিয়ভাবে লোডার হাইড হবে)
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        const loaders = document.querySelectorAll('.skeleton-loader');
+        loaders.forEach(loader => loader.style.display = 'none');
+    }, 2800);
+});
+
 function togglePinnedHeight() {
     const container = document.getElementById('pinned-container');
     const overlay = document.getElementById('pinned-fade-overlay');
