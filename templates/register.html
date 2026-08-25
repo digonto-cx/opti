@@ -1,153 +1,191 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opti Work - Create Account</title>
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tailwind CSS -->
+    <title>OptiWork - নতুন অ্যাকাউন্ট তৈরি করুন</title>
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- ৩ডি লাইভ থাম্বমার্ক জেএস অফিশিয়াল সিডিএন লাইব্রেরি (অক্ষুণ্ণ) -->
+    <!-- Font Awesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts (Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- ThumbmarkJS Official Library -->
     <script src="https://cdn.jsdelivr.net/npm/@thumbmarkjs/thumbmarkjs/dist/thumbmark.umd.js"></script>
+
+    <!-- Tailwind Ruby Theme Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        ruby: {
+                            50: '#FFF1F2',
+                            100: '#FFE4E6',
+                            200: '#FECDD3',
+                            500: '#F43F5E',
+                            600: '#E11D48',
+                            700: '#BE123C',
+                            800: '#9F1239',
+                            900: '#881337',
+                        }
+                    },
+                    boxShadow: {
+                        'glow-ruby': '0 10px 30px -5px rgba(225, 29, 72, 0.35)',
+                        'card-soft': '0 20px 40px -15px rgba(225, 29, 72, 0.08), 0 1px 3px rgba(0,0,0,0.02)',
+                        'input-focus': '0 0 0 4px rgba(254, 205, 211, 0.5)',
                     }
                 }
             }
         }
     </script>
+
     <style>
-        /* প্রিমিয়াম লাইট ডট গ্রিড ব্যাকগ্রাউন্ড */
         body {
-            background-color: #f8fafc;
-            background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px), radial-gradient(#cbd5e1 1.2px, #f8fafc 1.2px);
-            background-size: 24px 24px;
-            background-position: 0 0, 12px 12px;
+            background-color: #FFF9FA;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(254, 205, 211, 0.5) 0px, transparent 55%),
+                radial-gradient(at 100% 100%, rgba(255, 228, 230, 0.6) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(255, 241, 242, 0.7) 0px, transparent 60%);
             background-attachment: fixed;
         }
-        .premium-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(226, 232, 240, 0.9);
-            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 16px -6px rgba(15, 23, 42, 0.03);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        .glass-auth-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
         }
     </style>
 </head>
-<body class="text-[#0F172A] min-h-screen flex items-center justify-center px-4 py-8 antialiased">
+<body class="text-slate-800 font-sans antialiased flex items-center justify-center min-h-screen p-4 py-8 selection:bg-ruby-600 selection:text-white">
 
-    <!-- প্রিমিয়াম ৩ডি গ্লাস কার্ড প্যানেল -->
-    <div class="premium-card p-6 sm:p-8 max-w-sm w-full relative overflow-hidden">
-        <!-- ব্যাকগ্রাউন্ড গ্লো ডিজাইন -->
-        <div class="absolute -right-10 -top-10 w-28 h-28 bg-blue-500/5 rounded-full blur-3xl"></div>
+    <!-- গ্লাস রেজিস্ট্রেশন প্যানেল -->
+    <div class="glass-auth-card p-7 sm:p-9 rounded-[32px] shadow-card-soft max-w-sm w-full relative overflow-hidden border border-white">
         
-        <!-- লোগো এবং বোনাস নোটিশ -->
-        <div class="text-center mb-6 border-b border-slate-100 pb-5">
-            <div class="flex items-center justify-center space-x-2.5">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="2" y="2" width="8" height="8" rx="2.5" fill="#2563eb"/>
-                    <rect x="2" y="14" width="8" height="8" rx="2.5" fill="#2563eb"/>
-                    <rect x="14" y="14" width="8" height="8" rx="2.5" fill="#2563eb"/>
-                    <path d="M14 2H18C20.2091 2 22 3.79086 22 6V10C22 12.2091 20.2091 14 18 14H14V2Z" fill="#2563eb"/>
-                </svg>
-                <span class="text-lg font-black tracking-wider text-[#0F172A]">
-                    OPTI<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">WORK</span>
+        <!-- সফট ব্যাকগ্রাউন্ড গ্লো -->
+        <div class="absolute -right-12 -top-12 w-36 h-36 bg-ruby-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- ব্র্যান্ড হেডার ও ৳৫০ বোনাস ব্যাজ -->
+        <div class="text-center space-y-2 mb-6 relative z-10">
+            <a href="/" class="inline-flex items-center gap-2">
+                <div class="w-9 h-9 rounded-2xl bg-ruby-600 flex items-center justify-center text-white shadow-glow-ruby">
+                    <i class="fa-solid fa-fire text-base"></i>
+                </div>
+                <span class="text-xl font-black tracking-tight text-slate-900">
+                    OPTI<span class="text-ruby-600">WORK</span>
+                </span>
+            </a>
+            
+            <div class="pt-1">
+                <span class="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5 shadow-xs">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                    ৳৫০ সাইন-আপ বোনাস প্রযোজ্য
                 </span>
             </div>
-            
-            <!-- সংশোধিত ৫০ টাকা জয়েনিং বোনাস গ্লো ব্যাজ -->
-            <div class="mt-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 text-blue-700 text-[10px] font-black px-4 py-2 rounded-full inline-flex items-center gap-1.5 shadow-sm uppercase tracking-wide">
-                <span class="w-1.5 h-1.5 bg-blue-600 rounded-full animate-ping"></span>
-                <span>৳৫০ জয়েনিং বোনাস ভেরিফাইড</span>
-            </div>
         </div>
-        
-        <!-- ফ্ল্যাশ এরর মেসেজ নোটিশ -->
+
+        <!-- ফ্ল্যাশ মেসেজ -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="p-3 mb-4 text-[10px] text-center text-red-600 bg-red-50 border border-red-100 rounded-2xl font-black leading-normal">
-                        <i class="fa-solid fa-triangle-exclamation mr-1"></i> {{ message }}
+                    <div class="p-3 mb-4 text-xs text-center text-red-600 bg-red-50 border border-red-200 rounded-2xl font-bold">
+                        <i class="fa-solid fa-circle-exclamation mr-1"></i> {{ message }}
                     </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
-        <!-- রেজিষ্ট্রেশন ফর্ম -->
-        <form action="/register" method="POST" class="space-y-4">
-            <!-- হিডেন ডিভাইস ফিঙ্গারপ্রিন্ট এবং ডিভাইস নেম ইনপুট -->
+        <form action="/register" method="POST" class="space-y-3.5 relative z-10">
+            <!-- সিকিউরিটি হিডেন ইনপুটস -->
             <input type="hidden" name="device_fingerprint" id="device-fingerprint-input">
             <input type="hidden" name="device_name" id="device-name-input">
 
             <!-- ব্যবহারকারীর নাম -->
-            <div>
-                <label class="block text-[10px] font-black text-slate-500 uppercase mb-1.5 tracking-wider">ব্যবহারকারীর নাম</label>
+            <div class="space-y-1">
+                <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">ব্যবহারকারীর নাম</label>
                 <div class="relative group">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 group-focus-within:text-blue-600 transition-colors duration-200">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 group-focus-within:text-ruby-600 transition-colors">
                         <i class="fa-regular fa-user text-xs"></i>
                     </span>
-                    <input type="text" name="username" required placeholder="নাম টাইপ করুন..." 
-                           class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 placeholder-slate-400 font-extrabold focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50/50 focus:bg-white transition-all duration-300 shadow-sm">
+                    <input type="text" name="username" required placeholder="আপনার নাম লিখুন..." 
+                           class="w-full pl-10 pr-4 py-3 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-900 font-bold placeholder-slate-400 focus:outline-none focus:border-ruby-600 focus:shadow-input-focus transition duration-200 shadow-xs">
                 </div>
             </div>
 
             <!-- ইমেইল এড্রেস -->
-            <div>
-                <label class="block text-[10px] font-black text-slate-500 uppercase mb-1.5 tracking-wider">ইমেইল এড্রেস</label>
+            <div class="space-y-1">
+                <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">ইমেইল এড্রেস</label>
                 <div class="relative group">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 group-focus-within:text-blue-600 transition-colors duration-200">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 group-focus-within:text-ruby-600 transition-colors">
                         <i class="fa-regular fa-envelope text-xs"></i>
                     </span>
                     <input type="email" name="email" required placeholder="name@domain.com" 
-                           class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 placeholder-slate-400 font-extrabold focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50/50 focus:bg-white transition-all duration-300 shadow-sm">
-                </div>
-            </div>
-            
-            <!-- পাসওয়ার্ড -->
-            <div>
-                <label class="block text-[10px] font-black text-slate-500 uppercase mb-1.5 tracking-wider">পাসওয়ার্ড</label>
-                <div class="relative group">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 group-focus-within:text-blue-600 transition-colors duration-200">
-                        <i class="fa-solid fa-lock text-xs"></i>
-                    </span>
-                    <input type="password" name="password" required placeholder="••••••••" 
-                           class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 placeholder-slate-400 font-extrabold focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50/50 focus:bg-white transition-all duration-300 shadow-sm">
+                           class="w-full pl-10 pr-4 py-3 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-900 font-bold placeholder-slate-400 focus:outline-none focus:border-ruby-600 focus:shadow-input-focus transition duration-200 shadow-xs">
                 </div>
             </div>
 
-            <!-- আমন্ত্রণ কোড -->
-            <div>
-                <label class="block text-[10px] font-black text-slate-500 uppercase mb-1.5 tracking-wider">আমন্ত্রণ কোড (Referral Code / UID)</label>
+            <!-- পাসওয়ার্ড -->
+            <div class="space-y-1">
+                <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">পাসওয়ার্ড</label>
                 <div class="relative group">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 group-focus-within:text-blue-600 transition-colors duration-200">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 group-focus-within:text-ruby-600 transition-colors">
+                        <i class="fa-solid fa-lock text-xs"></i>
+                    </span>
+                    <input type="password" name="password" id="register-password" required placeholder="••••••••" 
+                           class="w-full pl-10 pr-11 py-3 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-900 font-bold placeholder-slate-400 focus:outline-none focus:border-ruby-600 focus:shadow-input-focus transition duration-200 shadow-xs">
+                    
+                    <button type="button" onclick="togglePasswordVisibility('register-password', this)" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-700 transition">
+                        <i class="fa-regular fa-eye text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- আমন্ত্রণ কোড (Referral) -->
+            <div class="space-y-1">
+                <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">আমন্ত্রণ কোড (Referral Code)</label>
+                <div class="relative group">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 group-focus-within:text-ruby-600 transition-colors">
                         <i class="fa-solid fa-ticket text-xs"></i>
                     </span>
                     <input type="text" name="referrer" value="{{ ref_by }}" placeholder="6892 (ঐচ্ছিক)" 
-                           class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 placeholder-slate-400 font-mono font-extrabold focus:outline-none focus:border-blue-500 focus:bg-white transition-all duration-300 shadow-sm">
+                           class="w-full pl-10 pr-4 py-3 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-900 font-mono font-bold placeholder-slate-400 focus:outline-none focus:border-ruby-600 focus:shadow-input-focus transition duration-200 shadow-xs">
                 </div>
             </div>
 
-            <!-- সাবমিট বাটন (রাউন্ডেড গ্রেডিয়েন্ট গ্লো) -->
-            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-xs py-3.5 rounded-2xl transition tracking-wider uppercase shadow-[0_4px_12px_rgba(37,99,235,0.2)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.35)]">
-                অ্যাকাউন্ট তৈরি করুন
+            <!-- সাবমিট বাটন -->
+            <button type="submit" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-ruby-600 via-rose-600 to-red-600 hover:opacity-95 text-white font-black text-xs shadow-glow-ruby transition active:scale-95 duration-150 tracking-wider uppercase flex items-center justify-center gap-2 mt-2">
+                <span>অ্যাকাউন্ট তৈরি করুন</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
             </button>
         </form>
 
-        <p class="text-center text-[11px] text-slate-500 font-bold mt-5">
-            ইতিমধ্যে একটি অ্যাকাউন্ট আছে? <a href="/login" class="text-blue-600 font-black hover:underline">লগইন করুন</a>
+        <!-- লগইন লিংক -->
+        <p class="text-center text-xs font-bold text-slate-500 mt-5 relative z-10">
+            ইতিমধ্যে একটি অ্যাকাউন্ট আছে? <a href="/login" class="text-ruby-600 font-black hover:underline">লগইন করুন</a>
         </p>
+
     </div>
 
-    <!-- ThumbmarkJS এবং গুগল ক্রোম ক্লায়েন্ট এপিআই স্ক্রিপ্ট (হুবহু অক্ষুণ্ণ রাখা হয়েছে) -->
+    <!-- থাম্বমার্ক ও ক্লায়েন্ট ডিভাইস সিকিউরিটি স্ক্রিপ্ট -->
     <script>
+        function togglePasswordVisibility(fieldId, btn) {
+            const input = document.getElementById(fieldId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-regular fa-eye-slash text-xs';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-regular fa-eye text-xs';
+            }
+        }
+
         async function getPhysicalDeviceName() {
             let device = "Unknown Device";
             const ua = navigator.userAgent;
@@ -189,18 +227,14 @@
             return device;
         }
 
-        // ThumbmarkJS লোড এবং সাবমিট প্রসেস ভ্যালিডেশন
         document.addEventListener("DOMContentLoaded", async function() {
-            // ১. গুগল ক্লায়েন্ট ড্রাইভার দিয়ে মডেল বের করা
             const resolvedDeviceName = await getPhysicalDeviceName();
             document.getElementById('device-name-input').value = resolvedDeviceName;
             
-            // ২. থাম্বমার্ক লাইব্রেরি দিয়ে জেনুইন ফিঙ্গারপ্রিন্ট জেনারেট করা
             if (typeof Thumbmark !== 'undefined') {
                 Thumbmark.getFingerprint().then(function(fp) {
                     document.getElementById('device-fingerprint-input').value = fp;
                 }).catch(function(err) {
-                    // ফেইল হলে নিরাপদ ডাইনামিক র্যান্ডম ব্যাকআপ
                     document.getElementById('device-fingerprint-input').value = "fallback_" + Math.random().toString(36).substring(2, 15);
                 });
             } else {
@@ -208,6 +242,5 @@
             }
         });
     </script>
-
 </body>
 </html>
