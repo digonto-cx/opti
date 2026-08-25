@@ -739,15 +739,18 @@ def about():
     return render_template('about.html', user=user)
     
 
-    
-# app.py ফাইলের /referrals রাউটটি এটি দিয়ে প্রতিস্থাপন করুন
-@app.route('/referrals')
+    @app.route('/referrals')
 def referrals():
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
         
-    user = supabase.table("users").select("uid").eq("id", user_id).execute().data[0]
+    # select("*") দিয়ে ইউজারের সমস্ত প্রোফাইল ও ব্যালেন্স ডাটা নেওয়া হচ্ছে
+    user_query = supabase.table("users").select("*").eq("id", user_id).execute().data
+    if not user_query:
+        session.clear()
+        return redirect(url_for('login'))
+    user = user_query[0]
     
     # সরাসরি ডাটাবেজ থেকে রিয়েল-টাইম রেফারেল তথ্য সংগ্রহ করা হচ্ছে
     referrals_data = supabase.table("referrals") \
@@ -761,14 +764,16 @@ def referrals():
         
     ref_link = request.url_root + "register?ref=" + str(user['uid'])
     
+    # user=user নিশ্চিতভাবে টেমপ্লেটে পাঠানো হলো
     return render_template('referrals.html', 
+                           user=user,
                            referrals=referrals_data, 
                            ref_link=ref_link,
                            success_count=success_count,
                            processing_count=processing_count,
                            failed_count=failed_count,
-                           total_earnings=total_earnings)    
-        
+                           total_earnings=total_earnings)
+    
 @app.route('/admin/task', methods=['GET'])
 def admin_task_hub():
     if not check_admin_auth():
