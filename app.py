@@ -1264,26 +1264,30 @@ def tasks():
     if not user_id:
         return redirect(url_for('login'))
         
-    user = supabase.table("users").select("*").eq("id", user_id).execute().data[0]
+    user_res = supabase.table("users").select("*").eq("id", user_id).execute().data
+    if not user_res:
+        session.clear()
+        return redirect(url_for('login'))
+    user = user_res[0]
     
     # ইউজার ইতিমধ্যে ক্লেইম করা ওয়ান-টাইম টাস্কগুলোর তালিকা
     completed_one_times = supabase.table("user_one_time_tasks") \
-        .select("task_name").eq("user_id", user_id).execute().data
+        .select("task_name").eq("user_id", user_id).execute().data or []
     claimed_one_times = [t['task_name'] for t in completed_one_times]
     
     # সফল রেফারেল সংখ্যা যাচাই
-    success_refs_query = supabase.table("referrals").select("id").eq("referrer_id", user_id).eq("status", "Success").execute().data
+    success_refs_query = supabase.table("referrals").select("id").eq("referrer_id", user_id).eq("status", "Success").execute().data or []
     success_ref_count = len(success_refs_query)
     
     # প্রোফাইল সম্পূর্ণ করা হয়েছে কিনা যাচাই করা
     is_profile_complete = bool(user.get('phone_number') and user.get('age') and user.get('district'))
     
     # ইউজারের সাবমিট করা পূর্ববর্তী নরমাল টাস্কের ডাটা
-    submissions = supabase.table("task_submissions").select("task_id, status").eq("user_id", user_id).execute().data
+    submissions = supabase.table("task_submissions").select("task_id, status").eq("user_id", user_id).execute().data or []
     submission_map = {s['task_id']: s['status'] for s in submissions}
     
     # এডমিনের তৈরি সমস্ত নরমাল টাস্কসমূহ
-    all_normal_tasks = supabase.table("tasks").select("*").order("created_at", desc=True).execute().data
+    all_normal_tasks = supabase.table("tasks").select("*").order("created_at", desc=True).execute().data or []
     
     # ফিল্টারিং লজিক: কেবল সেই কাজগুলোই দেখাবে যা ইউজার সাবমিট করেনি অথবা পূর্বে 'Rejected' হয়েছে
     active_normal_tasks = []
@@ -1292,7 +1296,9 @@ def tasks():
         if status is None or status == 'Rejected':
             active_normal_tasks.append(task)
 
+    # user=user নিশ্চিতভাবে পাস করা হলো
     return render_template('tasks.html', 
+                           user=user,
                            claimed_one_times=claimed_one_times,
                            success_ref_count=success_ref_count,
                            is_profile_complete=is_profile_complete,
@@ -1307,7 +1313,11 @@ def task_detail(task_id):
     if not user_id:
         return redirect(url_for('login'))
         
-    user = supabase.table("users").select("username").eq("id", user_id).execute().data[0]
+    user_res = supabase.table("users").select("*").eq("id", user_id).execute().data
+    if not user_res:
+        session.clear()
+        return redirect(url_for('login'))
+    user = user_res[0]
     
     # নির্দিষ্ট টাস্ক আইডি দিয়ে ডাটা কুয়েরি
     task_query = supabase.table("tasks").select("*").eq("id", task_id).execute().data
@@ -1325,9 +1335,9 @@ def task_detail(task_id):
     status = submission_query[0]['status'] if submission_query else None
     proof_url = submission_query[0]['proof_image_url'] if submission_query else None
     
-    return render_template('task_detail.html', task=task, status=status, proof_url=proof_url)
-
-
+    # user=user নিশ্চিতভাবে পাস করা হলো
+    return render_template('task_detail.html', user=user, task=task, status=status, proof_url=proof_url)
+    
 # app.py ফাইলের /tasks/submit-normal রাউটটি এটি দিয়ে পরিবর্তন করুন
 @app.route('/tasks/submit-normal', methods=['POST'])
 def submit_normal():
