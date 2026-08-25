@@ -1,79 +1,155 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opti Work - Login</title>
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tailwind CSS -->
+    <title>OptiWork - অ্যাকাউন্ট লগইন</title>
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts (Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Ruby Theme Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        ruby: {
+                            50: '#FFF1F2',
+                            100: '#FFE4E6',
+                            200: '#FECDD3',
+                            500: '#F43F5E',
+                            600: '#E11D48',
+                            700: '#BE123C',
+                            800: '#9F1239',
+                            900: '#881337',
+                        }
+                    },
+                    boxShadow: {
+                        'glow-ruby': '0 10px 30px -5px rgba(225, 29, 72, 0.35)',
+                        'card-soft': '0 20px 40px -15px rgba(225, 29, 72, 0.08), 0 1px 3px rgba(0,0,0,0.02)',
+                        'input-focus': '0 0 0 4px rgba(254, 205, 211, 0.5)',
                     }
                 }
             }
         }
     </script>
-</head>
-<body class="bg-[#F8FAFC] text-[#0F172A] flex items-center justify-center min-h-screen px-4">
 
-    <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl max-w-sm w-full relative overflow-hidden">
+    <style>
+        body {
+            background-color: #FFF9FA;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(254, 205, 211, 0.5) 0px, transparent 55%),
+                radial-gradient(at 100% 100%, rgba(255, 228, 230, 0.6) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(255, 241, 242, 0.7) 0px, transparent 60%);
+            background-attachment: fixed;
+        }
+        .glass-auth-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+        }
+    </style>
+</head>
+<body class="text-slate-800 font-sans antialiased flex items-center justify-center min-h-screen p-4 selection:bg-ruby-600 selection:text-white">
+
+    <!-- গ্লাস লগইন প্যানেল -->
+    <div class="glass-auth-card p-7 sm:p-9 rounded-[32px] shadow-card-soft max-w-sm w-full relative overflow-hidden border border-white">
         
-        <!-- লোগো এরিয়া -->
-        <div class="text-center mb-6">
-            <span class="text-xl font-extrabold tracking-tight text-slate-900">
-                OPTI<span class="text-emerald-500">WORK</span>
-            </span>
-            <p class="text-[11px] text-slate-400 font-bold uppercase mt-1 tracking-wider">Secure Access Terminal</p>
+        <!-- সফট ব্যাকগ্রাউন্ড গ্লো -->
+        <div class="absolute -right-12 -top-12 w-36 h-36 bg-ruby-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- ব্র্যান্ড হেডার -->
+        <div class="text-center space-y-2 mb-7 relative z-10">
+            <a href="/" class="inline-flex items-center gap-2">
+                <div class="w-9 h-9 rounded-2xl bg-ruby-600 flex items-center justify-center text-white shadow-glow-ruby">
+                    <i class="fa-solid fa-fire text-base"></i>
+                </div>
+                <span class="text-xl font-black tracking-tight text-slate-900">
+                    OPTI<span class="text-ruby-600">WORK</span>
+                </span>
+            </a>
+            <p class="text-xs font-bold text-slate-400">স্বাগতম! আপনার অ্যাকাউন্টে লগইন করুন</p>
         </div>
-        
+
+        <!-- ফ্ল্যাশ মেসেজ -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="p-3 mb-4 text-xs text-center text-red-600 bg-red-50 border border-red-100 rounded-xl font-semibold">
-                        <i class="fa-solid fa-triangle-exclamation mr-1"></i> {{ message }}
+                    <div class="p-3 mb-5 text-xs text-center rounded-2xl border font-bold shadow-xs {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-200{% else %}bg-red-50 text-red-600 border-red-200{% endif %}">
+                        <i class="fa-solid fa-circle-exclamation mr-1"></i> {{ message }}
                     </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
-        <form action="/login" method="POST" class="space-y-4">
-            <div>
-                <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1 tracking-wider">ইমেইল এড্রেস</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+        <form action="/login" method="POST" class="space-y-4 relative z-10">
+            
+            <!-- ইমেইল ইনপুট বক্স (New Type) -->
+            <div class="space-y-1.5">
+                <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">ইমেইল এড্রেস</label>
+                <div class="relative group">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 group-focus-within:text-ruby-600 transition-colors">
                         <i class="fa-regular fa-envelope text-xs"></i>
                     </span>
-                    <input type="email" name="email" required placeholder="name@domain.com" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-slate-300">
-                </div>
-            </div>
-            
-            <div>
-                <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1 tracking-wider">পাসওয়ার্ড</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-                        <i class="fa-solid fa-lock text-xs"></i>
-                    </span>
-                    <input type="password" name="password" required placeholder="••••••••" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-slate-300">
+                    <input type="email" name="email" required placeholder="name@domain.com" 
+                           class="w-full pl-10 pr-4 py-3.5 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-900 font-bold placeholder-slate-400 focus:outline-none focus:border-ruby-600 focus:shadow-input-focus transition duration-200 shadow-xs">
                 </div>
             </div>
 
-            <button type="submit" class="w-full bg-slate-950 hover:bg-slate-800 text-white font-extrabold text-xs py-3 rounded-xl transition tracking-wider uppercase">
-                লগইন করুন
+            <!-- পাসওয়ার্ড ইনপুট বক্স (New Type with Eye Toggle) -->
+            <div class="space-y-1.5">
+                <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">পাসওয়ার্ড</label>
+                <div class="relative group">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 group-focus-within:text-ruby-600 transition-colors">
+                        <i class="fa-solid fa-lock text-xs"></i>
+                    </span>
+                    <input type="password" name="password" id="login-password" required placeholder="••••••••" 
+                           class="w-full pl-10 pr-11 py-3.5 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-900 font-bold placeholder-slate-400 focus:outline-none focus:border-ruby-600 focus:shadow-input-focus transition duration-200 shadow-xs">
+                    
+                    <button type="button" onclick="togglePasswordVisibility('login-password', this)" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-700 transition">
+                        <i class="fa-regular fa-eye text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- লগইন বাটন -->
+            <button type="submit" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-ruby-600 via-rose-600 to-red-600 hover:opacity-95 text-white font-black text-xs shadow-glow-ruby transition active:scale-95 duration-150 tracking-wider uppercase flex items-center justify-center gap-2 mt-2">
+                <span>লগইন করুন</span>
+                <i class="fa-solid fa-arrow-right text-[10px]"></i>
             </button>
         </form>
 
-        <p class="text-center text-[11px] text-slate-500 mt-5">
-            নতুন অ্যাকাউন্ট তৈরি করতে চান? <a href="/register" class="text-emerald-500 font-bold hover:underline">নিবন্ধন করুন</a>
+        <!-- রেজিস্টার লিংক -->
+        <p class="text-center text-xs font-bold text-slate-500 mt-6 relative z-10">
+            নতুন অ্যাকাউন্ট তৈরি করতে চান? <a href="/register" class="text-ruby-600 font-black hover:underline">নিবন্ধন করুন</a>
         </p>
+
     </div>
 
+    <!-- পাসওয়ার্ড টগল স্ক্রিপ্ট -->
+    <script>
+        function togglePasswordVisibility(fieldId, btn) {
+            const input = document.getElementById(fieldId);
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-regular fa-eye-slash text-xs';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-regular fa-eye text-xs';
+            }
+        }
+    </script>
 </body>
 </html>
