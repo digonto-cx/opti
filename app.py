@@ -739,7 +739,7 @@ def about():
     return render_template('about.html', user=user)
     
 
-    @app.route('/referrals')
+@app.route('/referrals')
 def referrals():
     user_id = session.get('user_id')
     if not user_id:
