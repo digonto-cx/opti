@@ -30,7 +30,7 @@
                             100: '#FFE4E6',
                             200: '#FECDD3',
                             500: '#F43F5E',
-                            600: '#E11D48', // Primary Crimson Red
+                            600: '#E11D48',
                             700: '#BE123C',
                             800: '#9F1239',
                             900: '#881337',
@@ -38,8 +38,9 @@
                     },
                     boxShadow: {
                         'glow-ruby': '0 10px 30px -5px rgba(225, 29, 72, 0.35)',
-                        'card-soft': '0 15px 35px -10px rgba(225, 29, 72, 0.07), 0 1px 3px rgba(0,0,0,0.03)',
+                        'card-soft': '0 20px 40px -15px rgba(225, 29, 72, 0.07), 0 1px 3px rgba(0,0,0,0.02)',
                         'nav-float': '0 15px 35px -5px rgba(15, 23, 42, 0.12)',
+                        'support-glow': '0 10px 25px -3px rgba(34, 158, 217, 0.4)',
                     }
                 }
             }
@@ -47,26 +48,26 @@
     </script>
 
     <style>
+        /* ডট মুক্ত আল্ট্রা-সফট লাক্সারি গ্লাস গ্রেডিয়েন্ট */
         body {
-            background-color: #FFF8F8;
+            background-color: #FFF9FA;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(225, 29, 72, 0.05) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.04) 0px, transparent 50%),
-                radial-gradient(#FCA5A5 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 24px 24px;
+                radial-gradient(at 0% 0%, rgba(254, 205, 211, 0.45) 0px, transparent 55%),
+                radial-gradient(at 100% 0%, rgba(255, 228, 230, 0.5) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(255, 241, 242, 0.65) 0px, transparent 60%);
             background-attachment: fixed;
         }
         .glass-panel {
-            background: rgba(255, 255, 255, 0.90);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
             border: 1px solid rgba(255, 255, 255, 0.95);
         }
         .glass-header {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(254, 205, 211, 0.5);
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(254, 205, 211, 0.45);
         }
         .glass-bottom-nav {
             background: rgba(255, 255, 255, 0.92);
@@ -89,10 +90,10 @@
     <!-- ============================================== -->
     <!-- 1. TOP HEADER                                  -->
     <!-- ============================================== -->
-    <header class="sticky top-0 z-40 glass-header px-4 sm:px-8 py-3 flex items-center justify-between shadow-sm">
+    <header class="sticky top-0 z-40 glass-header px-4 sm:px-8 py-3 flex items-center justify-between shadow-xs">
         <!-- Left: Toggle Menu + Brand Logo -->
         <div class="flex items-center gap-3">
-            <button id="drawer-toggle-btn" class="w-10 h-10 rounded-2xl bg-white border border-rose-200 shadow-sm flex items-center justify-center text-slate-700 hover:text-ruby-600 hover:border-ruby-300 transition active:scale-95">
+            <button id="drawer-toggle-btn" class="w-10 h-10 rounded-2xl bg-white border border-rose-200/80 shadow-xs flex items-center justify-center text-slate-700 hover:text-ruby-600 hover:border-ruby-300 transition active:scale-95 duration-150">
                 <i class="fa-solid fa-bars-staggered text-base"></i>
             </button>
             
@@ -109,22 +110,22 @@
         <!-- Right: Balance Pill + Notifications + Profile Pic -->
         <div class="flex items-center gap-2.5">
             {% if user %}
-            <!-- Balance Pill -->
-            <a href="/history" class="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-white border border-rose-200 shadow-sm text-xs font-bold text-slate-700 hover:border-ruby-300 transition">
+            <!-- Clean Balance Pill -->
+            <a href="/history" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-white border border-rose-200/80 shadow-xs text-xs font-bold text-slate-700 hover:border-ruby-300 transition active:scale-95 duration-150">
                 <i class="fa-solid fa-coins text-amber-500 text-[11px]"></i>
                 <span>৳<strong class="text-slate-900 ml-0.5">{{ user.balance }}</strong></span>
             </a>
             
             <!-- Notification Bell -->
-            <a href="/updates" class="relative w-9 h-9 rounded-2xl bg-white border border-rose-200 shadow-sm flex items-center justify-center text-slate-600 hover:text-ruby-600 transition active:scale-95">
+            <a href="/updates" class="relative w-9 h-9 rounded-2xl bg-white border border-rose-200/80 shadow-xs flex items-center justify-center text-slate-600 hover:text-ruby-600 transition active:scale-95 duration-150">
                 <i class="fa-solid fa-bell text-xs"></i>
                 <span class="absolute top-2 right-2 w-2 h-2 bg-ruby-600 rounded-full animate-ping"></span>
                 <span class="absolute top-2 right-2 w-2 h-2 bg-ruby-600 rounded-full"></span>
             </a>
 
             <!-- Profile Avatar -->
-            <a href="/profile" class="relative group">
-                <img src="{{ user.avatar_url or 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80' }}" alt="Avatar" class="w-9 h-9 rounded-2xl object-cover ring-2 ring-ruby-500/20 group-hover:ring-ruby-500 transition shadow-sm">
+            <a href="/profile" class="relative group active:scale-95 duration-150">
+                <img src="{{ user.avatar_url or 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80' }}" alt="Avatar" class="w-9 h-9 rounded-2xl object-cover ring-2 ring-ruby-500/20 group-hover:ring-ruby-500 transition shadow-xs">
                 <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full"></span>
             </a>
             {% else %}
@@ -147,32 +148,32 @@
                     </div>
                     <span class="text-lg font-black text-slate-900">OPTI<span class="text-ruby-600">WORK</span></span>
                 </div>
-                <button id="drawer-close-btn" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 hover:bg-rose-100 hover:text-ruby-600 flex items-center justify-center">
+                <button id="drawer-close-btn" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 hover:bg-rose-100 hover:text-ruby-600 flex items-center justify-center active:scale-95 duration-150">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
             <!-- Drawer Links -->
             <nav class="mt-5 space-y-1 text-xs font-bold text-slate-600">
-                <a href="/dashboard" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                <a href="/dashboard" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition active:scale-95 duration-150">
                     <i class="fa-solid fa-house text-sm w-5"></i> ড্যাশবোর্ড হোম
                 </a>
-                <a href="/tasks" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                <a href="/tasks" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition active:scale-95 duration-150">
                     <i class="fa-solid fa-list-check text-sm w-5"></i> সকল টাস্ক
                 </a>
-                <a href="/store" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                <a href="/store" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition active:scale-95 duration-150">
                     <i class="fa-solid fa-store text-sm w-5"></i> হার্ডওয়্যার স্টোর
                 </a>
-                <a href="/history" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                <a href="/history" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition active:scale-95 duration-150">
                     <i class="fa-solid fa-clock-rotate-left text-sm w-5"></i> আয় ও ট্রানজেকশন
                 </a>
-                <a href="/referrals" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                <a href="/referrals" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition active:scale-95 duration-150">
                     <i class="fa-solid fa-gift text-sm w-5"></i> রেফারেল সেন্টার
                 </a>
-                <a href="/profile" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                <a href="/profile" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition active:scale-95 duration-150">
                     <i class="fa-solid fa-user-gear text-sm w-5"></i> প্রোফাইল সেটিংস
                 </a>
-                <a href="https://t.me/Optiworkhelp" target="_blank" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition">
+                <a href="https://t.me/Optiworkhelp" target="_blank" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl hover:bg-rose-50 hover:text-ruby-600 transition active:scale-95 duration-150">
                     <i class="fa-brands fa-telegram text-sm text-sky-500 w-5"></i> টেলিগ্রাম হেল্প সাপোর্ট
                 </a>
             </nav>
@@ -180,53 +181,69 @@
 
         <!-- Drawer Bottom User Status -->
         <div class="pt-4 border-t border-slate-100">
-            <a href="/logout" class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-rose-50 text-xs font-bold text-slate-700 hover:text-ruby-600 transition flex items-center justify-center gap-2">
+            <a href="/logout" class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-rose-50 text-xs font-bold text-slate-700 hover:text-ruby-600 transition flex items-center justify-center gap-2 active:scale-95 duration-150">
                 <i class="fa-solid fa-right-from-bracket"></i> লগআউট করুন
             </a>
         </div>
     </aside>
 
     <!-- ============================================== -->
-    <!-- 3. MAIN PAGE INJECTED CONTENT                  -->
+    <!-- 3. MAIN INJECTED CONTENT                       -->
     <!-- ============================================== -->
-    <main class="max-w-4xl mx-auto px-4 pt-5">
+    <main class="max-w-4xl mx-auto px-4 pt-4">
         {% block content %}{% endblock %}
     </main>
 
     <!-- ============================================== -->
-    <!-- 4. FLOATING GLASS BOTTOM NAVIGATION BAR        -->
+    <!-- 4. 24/7 FIXED FLOATING LIVE SUPPORT WIDGET     -->
+    <!-- ============================================== -->
+    <div class="fixed bottom-24 right-4 sm:bottom-8 sm:right-8 z-40">
+        <a href="https://t.me/Optiworkhelp" target="_blank" 
+           class="group flex items-center gap-2 bg-gradient-to-r from-[#229ED9] to-[#1E88E5] text-white p-3 sm:px-4 sm:py-3 rounded-full shadow-support-glow hover:scale-105 active:scale-95 transition-all duration-200 relative overflow-hidden"
+           title="২৪/৭ লাইভ সাপোর্ট">
+            <!-- গ্লো ব্লিঙ্ক ইফেক্ট -->
+            <span class="absolute inset-0 rounded-full bg-white/20 animate-ping pointer-events-none"></span>
+            
+            <i class="fa-brands fa-telegram text-xl sm:text-lg"></i>
+            <span class="hidden sm:inline text-xs font-black tracking-wider uppercase">Live Support</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-300 shadow-[0_0_8px_#6ee7b7] animate-pulse"></span>
+        </a>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 5. FLOATING GLASS BOTTOM NAVIGATION BAR        -->
     <!-- ============================================== -->
     <nav class="fixed bottom-4 left-4 right-4 z-40 max-w-md mx-auto glass-bottom-nav rounded-full shadow-nav-float px-3 py-2">
         <div class="flex items-center justify-around text-center">
             
             <!-- Tab 1: Home -->
-            <a href="/dashboard" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-ruby-600 font-bold text-[10px] transition group py-1 px-2.5">
+            <a href="/dashboard" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-ruby-600 font-bold text-[10px] transition group py-1 px-2.5 active:scale-95 duration-150">
                 <i class="fa-solid fa-house text-base group-hover:scale-110 transition-transform"></i>
                 <span>হোম</span>
             </a>
 
             <!-- Tab 2: Tasks -->
-            <a href="/tasks" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-ruby-600 font-bold text-[10px] transition group py-1 px-2.5">
+            <a href="/tasks" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-ruby-600 font-bold text-[10px] transition group py-1 px-2.5 active:scale-95 duration-150">
                 <i class="fa-solid fa-list-check text-base group-hover:scale-110 transition-transform"></i>
                 <span>টাস্ক</span>
             </a>
 
             <!-- Center Fast Action Button (Withdraw) -->
-            <a href="/withdraw" class="flex flex-col items-center -mt-6 group">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-ruby-700 via-ruby-600 to-rose-500 text-white flex items-center justify-center text-lg shadow-glow-ruby group-hover:scale-110 active:scale-95 transition-all">
+            <a href="/withdraw" class="flex flex-col items-center -mt-6 group active:scale-90 duration-150">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-ruby-700 via-ruby-600 to-rose-500 text-white flex items-center justify-center text-lg shadow-glow-ruby group-hover:scale-105 transition-all">
                     <i class="fa-solid fa-money-bill-transfer"></i>
                 </div>
                 <span class="text-[9px] font-black text-ruby-600 mt-1 uppercase tracking-wider">উইথড্র</span>
             </a>
 
             <!-- Tab 3: Refer -->
-            <a href="/referrals" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-ruby-600 font-bold text-[10px] transition group py-1 px-2.5">
+            <a href="/referrals" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-ruby-600 font-bold text-[10px] transition group py-1 px-2.5 active:scale-95 duration-150">
                 <i class="fa-solid fa-gift text-base group-hover:scale-110 transition-transform"></i>
                 <span>রেফার</span>
             </a>
 
             <!-- Tab 4: Account -->
-            <a href="/profile" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-ruby-600 font-bold text-[10px] transition group py-1 px-2.5">
+            <a href="/profile" class="nav-item flex flex-col items-center gap-0.5 text-slate-400 hover:text-ruby-600 font-bold text-[10px] transition group py-1 px-2.5 active:scale-95 duration-150">
                 <i class="fa-solid fa-circle-user text-base group-hover:scale-110 transition-transform"></i>
                 <span>একাউন্ট</span>
             </a>
@@ -235,7 +252,7 @@
     </nav>
 
     <!-- ============================================== -->
-    <!-- 5. GLOBAL JAVASCRIPT LIBS & SCRIPTS            -->
+    <!-- 6. GLOBAL SCRIPTS                              -->
     <!-- ============================================== -->
     <!-- AOS JS -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
@@ -245,7 +262,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
 
     <script>
-        // Init AOS
         AOS.init({ once: true, duration: 600 });
 
         // Drawer Toggle Handlers
