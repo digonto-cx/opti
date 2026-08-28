@@ -1,96 +1,161 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'admin_base.html' %}
+{% block admin_content %}
 
-<!-- html2canvas লাইব্রেরি সরাসরি স্ক্রিনশট জেনারেট করার জন্য -->
+<!-- html2canvas লাইব্রেরি সরাসরি HD স্ক্রিনশট ডাউনলোড করার জন্য -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-<div class="space-y-4">
+<div class="space-y-6 max-w-4xl mx-auto pb-12">
     
-    <!-- গ্লোবাল এডমিন নেভিগেশন বার -->
-    <div class="minimal-card p-4 rounded-2xl bg-white border border-slate-200 shadow-sm flex justify-between items-center">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-            <i class="fa-solid fa-image text-emerald-500"></i> HD প্রমোশনাল রিপোর্ট জেনারেটর
-        </h2>
-    </div>
+    <!-- ============================================== -->
+    <!-- 1. REPORT HUB HEADER                           -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft relative overflow-hidden bg-gradient-to-br from-white via-rose-50/30 to-ruby-50/40 border border-white" data-aos="fade-down">
+        <div class="absolute -right-10 -top-10 w-36 h-36 bg-ruby-600/10 rounded-full blur-3xl pointer-events-none"></div>
 
-    <!-- ================= ডাউনলোড করার জন্য এইচডি প্রিমিয়াম রিপোর্ট কার্ড পোস্টার ================= -->
-    <div id="payout-poster" class="w-[350px] bg-white border border-slate-200/80 p-6 rounded-3xl flex flex-col justify-between shadow-2xl relative mx-auto overflow-hidden leading-relaxed" style="font-family: 'Plus Jakarta Sans', sans-serif;">
-        <!-- নিয়ন ব্যাকিং ডেকোরেশন -->
-        <div class="absolute -right-12 -top-12 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl"></div>
-        <div class="absolute -left-12 -bottom-12 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl"></div>
-
-        <div class="z-10 space-y-5">
-            <!-- ব্র্যান্ড এবং রিপোর্টের নাম -->
-            <div class="flex justify-between items-center border-b border-slate-100 pb-3.5 leading-none">
-                <span class="text-xs font-black tracking-wide text-slate-900 leading-none">OPTI<span class="text-emerald-500">WORK</span> ⚡</span>
-                <span class="bg-emerald-50 text-emerald-700 text-[8px] font-extrabold px-2.5 py-1 rounded-full border border-emerald-100/50 uppercase tracking-widest leading-none">Live Report</span>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+            <div class="space-y-1">
+                <span class="px-2.5 py-0.5 rounded-lg bg-ruby-100 text-ruby-700 text-[10px] font-black uppercase tracking-wider inline-block">
+                    Channel Promo Engine
+                </span>
+                <h1 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">HD পেমেন্ট ও বিতরণ রিপোর্ট জেনারেটর</h1>
+                <p class="text-[11px] text-slate-500 font-medium">বিগত ৫ ঘণ্টার লাইভ পেমেন্ট ডাটা দিয়ে টেলিগ্রাম চ্যানেলের জন্য অফিশিয়াল পোস্টার তৈরি করুন।</p>
             </div>
 
-            <!-- রিপোর্ট জেনারেশন সময় প্রদর্শন -->
-            <div class="text-center space-y-1.5 leading-normal">
-                <h2 class="text-sm font-extrabold text-slate-800 leading-normal">৫ ঘণ্টার পেমেন্ট রিপোর্ট</h2>
-                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider leading-normal">রিপোর্ট সময়: {{ generation_time }}</p>
-            </div>
-
-            <!-- পেন্ডিং বাদে সফল ও রিজেক্টেড মিক্সড স্ট্যাটস গ্রিড -->
-            <div class="grid grid-cols-2 gap-3 leading-normal">
-                <!-- সফল বিতরণ (৳) -->
-                <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl leading-normal">
-                    <span class="text-[8px] text-slate-400 font-bold uppercase tracking-wider block leading-none">মোট সফল বিতরণ</span>
-                    <span class="text-sm font-black text-emerald-600 block mt-1.5 leading-none">৳ {{ total_success_amount }}</span>
-                </div>
-                <!-- সফল পেমেন্ট কাউন্ট -->
-                <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl leading-normal">
-                    <span class="text-[8px] text-slate-400 font-bold uppercase tracking-wider block leading-none">সফল পেমেন্ট সংখ্যা</span>
-                    <span class="text-sm font-extrabold text-slate-800 block mt-1.5 leading-none">{{ total_success_count }} জন</span>
-                </div>
-                <!-- বাতিল বিতরণ (৳) -->
-                <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl leading-normal">
-                    <span class="text-[8px] text-slate-400 font-bold uppercase tracking-wider block leading-none">বাতিলকৃত বিতরণ</span>
-                    <span class="text-sm font-black text-red-500 block mt-1.5 leading-none">৳ {{ total_rejected_amount }}</span>
-                </div>
-                <!-- বাতিল পেমেন্ট কাউন্ট -->
-                <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl leading-normal">
-                    <span class="text-[8px] text-slate-400 font-bold uppercase tracking-wider block leading-none">বাতিল পেমেন্ট সংখ্যা</span>
-                    <span class="text-sm font-extrabold text-slate-800 block mt-1.5 leading-none">{{ total_rejected_count }} জন</span>
-                </div>
-            </div>
-
-            <!-- কাস্টম ফুটার (শেষে) -->
-            <div class="border-t border-slate-100 pt-4 text-center space-y-1.5 leading-normal">
-                <p class="text-[10px] font-extrabold text-slate-800 flex items-center justify-center gap-1 leading-none">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> আমাদের অটো পেমেন্ট চালু আছে
-                </p>
-                <p class="text-[9px] text-slate-400 font-bold leading-none">বিস্তারিত জানতে যুক্ত হন: <span class="text-emerald-500 font-mono">@ortipay</span></p>
+            <div class="flex items-center gap-2.5">
+                <button onclick="location.reload()" class="px-4 py-2.5 rounded-xl bg-white border border-rose-200 text-slate-700 hover:bg-rose-50 font-extrabold text-xs shadow-xs transition active:scale-95 duration-150 flex items-center gap-1.5">
+                    <i class="fa-solid fa-rotate text-xs"></i> রিফ্রেশ ডাটা
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- ডাউনলোড কন্ট্রোল বাটন -->
-    <div class="text-center pt-2 max-w-[350px] mx-auto">
-        <button onclick="downloadPoster()" class="w-full bg-slate-950 hover:bg-slate-800 text-white font-extrabold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow">
-            <i class="fa-solid fa-download"></i> ডাউনলোড পোস্টার (Download PNG)
-        </button>
+    <!-- ============================================== -->
+    <!-- 2. HD PROMOTIONAL REPORT POSTER CARD           -->
+    <!-- ============================================== -->
+    <div class="flex flex-col items-center justify-center space-y-5" data-aos="fade-up">
+        
+        <!-- ডাউনলোডযোগ্য মেইন পোস্টার কন্টেইনার -->
+        <div id="payout-poster" class="w-[360px] bg-white border border-rose-200/90 p-6 sm:p-7 rounded-[32px] shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-6" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+            
+            <!-- পোস্টার ব্যাকগ্রাউন্ড সফট গ্লো -->
+            <div class="absolute -right-10 -top-10 w-36 h-36 bg-gradient-to-br from-rose-500/15 via-red-500/10 to-ruby-600/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-10 -bottom-10 w-36 h-36 bg-gradient-to-tr from-emerald-500/10 to-teal-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="z-10 relative space-y-5">
+                
+                <!-- ১. ব্র্যান্ড হেডার -->
+                <div class="flex justify-between items-center border-b border-rose-100 pb-3.5">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-xl bg-ruby-600 flex items-center justify-center text-white shadow-xs">
+                            <i class="fa-solid fa-fire text-xs"></i>
+                        </div>
+                        <span class="text-xs font-black tracking-wider text-slate-900 uppercase">
+                            OPTI<span class="text-ruby-600">WORK</span> ⚡
+                        </span>
+                    </div>
+
+                    <span class="bg-emerald-50 text-emerald-700 text-[8px] font-black px-2.5 py-1 rounded-full border border-emerald-200 uppercase tracking-widest flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span> Live Summary
+                    </span>
+                </div>
+
+                <!-- ২. পোস্টার টাইটেল ও সময় -->
+                <div class="text-center space-y-1">
+                    <h2 class="text-base font-black text-slate-900 tracking-tight">৫ ঘণ্টার পেমেন্ট রিপোর্ট</h2>
+                    <p class="text-[9px] font-extrabold text-slate-400 font-mono tracking-wider uppercase">{{ generation_time }}</p>
+                </div>
+
+                <!-- ৩. ৪-গ্রিড লাইভ মেট্রিক্স প্যানেল -->
+                <div class="grid grid-cols-2 gap-3">
+                    
+                    <!-- মোট সফল বিতরণ -->
+                    <div class="bg-gradient-to-br from-rose-50/50 via-white to-rose-50/20 border border-rose-200/80 p-3.5 rounded-2xl space-y-0.5 shadow-2xs">
+                        <span class="text-[8px] text-slate-400 font-black uppercase tracking-wider block">মোট সফল বিতরণ</span>
+                        <span class="text-base font-black text-emerald-600 block mt-1 tracking-tight">৳ {{ total_success_amount }}</span>
+                    </div>
+
+                    <!-- সফল পেমেন্ট সংখ্যা -->
+                    <div class="bg-gradient-to-br from-rose-50/50 via-white to-rose-50/20 border border-rose-200/80 p-3.5 rounded-2xl space-y-0.5 shadow-2xs">
+                        <span class="text-[8px] text-slate-400 font-black uppercase tracking-wider block">সফল পেমেন্ট</span>
+                        <span class="text-base font-black text-slate-900 block mt-1 tracking-tight">{{ total_success_count }} জন</span>
+                    </div>
+
+                    <!-- বাতিল বিতরণ -->
+                    <div class="bg-gradient-to-br from-rose-50/50 via-white to-rose-50/20 border border-rose-200/80 p-3.5 rounded-2xl space-y-0.5 shadow-2xs">
+                        <span class="text-[8px] text-slate-400 font-black uppercase tracking-wider block">বাতিলকৃত বিতরণ</span>
+                        <span class="text-base font-black text-rose-500 block mt-1 tracking-tight">৳ {{ total_rejected_amount }}</span>
+                    </div>
+
+                    <!-- বাতিল পেমেন্ট সংখ্যা -->
+                    <div class="bg-gradient-to-br from-rose-50/50 via-white to-rose-50/20 border border-rose-200/80 p-3.5 rounded-2xl space-y-0.5 shadow-2xs">
+                        <span class="text-[8px] text-slate-400 font-black uppercase tracking-wider block">বাতিল পেমেন্ট</span>
+                        <span class="text-base font-black text-slate-900 block mt-1 tracking-tight">{{ total_rejected_count }} জন</span>
+                    </div>
+
+                </div>
+
+                <!-- ৪. পোস্টার ফুটার স্ট্যাটাস -->
+                <div class="border-t border-rose-100 pt-3.5 text-center space-y-1">
+                    <p class="text-[10px] font-black text-slate-800 flex items-center justify-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981]"></span>
+                        <span>২৪ ঘণ্টা অটোমেটেড পেমেন্ট নোড সচল আছে</span>
+                    </p>
+                    <p class="text-[9px] text-slate-400 font-bold">লাইভ প্রুফ চ্যানেল: <span class="text-ruby-600 font-mono">@ortipay</span></p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ৩. ডাউনলোড কন্ট্রোল বাটন -->
+        <div class="w-[360px]">
+            <button id="download-btn" onclick="downloadPayoutPoster()" 
+                    class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-ruby-600 via-rose-600 to-red-600 hover:opacity-95 text-white font-black text-xs shadow-glow-ruby transition active:scale-95 duration-150 flex items-center justify-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-download"></i>
+                <span id="download-btn-text">এইচডি পোস্টার ডাউনলোড করুন (PNG)</span>
+            </button>
+        </div>
+
     </div>
 
 </div>
 
+<!-- ============================================== -->
+<!-- 3. HD POSTER GENERATION JAVASCRIPT ENGINE      -->
+<!-- ============================================== -->
 <script>
-function downloadPoster() {
+function downloadPayoutPoster() {
     const poster = document.getElementById('payout-poster');
-    
-    // html2canvas কনফিগারেশন যা ব্রাউজার ক্র্যাশ বা টেক্সট ওভারল্যাপ হওয়া সম্পূর্ণ রোধ করবে
+    const btn = document.getElementById('download-btn');
+    const btnText = document.getElementById('download-btn-text');
+
+    btnText.innerText = "পোস্টার তৈরি হচ্ছে...";
+    btn.setAttribute('disabled', 'true');
+
+    // html2canvas 3x আল্ট্রা-এইচডি কনফিগারেশন
     html2canvas(poster, { 
-        scale: 3, // ফুল এইচডি (3x Resolution) ইমেজের জন্য
+        scale: 3, // 3X আল্ট্রা ক্রিস্টাল ক্লিয়ার কোয়ালিটি
         logging: false,
         useCORS: true,
         allowTaint: false,
-        backgroundColor: '#FFFFFF' // ব্যাকগ্রাউন্ডে সাদা সলিড কালার ফিক্স করা হলো
+        backgroundColor: '#FFFFFF'
     }).then(canvas => {
         const link = document.createElement('a');
-        link.download = `OptiWork-PayoutReport-${Date.now()}.png`;
+        link.download = `OptiWork-Payout-Report-${Date.now()}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
+
+        btnText.innerText = "ডাউনলোড সম্পন্ন! ✓";
+        btn.className = "w-full py-3.5 rounded-2xl bg-emerald-600 text-white font-black text-xs shadow-sm transition active:scale-95 duration-150 flex items-center justify-center gap-2 cursor-pointer";
+
+        setTimeout(() => {
+            btnText.innerText = "এইচডি পোস্টার ডাউনলোড করুন (PNG)";
+            btn.className = "w-full py-3.5 rounded-2xl bg-gradient-to-r from-ruby-600 via-rose-600 to-red-600 hover:opacity-95 text-white font-black text-xs shadow-glow-ruby transition active:scale-95 duration-150 flex items-center justify-center gap-2 cursor-pointer";
+            btn.removeAttribute('disabled');
+        }, 2000);
+    }).catch(err => {
+        alert("পোস্টার ডাউনলোড করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+        btnText.innerText = "এইচডি পোস্টার ডাউনলোড করুন (PNG)";
+        btn.removeAttribute('disabled');
     });
 }
 </script>
