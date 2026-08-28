@@ -1,160 +1,277 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opti Work - Admin Console</title>
+    <title>OptiWork - Super Admin Command Center</title>
     
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+    <!-- Font Awesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts (Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- AOS Animation CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <!-- Tailwind Config for Super Admin Dark Ruby Theme -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        ruby: {
+                            500: '#F43F5E',
+                            600: '#E11D48',
+                            700: '#BE123C',
+                        },
+                        dark: {
+                            900: '#070A13',
+                            800: '#0F172A',
+                            700: '#1E293B',
+                        }
+                    },
+                    boxShadow: {
+                        'glow-ruby': '0 10px 25px -5px rgba(225, 29, 72, 0.4)',
+                        'card-admin': '0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0,0,0,0.02)',
                     }
                 }
             }
         }
     </script>
+
     <style>
-        /* মডার্ন টেকনোলজি ডট গ্রিড মেস ব্যাকগ্রাউন্ড */
         body {
-            background-color: #EDEDF0; 
+            background-color: #F8FAFC;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(254, 205, 211, 0.35) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(241, 245, 249, 0.8) 0px, transparent 50%);
+            background-attachment: fixed;
         }
-        .blockio-card {
-            background: #FFFFFF;
-            border: 1px solid #E5E5E9;
+        .admin-sidebar {
+            background: #070A13;
+            border-right: 1px solid #172033;
+        }
+        .admin-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
             border-radius: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.015);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.04);
+            transition: all 0.25s ease;
         }
-        .blockio-card:hover {
-            border-color: #fba82f;
-            transform: translateY(-1.5px);
-            box-shadow: 0 10px 25px rgba(251, 168, 47, 0.03);
+        .admin-card:hover {
+            border-color: #CBD5E1;
+            transform: translateY(-2px);
         }
-        .blockio-btn {
-            background-color: #000000;
-            color: #FFFFFF;
-            border-radius: 9999px;
-            font-weight: 700;
-            transition: all 0.3s ease;
-        }
-        .blockio-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #070A13; }
+        ::-webkit-scrollbar-thumb { background: #E11D48; border-radius: 8px; }
     </style>
 </head>
-<body class="text-[#000000] min-h-screen flex flex-col md:flex-row pb-10 md:pb-0">
+<body class="text-slate-800 font-sans antialiased min-h-screen flex flex-col md:flex-row pb-12 md:pb-0">
 
-    <!-- ================= ১. ডেস্কটপ এডমিন সাইডবার (লাক্সারি ডার্ক থিম) ================= -->
-    <aside class="hidden md:flex flex-col justify-between w-64 bg-[#070A13] border-r border-[#111726] h-screen fixed left-0 top-0 p-5 z-40">
+    <!-- ============================================== -->
+    <!-- 1. DESKTOP SAAS SIDEBAR (OLED DARK LUXURY)     -->
+    <!-- ============================================== -->
+    <aside class="hidden md:flex flex-col justify-between w-64 admin-sidebar h-screen fixed left-0 top-0 p-5 z-40 shadow-2xl">
         <div class="space-y-6">
-            <!-- এডমিন প্যানেল লোগো -->
-            <a href="/admin" class="flex items-center space-x-2.5 px-2">
-                <div class="w-2.5 h-2.5 bg-[#fba82f] rounded-full shadow-[0_0_10px_#fba82f] animate-pulse"></div>
-                <span class="text-xs font-extrabold tracking-widest text-white uppercase">
-                    OPTIWORK <span class="text-[#fba82f]">ADMIN</span>
-                </span>
+            
+            <!-- অ্যাডমিন ব্র্যান্ড লোগো -->
+            <a href="/admin" class="flex items-center gap-2.5 px-2">
+                <div class="w-8 h-8 rounded-xl bg-ruby-600 flex items-center justify-center text-white shadow-glow-ruby">
+                    <i class="fa-solid fa-shield-halved text-sm"></i>
+                </div>
+                <div>
+                    <span class="text-xs font-black tracking-widest text-white uppercase block">
+                        OPTI<span class="text-ruby-500">ADMIN</span>
+                    </span>
+                    <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Control Center</span>
+                </div>
             </a>
 
-            <!-- সমস্ত এডমিন নেভিগেশন লিংকসমূহ (SaaS ক্যাটাগরি) -->
-            <div class="space-y-1.5 text-xs font-bold uppercase tracking-wider text-gray-400 overflow-y-auto max-h-[70vh] pr-1">
-                <a href="/admin" class="flex items-center gap-3 px-3.5 py-3 rounded-xl hover:bg-[#111726] hover:text-white transition-all duration-200">
-                    <i class="fa-solid fa-chart-line text-sm text-slate-500"></i> Dashboard
+            <!-- সাইডবার নেভিগেশন ক্যাটাগরি -->
+            <div class="space-y-1 text-xs font-bold text-slate-400 overflow-y-auto max-h-[72vh] pr-1">
+                
+                <!-- ক্যাটাগরি: Overview -->
+                <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest px-3 py-1 block">Overview</span>
+                
+                <a href="/admin" class="admin-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-dark-800 hover:text-white transition duration-150">
+                    <span class="flex items-center gap-3"><i class="fa-solid fa-chart-line text-sm w-4"></i> ড্যাশবোর্ড</span>
                 </a>
-                <a href="/admin/user-search" class="flex items-center gap-3 px-3.5 py-3 rounded-xl hover:bg-[#111726] hover:text-white transition-all duration-200">
-                    <i class="fa-solid fa-magnifying-glass-chart text-sm text-slate-500"></i> User Audit
+
+                <a href="/admin/user-search" class="admin-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-dark-800 hover:text-white transition duration-150">
+                    <span class="flex items-center gap-3"><i class="fa-solid fa-magnifying-glass-chart text-sm w-4"></i> ইউজার অডিট</span>
                 </a>
-                <a href="/admin/deposits" class="flex items-center gap-3 px-3.5 py-3 rounded-xl hover:bg-[#111726] hover:text-white transition-all duration-200">
-                    <i class="fa-solid fa-plus-circle text-sm text-slate-500"></i> Deposits
+
+                <!-- ক্যাটাগরি: Financials -->
+                <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest px-3 py-1 pt-3 block">Financials</span>
+
+                <a href="/admin/deposits" class="admin-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-dark-800 hover:text-white transition duration-150">
+                    <span class="flex items-center gap-3"><i class="fa-solid fa-plus-circle text-sm w-4 text-emerald-500"></i> ডিপোজিট</span>
+                    {% if pending_deposits_count and pending_deposits_count > 0 %}
+                        <span class="px-2 py-0.2 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-black">{{ pending_deposits_count }}</span>
+                    {% endif %}
                 </a>
-                <a href="/admin/withdrawals" class="flex items-center gap-3 px-3.5 py-3 rounded-xl hover:bg-[#111726] hover:text-white transition-all duration-200">
-                    <i class="fa-solid fa-money-bill-transfer text-sm text-slate-500"></i> Withdraws
+
+                <a href="/admin/withdrawals" class="admin-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-dark-800 hover:text-white transition duration-150">
+                    <span class="flex items-center gap-3"><i class="fa-solid fa-money-bill-transfer text-sm w-4 text-ruby-500"></i> উইথড্রয়াল</span>
+                    {% if pending_withdrawals_count and pending_withdrawals_count > 0 %}
+                        <span class="px-2 py-0.2 rounded-full bg-ruby-500/20 text-ruby-400 text-[10px] font-black">{{ pending_withdrawals_count }}</span>
+                    {% endif %}
                 </a>
-                <a href="/admin/task" class="flex items-center gap-3 px-3.5 py-3 rounded-xl hover:bg-[#111726] hover:text-white transition-all duration-200">
-                    <i class="fa-solid fa-list-check text-sm text-slate-500"></i> Tasks Hub
+
+                <!-- ক্যাটাগরি: Tasks & Moderation -->
+                <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest px-3 py-1 pt-3 block">Tasks & Jobs</span>
+
+                <a href="/admin/task" class="admin-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-dark-800 hover:text-white transition duration-150">
+                    <span class="flex items-center gap-3"><i class="fa-solid fa-list-check text-sm w-4"></i> টাস্ক হাব</span>
                 </a>
-                <a href="/admin/adshear" class="flex items-center gap-3 px-3.5 py-3 rounded-xl hover:bg-[#111726] hover:text-white transition-all duration-200">
-                    <i class="fa-solid fa-rectangle-ad text-sm text-slate-500"></i> Ad Share
+
+                <a href="/admin/add" class="admin-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-dark-800 hover:text-white transition duration-150">
+                    <span class="flex items-center gap-3"><i class="fa-solid fa-clock-rotate-left text-sm w-4 text-sky-400"></i> পেন্ডিং টাস্ক ভেরিফাই</span>
+                    {% if pending_tasks_count and pending_tasks_count > 0 %}
+                        <span class="px-2 py-0.2 rounded-full bg-sky-500/20 text-sky-400 text-[10px] font-black">{{ pending_tasks_count }}</span>
+                    {% endif %}
                 </a>
-                <a href="/admin/gmails" class="flex items-center gap-3 px-3.5 py-3 rounded-xl hover:bg-[#111726] hover:text-white transition-all duration-200">
-                    <i class="fa-solid fa-envelope text-sm text-slate-500"></i> Gmail Tasks
+
+                <a href="/admin/adshear" class="admin-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-dark-800 hover:text-white transition duration-150">
+                    <span class="flex items-center gap-3"><i class="fa-solid fa-rectangle-ad text-sm w-4 text-purple-400"></i> এড শেয়ার জব</span>
                 </a>
-                <a href="/admin/keys" class="flex items-center gap-3 px-3.5 py-3 rounded-xl hover:bg-[#111726] hover:text-white transition-all duration-200">
-                    <i class="fa-solid fa-key text-sm text-slate-500"></i> API Rotator
+
+                <a href="/admin/gmails" class="admin-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-dark-800 hover:text-white transition duration-150">
+                    <span class="flex items-center gap-3"><i class="fa-solid fa-envelope text-sm w-4 text-amber-400"></i> জিমেইল কন্ট্রোল</span>
                 </a>
-                <a href="/admin/payout" class="flex items-center gap-3 px-3.5 py-3 rounded-xl hover:bg-[#111726] hover:text-white transition-all duration-200">
-                    <i class="fa-solid fa-image text-sm text-slate-500"></i> Reports
+
+                <!-- ক্যাটাগরি: Engine & Tools -->
+                <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest px-3 py-1 pt-3 block">Engine</span>
+
+                <a href="/admin/keys" class="admin-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-dark-800 hover:text-white transition duration-150">
+                    <span class="flex items-center gap-3"><i class="fa-solid fa-key text-sm w-4"></i> API Rotator</span>
+                </a>
+
+                <a href="/admin/payout" class="admin-nav-link flex items-center justify-between px-3.5 py-2.5 rounded-xl hover:bg-dark-800 hover:text-white transition duration-150">
+                    <span class="flex items-center gap-3"><i class="fa-solid fa-image text-sm w-4"></i> রিপোর্ট জেনারেটর</span>
                 </a>
             </div>
         </div>
 
-        <!-- সাইডবার ফুটার (ইউজার অ্যাপে ফিরে যাওয়ার লিংক) -->
-        <div class="border-t border-[#111726] pt-4 flex items-center justify-between">
-            <span class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Admin Console</span>
-            <a href="/dashboard" class="text-slate-500 hover:text-white transition text-xs font-bold uppercase tracking-wider flex items-center gap-1">App <i class="fa-solid fa-arrow-right-to-bracket text-[10px]"></i></a>
+        <!-- সাইডবার ফুটার (অ্যাপে ফিরে যাওয়ার লিংক) -->
+        <div class="pt-4 border-t border-dark-700 flex items-center justify-between">
+            <span class="text-[10px] text-slate-500 font-bold uppercase">Admin Session</span>
+            <a href="/dashboard" class="px-3 py-1.5 rounded-xl bg-dark-800 hover:bg-ruby-600 text-slate-300 hover:text-white text-[11px] font-extrabold transition flex items-center gap-1.5">
+                <span>অ্যাপ দেখুন</span>
+                <i class="fa-solid fa-arrow-right text-[9px]"></i>
+            </a>
         </div>
     </aside>
 
-    <!-- ================= ২. মোবাইল ফ্লোটিং ক্যাপসুল হেডার ও টগল মেনু ================= -->
-    <div class="md:hidden sticky top-0 z-50 w-full px-4 pt-3.5 pb-1 bg-gradient-to-b from-[#EDEDF0] via-[#EDEDF0]/90 to-transparent">
-        <div class="bg-white border border-[#E5E5E9] rounded-2xl px-4 py-3 flex justify-between items-center shadow-sm relative">
-            <a href="/admin" class="flex items-center space-x-2">
-                <div class="w-2 h-2 bg-[#fba82f] rounded-full shadow-[0_0_8px_#fba82f] animate-pulse"></div>
+    <!-- ============================================== -->
+    <!-- 2. MOBILE FLOATING HEADER & TOGGLE DRAWER      -->
+    <!-- ============================================== -->
+    <div class="md:hidden sticky top-0 z-50 w-full px-4 pt-3 pb-1 bg-gradient-to-b from-white/90 via-white/80 to-transparent backdrop-blur-md">
+        <div class="bg-[#070A13] text-white rounded-2xl px-4 py-3 flex justify-between items-center shadow-lg border border-dark-700">
+            <a href="/admin" class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-ruby-600 flex items-center justify-center text-white shadow-glow-ruby">
+                    <i class="fa-solid fa-shield-halved text-xs"></i>
+                </div>
                 <span class="text-xs font-black tracking-widest uppercase">
-                    OPTIWORK <span class="text-[#fba82f]">ADMIN</span>
+                    OPTI<span class="text-ruby-500">ADMIN</span>
                 </span>
             </a>
             
-            <button onclick="toggleAdminMenu()" class="text-slate-800 bg-slate-50 hover:bg-slate-100 border border-slate-200 p-2 rounded-xl focus:outline-none transition-all duration-300">
-                <i id="menu-icon" class="fa-solid fa-bars text-sm"></i>
+            <button onclick="toggleAdminMobileMenu()" class="text-slate-300 bg-dark-800 hover:bg-dark-700 p-2 rounded-xl focus:outline-none transition">
+                <i id="admin-menu-icon" class="fa-solid fa-bars text-sm"></i>
             </button>
         </div>
 
-        <!-- মোবাইল মেনু টগল ড্রপডাউন (ট্যাবলেট বা মোবাইলের জন্য সব লিংক সহ) -->
-        <div id="top-dropdown-menu" class="hidden mt-2 border border-slate-200/80 bg-[#070A13] text-gray-300 px-5 py-4 space-y-2 text-[10px] font-bold uppercase tracking-wider w-full rounded-2xl shadow-xl max-h-[70vh] overflow-y-auto">
-            <a href="/admin" class="block py-2.5 text-white border-b border-white/5"><i class="fa-solid fa-chart-line mr-2 text-[#fba82f]"></i> Dashboard</a>
-            <a href="/admin/user-search" class="block py-2.5 hover:text-white border-b border-white/5"><i class="fa-solid fa-magnifying-glass-chart mr-2"></i> User Audit</a>
-            <a href="/admin/deposits" class="block py-2.5 hover:text-white border-b border-white/5"><i class="fa-solid fa-plus-circle mr-2"></i> Deposits</a>
-            <a href="/admin/withdrawals" class="block py-2.5 hover:text-white border-b border-white/5"><i class="fa-solid fa-money-bill-transfer mr-2"></i> Withdraws</a>
-            <a href="/admin/task" class="block py-2.5 hover:text-white border-b border-white/5"><i class="fa-solid fa-list-check mr-2"></i> Tasks Hub</a>
-            <a href="/admin/adshear" class="block py-2.5 hover:text-white border-b border-white/5"><i class="fa-solid fa-rectangle-ad mr-2"></i> Ad Share</a>
-            <a href="/admin/gmails" class="block py-2.5 hover:text-white border-b border-white/5"><i class="fa-solid fa-envelope mr-2"></i> Gmail Tasks</a>
-            <a href="/admin/keys" class="block py-2.5 hover:text-white border-b border-white/5"><i class="fa-solid fa-key mr-2"></i> API Rotator</a>
-            <a href="/admin/payout" class="block py-2.5 hover:text-white border-b border-white/5"><i class="fa-solid fa-image mr-2"></i> Reports</a>
-            <a href="/dashboard" class="block py-2.5 text-[#fba82f]"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> Exit to App</a>
+        <!-- মোবাইল মেনু ড্রপডাউন -->
+        <div id="admin-mobile-dropdown" class="hidden mt-2 bg-[#070A13] border border-dark-700 text-slate-300 p-4 space-y-2 text-xs font-bold rounded-2xl shadow-2xl max-h-[75vh] overflow-y-auto">
+            <a href="/admin" class="block py-2 text-white border-b border-dark-700"><i class="fa-solid fa-chart-line mr-2 text-ruby-500"></i> ড্যাশবোর্ড</a>
+            <a href="/admin/user-search" class="block py-2 hover:text-white border-b border-dark-700"><i class="fa-solid fa-magnifying-glass-chart mr-2"></i> ইউজার অডিট</a>
+            <a href="/admin/deposits" class="block py-2 hover:text-white border-b border-dark-700"><i class="fa-solid fa-plus-circle mr-2 text-emerald-400"></i> ডিপোজিট</a>
+            <a href="/admin/withdrawals" class="block py-2 hover:text-white border-b border-dark-700"><i class="fa-solid fa-money-bill-transfer mr-2 text-ruby-400"></i> উইথড্রয়াল</a>
+            <a href="/admin/task" class="block py-2 hover:text-white border-b border-dark-700"><i class="fa-solid fa-list-check mr-2"></i> টাস্ক হাব</a>
+            <a href="/admin/add" class="block py-2 hover:text-white border-b border-dark-700"><i class="fa-solid fa-clock-rotate-left mr-2 text-sky-400"></i> পেন্ডিং টাস্ক ভেরিফাই</a>
+            <a href="/admin/adshear" class="block py-2 hover:text-white border-b border-dark-700"><i class="fa-solid fa-rectangle-ad mr-2 text-purple-400"></i> এড শেয়ার জব</a>
+            <a href="/admin/gmails" class="block py-2 hover:text-white border-b border-dark-700"><i class="fa-solid fa-envelope mr-2 text-amber-400"></i> জিমেইল কন্ট্রোল</a>
+            <a href="/admin/keys" class="block py-2 hover:text-white border-b border-dark-700"><i class="fa-solid fa-key mr-2"></i> API Rotator</a>
+            <a href="/admin/payout" class="block py-2 hover:text-white border-b border-dark-700"><i class="fa-solid fa-image mr-2"></i> রিপোর্ট জেনারেটর</a>
+            <a href="/dashboard" class="block py-2 text-ruby-400"><i class="fa-solid fa-arrow-right-to-bracket mr-2"></i> অ্যাপে ফিরে যান</a>
         </div>
     </div>
 
-    <!-- ওয়াইড মেইন উইন্ডো (ডেস্কটপে বামে সাইড-মেনুর জন্য মার্জিন রাখা হয়েছে) -->
-    <main class="max-w-5xl mx-auto p-4 mt-2 w-full flex-grow md:pl-64 shadow-none">
-        {% block admin_content %}{% endblock %}
-    </main>
+    <!-- ============================================== -->
+    <!-- 3. MAIN ADMIN WORKSPACE WITH QUICK SEARCH      -->
+    <!-- ============================================== -->
+    <div class="flex-grow md:pl-64 w-full">
+        
+        <!-- টপ সার্বজনীন কুইক সার্চ বার (গ্লোবাল ইউজার অডিট) -->
+        <div class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3 hidden md:flex items-center justify-between shadow-xs">
+            <form action="/admin/user-search" method="GET" class="relative w-96">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                </span>
+                <input type="text" name="query" placeholder="UID বা ইমেইল দিয়ে ইনস্ট্যান্ট ইউজার অডিট করুন..." 
+                       class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 font-bold focus:outline-none focus:border-ruby-600 focus:bg-white transition shadow-2xs">
+            </form>
 
+            <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-slate-500 font-mono">
+                    <i class="fa-solid fa-circle text-[8px] text-emerald-500 mr-1 animate-pulse"></i> সিস্টেম সচল
+                </span>
+                <a href="/dashboard" class="px-4 py-1.5 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white text-xs font-black transition active:scale-95 duration-150 flex items-center gap-1.5 shadow-xs">
+                    <i class="fa-solid fa-eye text-[10px]"></i> লাইভ অ্যাপ
+                </a>
+            </div>
+        </div>
+
+        <!-- মূল ইনজেক্টেড কন্টেন্ট -->
+        <main class="max-w-6xl mx-auto p-4 sm:p-6 space-y-6">
+            {% block admin_content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 4. ACTIVE LINK HIGHLIGHTER JAVASCRIPT          -->
+    <!-- ============================================== -->
     <script>
-        // মোবাইল মেনু টগল ড্রপডাউন স্ক্রিপ্ট
-        function toggleAdminMenu() {
-            const menu = document.getElementById('top-dropdown-menu');
-            const icon = document.getElementById('menu-icon');
+        function toggleAdminMobileMenu() {
+            const menu = document.getElementById('admin-mobile-dropdown');
+            const icon = document.getElementById('admin-menu-icon');
             if (menu.classList.contains('hidden')) {
                 menu.classList.remove('hidden');
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-xmark');
+                icon.className = 'fa-solid fa-xmark text-sm';
             } else {
                 menu.classList.add('hidden');
-                icon.classList.remove('fa-xmark');
-                icon.classList.add('fa-bars');
+                icon.className = 'fa-solid fa-bars text-sm';
             }
         }
+
+        // ব্রাউজারের বর্তমান URL অনুযায়ী সাইডবার লিংক স্বয়ংক্রিয়ভাবে সক্রিয় করার স্ক্রিপ্ট
+        document.addEventListener("DOMContentLoaded", function() {
+            const path = window.location.pathname;
+            const links = document.querySelectorAll('.admin-nav-link');
+            
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (path === href) {
+                    link.classList.remove('text-slate-400', 'hover:bg-dark-800');
+                    link.classList.add('bg-ruby-600', 'text-white', 'shadow-glow-ruby', 'font-black');
+                    const icon = link.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('text-slate-400', 'text-ruby-500', 'text-emerald-500', 'text-sky-400', 'text-purple-400', 'text-amber-400');
+                        icon.classList.add('text-white');
+                    }
+                }
+            });
+        });
     </script>
 
 </body>
