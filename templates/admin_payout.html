@@ -1,43 +1,33 @@
 {% extends 'admin_base.html' %}
 {% block admin_content %}
 
-<!-- html2canvas লাইব্রেরি সরাসরি স্ক্রিনশট নেওয়ার জন্য -->
+<!-- html2canvas স্ক্রিপ্ট -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <div class="space-y-6 max-w-4xl mx-auto pb-12">
     
-    <!-- ============================================== -->
-    <!-- 1. REPORT HUB HEADER                           -->
-    <!-- ============================================== -->
-    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft relative overflow-hidden bg-gradient-to-br from-white via-rose-50/30 to-ruby-50/40 border border-white" data-aos="fade-down">
-        <div class="absolute -right-10 -top-10 w-36 h-36 bg-ruby-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <!-- হেডার -->
+    <div class="admin-card p-6 sm:p-7 bg-white relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="space-y-1">
+            <span class="px-2.5 py-0.5 rounded-lg bg-ruby-100 text-ruby-700 text-[10px] font-black uppercase tracking-wider inline-block">
+                Channel Promo Engine
+            </span>
+            <h1 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">HD পেমেন্ট ও বিতরণ রিপোর্ট জেনারেটর</h1>
+            <p class="text-[11px] text-slate-500 font-medium">বিগত ৫ ঘণ্টার লাইভ পেমেন্ট ডাটা দিয়ে টেলিগ্রাম চ্যানেলের জন্য অফিশিয়াল পোস্টার তৈরি করুন।</p>
+        </div>
 
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
-            <div class="space-y-1">
-                <span class="px-2.5 py-0.5 rounded-lg bg-ruby-100 text-ruby-700 text-[10px] font-black uppercase tracking-wider inline-block">
-                    Channel Promo Engine
-                </span>
-                <h1 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">HD পেমেন্ট ও বিতরণ রিপোর্ট জেনারেটর</h1>
-                <p class="text-[11px] text-slate-500 font-medium">বিগত ৫ ঘণ্টার লাইভ পেমেন্ট ডাটা দিয়ে টেলিগ্রাম চ্যানেলের জন্য অফিশিয়াল পোস্টার তৈরি করুন।</p>
-            </div>
-
-            <div class="flex items-center gap-2.5">
-                <button onclick="location.reload()" class="px-4 py-2.5 rounded-xl bg-white border border-rose-200 text-slate-700 hover:bg-rose-50 font-extrabold text-xs shadow-xs transition active:scale-95 duration-150 flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-rotate text-xs"></i> রিফ্রেশ ডাটা
-                </button>
-            </div>
+        <div>
+            <button onclick="location.reload()" class="px-4 py-2.5 rounded-xl bg-white border border-rose-200 text-slate-700 hover:bg-rose-50 font-extrabold text-xs shadow-xs transition active:scale-95 duration-150 flex items-center gap-1.5 cursor-pointer">
+                <i class="fa-solid fa-rotate text-xs"></i> রিফ্রেশ ডাটা
+            </button>
         </div>
     </div>
 
-    <!-- ============================================== -->
-    <!-- 2. HD PROMOTIONAL REPORT POSTER CARD           -->
-    <!-- ============================================== -->
-    <div class="flex flex-col items-center justify-center space-y-5" data-aos="fade-up">
+    <!-- এইচডি পোস্টার প্রিভিউ -->
+    <div class="flex flex-col items-center justify-center space-y-5">
         
-        <!-- ডাউনলোডযোগ্য মেইন পোস্টার কন্টেইনার -->
         <div id="payout-poster" class="w-[360px] bg-white border border-rose-200/90 p-6 sm:p-7 rounded-[32px] shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-6" style="font-family: 'Plus Jakarta Sans', sans-serif;">
             
-            <!-- পোস্টার ব্যাকগ্রাউন্ড সফট গ্লো -->
             <div class="absolute -right-10 -top-10 w-36 h-36 bg-gradient-to-br from-rose-500/15 via-red-500/10 to-ruby-600/20 rounded-full blur-3xl pointer-events-none"></div>
             <div class="absolute -left-10 -bottom-10 w-36 h-36 bg-gradient-to-tr from-emerald-500/10 to-teal-500/15 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -65,28 +55,24 @@
                     <p class="text-[9px] font-extrabold text-slate-400 font-mono tracking-wider uppercase">{{ generation_time }}</p>
                 </div>
 
-                <!-- ৩. ৪-গ্রিড লাইভ মেট্রিক্স প্যানেল -->
+                <!-- ৩. ৪-গ্রিড লাইভ মেট্রিক্স -->
                 <div class="grid grid-cols-2 gap-3">
                     
-                    <!-- মোট সফল বিতরণ -->
                     <div class="bg-gradient-to-br from-rose-50/50 via-white to-rose-50/20 border border-rose-200/80 p-3.5 rounded-2xl space-y-0.5 shadow-2xs">
                         <span class="text-[8px] text-slate-400 font-black uppercase tracking-wider block">মোট সফল বিতরণ</span>
                         <span class="text-base font-black text-emerald-600 block mt-1 tracking-tight">৳ {{ total_success_amount }}</span>
                     </div>
 
-                    <!-- সফল পেমেন্ট সংখ্যা -->
                     <div class="bg-gradient-to-br from-rose-50/50 via-white to-rose-50/20 border border-rose-200/80 p-3.5 rounded-2xl space-y-0.5 shadow-2xs">
                         <span class="text-[8px] text-slate-400 font-black uppercase tracking-wider block">সফল পেমেন্ট</span>
                         <span class="text-base font-black text-slate-900 block mt-1 tracking-tight">{{ total_success_count }} জন</span>
                     </div>
 
-                    <!-- বাতিল বিতরণ -->
                     <div class="bg-gradient-to-br from-rose-50/50 via-white to-rose-50/20 border border-rose-200/80 p-3.5 rounded-2xl space-y-0.5 shadow-2xs">
                         <span class="text-[8px] text-slate-400 font-black uppercase tracking-wider block">বাতিলকৃত বিতরণ</span>
                         <span class="text-base font-black text-rose-500 block mt-1 tracking-tight">৳ {{ total_rejected_amount }}</span>
                     </div>
 
-                    <!-- বাতিল পেমেন্ট সংখ্যা -->
                     <div class="bg-gradient-to-br from-rose-50/50 via-white to-rose-50/20 border border-rose-200/80 p-3.5 rounded-2xl space-y-0.5 shadow-2xs">
                         <span class="text-[8px] text-slate-400 font-black uppercase tracking-wider block">বাতিল পেমেন্ট</span>
                         <span class="text-base font-black text-slate-900 block mt-1 tracking-tight">{{ total_rejected_count }} জন</span>
@@ -94,7 +80,7 @@
 
                 </div>
 
-                <!-- ৪. পোস্টার ফুটার স্ট্যাটাস -->
+                <!-- ৪. ফুটার -->
                 <div class="border-t border-rose-100 pt-3.5 text-center space-y-1">
                     <p class="text-[10px] font-black text-slate-800 flex items-center justify-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981]"></span>
@@ -106,7 +92,7 @@
             </div>
         </div>
 
-        <!-- ৩. ডাউনলোড কন্ট্রোল বাটন -->
+        <!-- ডাউনলোড বাটন -->
         <div class="w-[360px]">
             <button id="download-btn" onclick="downloadPayoutPoster()" 
                     class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-ruby-600 via-rose-600 to-red-600 hover:opacity-95 text-white font-black text-xs shadow-glow-ruby transition active:scale-95 duration-150 flex items-center justify-center gap-2 cursor-pointer">
@@ -119,9 +105,6 @@
 
 </div>
 
-<!-- ============================================== -->
-<!-- 3. HD POSTER GENERATION JAVASCRIPT ENGINE      -->
-<!-- ============================================== -->
 <script>
 function downloadPayoutPoster() {
     const poster = document.getElementById('payout-poster');
@@ -131,7 +114,6 @@ function downloadPayoutPoster() {
     btnText.innerText = "পোস্টার তৈরি হচ্ছে...";
     btn.setAttribute('disabled', 'true');
 
-    // html2canvas 3x আল্ট্রা-এইচডি কনফিগারেশন
     html2canvas(poster, { 
         scale: 3, 
         logging: false,
