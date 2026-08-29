@@ -2385,15 +2385,18 @@ def admin_adshear_action():
         
     return redirect(url_for('admin_adshear'))
 
-
-# app.py ফাইলের /reviews রাউটটি এটি দিয়ে প্রতিস্থাপন করুন:
 @app.route('/reviews', methods=['GET', 'POST'])
 def reviews_page():
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
         
-    user = supabase.table("users").select("username, is_admin").eq("id", user_id).execute().data[0]
+    user_res = supabase.table("users").select("*").eq("id", user_id).execute().data
+    if not user_res:
+        session.clear()
+        return redirect(url_for('login'))
+        
+    user = user_res[0]
     is_admin = user.get('is_admin', False)
     
     if request.method == 'POST':
@@ -2401,7 +2404,6 @@ def reviews_page():
         rating = int(request.form.get('rating', 5))
         image_url = request.form.get('image_url')
         
-        # ডাটাবেজ ক্লোন এড়াতে এবং নিখুঁত সময় সংরক্ষণে সার্ভার টাইমস্ট্যাম্প পুশ
         now_str = datetime.datetime.now(datetime.timezone.utc).isoformat()
         
         insert_data = {
@@ -2410,7 +2412,7 @@ def reviews_page():
             "rating": rating,
             "comment": comment,
             "is_admin_fake": False,
-            "created_at": now_str # পাইথন সার্ভার থেকে জেনারেট করা সঠিক সময়
+            "created_at": now_str
         }
         
         if image_url and image_url.strip() != "":
@@ -2419,34 +2421,38 @@ def reviews_page():
         try:
             supabase.table("reviews").insert(insert_data).execute()
             flash("আপনার মূল্যবান মতামতটি সফলভাবে জমা হয়েছে।", "success")
-        except Exception:
+        except Exception as e:
+            print("Review Insert Error:", e)
             flash("রিভিউ জমা দিতে ত্রুটি ঘটেছে। অনুগ্রহ করে আবার চেষ্টা করুন।", "danger")
             
         return redirect(url_for('reviews_page'))
         
-    # --- নিরাপদ ডাটা কুয়েরি ও ক্রনোলজিক্যাল সর্টিং ---
+    # --- ১০০% গ্যারান্টেড Newest-First সর্টিং লজিক ---
     try:
         if is_admin:
-            reviews_data = supabase.table("reviews").select("*").execute().data or []
+            reviews_data = supabase.table("reviews").select("*").order("created_at", desc=True).execute().data or []
         else:
-            fake_reviews = supabase.table("reviews").select("*").eq("is_admin_fake", True).execute().data or []
-            my_reviews = supabase.table("reviews").select("*").eq("user_id", user_id).eq("is_admin_fake", False).execute().data or []
+            fake_reviews = supabase.table("reviews").select("*").eq("is_admin_fake", True).order("created_at", desc=True).execute().data or []
+            my_reviews = supabase.table("reviews").select("*").eq("user_id", user_id).eq("is_admin_fake", False).order("created_at", desc=True).execute().data or []
             reviews_data = fake_reviews + my_reviews
             
-        # ISO-8601 স্ট্রিং স্লাইসিং এবং ক্রনোলজিক্যাল তুলনা হেল্পার (যা পাইথনের সব সংস্করণে ১০০% কাজ করবে)
-        def get_clean_iso_key(x):
-            val = x.get('created_at', '')
-            if not val:
-                return ""
-            # প্রথম ১৯টি ক্যারেক্টার নেওয়া হচ্ছে (যেমন: YYYY-MM-DDTHH:MM:SS) যা আলফানিউমেরিক্যালি নিখুঁত সর্ট হবে
-            return val[:19]
-            
-        # সফল সর্টিং এক্সিকিউশন (Newest first)
-        reviews_data.sort(key=get_clean_iso_key, reverse=True)
-    except Exception:
+        # পাইথনের নিরাপদ টাইমস্ট্যাম্প সর্টার (সর্বশেষ নতুন রিভিউ সবার আগে আসবে)
+        def parse_sort_date(item):
+            d_str = item.get('created_at', '')
+            if not d_str:
+                return datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)
+            try:
+                clean_str = d_str.replace('Z', '+00:00')
+                return datetime.datetime.fromisoformat(clean_str)
+            except Exception:
+                return datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)
+                
+        reviews_data.sort(key=parse_sort_date, reverse=True)
+    except Exception as e:
+        print("Review Fetch Error:", e)
         reviews_data = []
             
-    return render_template('reviews.html', reviews=reviews_data, is_admin=is_admin)
+    return render_template('reviews.html', user=user, reviews=reviews_data, is_admin=is_admin)
     
 @app.route('/admin/reviews/create', methods=['POST'])
 def admin_create_fake_review():
