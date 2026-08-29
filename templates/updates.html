@@ -1,7 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- কাস্টম সুপার-ফাস্ট লোডিং শিমার -->
+<!-- ১. ইনস্ট্যান্ট পেজ লোডিং ওভারলে (CSS Animation) -->
+<div id="page-global-loader" class="fixed inset-0 bg-[#FFF9FA]/90 backdrop-blur-md z-50 flex flex-col items-center justify-center space-y-3 transition-opacity duration-300">
+    <div class="relative flex items-center justify-center">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-ruby-600 to-rose-400 flex items-center justify-center text-white text-xl shadow-glow-ruby animate-bounce">
+            <i class="fa-solid fa-fire"></i>
+        </div>
+        <span class="absolute -top-1 -right-1 flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-ruby-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-ruby-600"></span>
+        </span>
+    </div>
+    <p class="text-xs font-black text-slate-800 tracking-wider">টেলিগ্রাম আপডেট লোড হচ্ছে...</p>
+</div>
+
 <style>
     @keyframes shimmerAnim {
         0% { background-position: -200% 0; }
@@ -17,7 +30,7 @@
 <div class="space-y-6 max-w-3xl mx-auto pb-12">
     
     <!-- ============================================== -->
-    <!-- 1. UPDATES HERO HEADER WITH USER STATUS        -->
+    <!-- 2. UPDATES HERO HEADER WITH USER STATUS        -->
     <!-- ============================================== -->
     <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft relative overflow-hidden bg-gradient-to-br from-white via-rose-50/30 to-ruby-50/40 border border-white" data-aos="fade-down">
         <div class="absolute -right-10 -top-10 w-36 h-36 bg-ruby-600/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -55,7 +68,7 @@
     {% endwith %}
 
     <!-- ============================================== -->
-    <!-- 2. PINNED IMPORTANT NOTICE CARD                -->
+    <!-- 3. PINNED IMPORTANT NOTICE CARD                -->
     <!-- ============================================== -->
     <div class="glass-panel p-6 rounded-3xl shadow-card-soft border-l-4 border-ruby-600 space-y-4 border border-white relative" data-aos="fade-up">
         
@@ -70,7 +83,6 @@
             </span>
         </div>
         
-        <!-- পিন করা টেলিগ্রাম পোস্ট ও সুপার-ফাস্ট লোডার -->
         <div id="pinned-container" class="w-full max-h-[26vh] overflow-hidden relative transition-all duration-500 ease-in-out">
             <div id="pinned-fade-overlay" class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white via-white/80 to-transparent z-10 pointer-events-none"></div>
 
@@ -84,7 +96,6 @@
             </div>
         </div>
 
-        <!-- অ্যাকশন বাটনস -->
         <div class="pt-2 flex flex-col sm:flex-row justify-between items-center gap-2.5 border-t border-rose-100">
             <button id="read-more-btn" onclick="togglePinnedHeight()" class="text-xs text-ruby-600 hover:text-ruby-700 font-extrabold flex items-center gap-1.5 focus:outline-none active:scale-95 duration-150">
                 <i id="read-more-icon" class="fa-solid fa-angles-down text-[10px]"></i>
@@ -98,7 +109,7 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- 3. DYNAMIC ANNOUNCEMENTS FEED                  -->
+    <!-- 4. DYNAMIC ANNOUNCEMENTS FEED                  -->
     <!-- ============================================== -->
     <div class="space-y-4" data-aos="fade-up">
         {% for item in updates %}
@@ -115,13 +126,10 @@
                 </span>
             </div>
             
-            <!-- টেলিগ্রাম এমবেড দ্রুত কন্টেইনার -->
             <div class="w-full flex justify-center bg-white p-2 rounded-2xl border border-rose-100 overflow-hidden shadow-xs min-h-[120px] relative">
-                <!-- লোডার -->
                 <div id="loader-{{ item.id }}" class="absolute inset-0 skeleton-loader rounded-2xl flex items-center justify-center text-ruby-700 text-[10px] font-black z-0">
                     <i class="fa-solid fa-spinner fa-spin mr-1.5 text-xs"></i> পোস্ট লোড হচ্ছে...
                 </div>
-                <!-- টেলিগ্রাম উইজেট কন্টেইনার -->
                 <div class="telegram-post-target w-full z-10" data-post="{{ item.post_path }}" data-loader="loader-{{ item.id }}"></div>
             </div>
 
@@ -131,7 +139,6 @@
                     <span>চ্যানেলে দেখুন</span>
                 </a>
 
-                <!-- অ্যাডমিন ডিলিট বাটন -->
                 {% if is_admin %}
                 <form action="/admin/delete-update" method="POST" onsubmit="return confirm('আপনি কি নিশ্চিত যে এই নোটিশটি ডিলিট করতে চান?');">
                     <input type="hidden" name="update_id" value="{{ item.id }}">
@@ -155,13 +162,14 @@
 </div>
 
 <!-- ============================================== -->
-<!-- 4. ULTRA-FAST TELEGRAM ASYNC LOADER ENGINE     -->
+<!-- JAVASCRIPT: ASYNC TELEGRAM LOADER & TIMEOUT    -->
 <!-- ============================================== -->
 <script>
-// পেজ লোড ব্লক না করে সেকেন্ডের মধ্যে ব্যাকগ্রাউন্ডে টেলিগ্রাম উইজেট লোড করার অপ্টিমাইজড স্ক্রিপ্ট
 document.addEventListener("DOMContentLoaded", function() {
     const targets = document.querySelectorAll('.telegram-post-target');
-    
+    const globalLoader = document.getElementById('page-global-loader');
+
+    // প্রতিটি পোস্ট ব্যাকগ্রাউন্ডে ডায়নামিক লোড করা
     targets.forEach(target => {
         const postPath = target.getAttribute('data-post');
         const loaderId = target.getAttribute('data-loader');
@@ -178,14 +186,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (loader) loader.style.display = 'none';
             }
         };
-        
         target.appendChild(script);
     });
 
-    // ফেইলওভার সেইফটি: ১.৫ সেকেন্ড পর স্বয়ংক্রিয়ভাবে লোডার হাইড
+    // পেজের ফুল স্ক্রিন লোডার মাত্র ০.৭ সেকেন্ডের মধ্যে স্মুথলি ফেড আউট হবে
     setTimeout(() => {
+        if (globalLoader) {
+            globalLoader.style.opacity = '0';
+            setTimeout(() => { globalLoader.style.display = 'none'; }, 300);
+        }
         document.querySelectorAll('.skeleton-loader').forEach(l => l.style.display = 'none');
-    }, 1500);
+    }, 700);
 });
 
 function togglePinnedHeight() {
