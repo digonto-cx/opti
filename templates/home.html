@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OptiWork - Next-Gen Cloud Mining & Hardware Rental</title>
+    <title>OptiWork - Next-Gen Cloud Mining & Free Earning Hub</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -104,43 +104,48 @@
     </header>
 
     <!-- ============================================== -->
-    <!-- 2. LIVE PAYOUT TICKER MARQUEE                  -->
+    <!-- 2. REALISTIC LIVE PAYOUT TICKER (HOME ONLY)    -->
     <!-- ============================================== -->
-    <div class="bg-gradient-to-r from-rose-50 via-white to-ruby-50 border-b border-rose-100 py-2 px-4 overflow-hidden shadow-2xs">
+    <div class="bg-gradient-to-r from-rose-50 via-white to-ruby-50 border-b border-rose-100 py-2.5 px-4 overflow-hidden shadow-2xs">
         <div class="max-w-5xl mx-auto flex items-center gap-3 text-xs font-bold">
-            <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700 text-[9px] font-black uppercase tracking-wider shrink-0 flex items-center gap-1">
+            <span class="px-2.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[9px] font-black uppercase tracking-wider shrink-0 flex items-center gap-1.5 shadow-2xs">
                 <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></span> Live Payouts
             </span>
-            <marquee scrollamount="4" class="text-slate-600 font-semibold text-[11px]">
-                ⚡ User #4892 withdrew ৳450 via bKash (1m ago) • User #1084 withdrew ৳1,200 via Nagad (4m ago) • User #6021 claimed ৳135 GPU Yield • User #3290 withdrew ৳500 via Rocket (8m ago)
-            </marquee>
+            <div class="overflow-hidden whitespace-nowrap w-full">
+                <div id="live-payout-text" class="inline-block animate-marquee font-bold text-slate-700 text-[11px] font-mono">
+                    🟢 User #4892 withdrew ৳450 via bKash Personal (1m ago) • 🟢 User #1084 withdrew ৳1,200 via Nagad (3m ago) • 🟢 User #6021 claimed ৳135 Mining Yield • 🟢 User #3290 withdrew ৳500 via Rocket (6m ago) • 🟢 User #2187 withdrew ৳350 via bKash (8m ago)
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- ============================================== -->
-    <!-- 3. MAIN LANDING CONTENT                        -->
+    <!-- 3. MAIN HERO & CONTENT                         -->
     <!-- ============================================== -->
-    <main class="max-w-4xl mx-auto px-4 py-6 sm:py-10 space-y-9 flex-grow w-full">
+    <main class="max-w-4xl mx-auto px-4 py-6 sm:py-10 space-y-8 flex-grow w-full">
         
         <!-- HERO SECTION -->
-        <div class="glass-panel p-6 sm:p-12 rounded-3xl shadow-card-soft text-center relative overflow-hidden border border-white" data-aos="fade-up">
+        <div class="glass-panel p-6 sm:p-11 rounded-3xl shadow-card-soft text-center relative overflow-hidden border border-white" data-aos="fade-up">
             <div class="absolute -right-12 -top-12 w-48 h-48 bg-gradient-to-br from-rose-500/15 via-red-500/10 to-ruby-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
             <div class="space-y-4 max-w-xl mx-auto relative z-10">
                 <span class="px-3 py-1 rounded-full bg-ruby-50 border border-ruby-100 text-ruby-600 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5 shadow-xs">
                     <span class="w-1.5 h-1.5 rounded-full bg-ruby-600 animate-ping"></span>
-                    Automated Hashrate Distribution Protocol
+                    Smart Online Income Hub
                 </span>
 
                 <h1 class="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-snug sm:leading-tight">
-                    স্মার্টফোনের মাধ্যমে ঘরে বসেই <span class="text-transparent bg-clip-text bg-gradient-to-r from-ruby-600 via-rose-600 to-red-600">নিশ্চিত ক্লাউড আয়</span>
+                    স্মার্টফোনের মাধ্যমে ঘরে বসেই <span class="text-transparent bg-clip-text bg-gradient-to-r from-ruby-600 via-rose-600 to-red-600">নিশ্চিত অনলাইন আয়</span>
                 </h1>
 
-                <p class="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
-                    কোনো প্রকার জটিল হার্ডওয়্যার বা অভিজ্ঞতা ছাড়াই আমাদের ডাটা সেন্টারের প্রসেসর নোড ভাড়া নিয়ে স্বয়ংক্রিয় ব্লকচেন মাইনিং শুরু করুন।
-                </p>
+                <!-- নির্দিষ্ট রিকোয়ার্ড মেসেজ বক্স -->
+                <div class="p-3.5 rounded-2xl bg-gradient-to-r from-rose-50/80 via-white to-ruby-50/80 border border-rose-200/90 shadow-2xs">
+                    <p class="text-xs sm:text-sm font-black text-slate-900 leading-relaxed">
+                        ⚡ যদি চান, তাহলে <span class="text-ruby-600 underline decoration-ruby-300">সম্পূর্ণ ফ্রিতে ইনকাম করা সম্ভব</span> — টাস্ক করে, ফ্রি মাইনিং করে এবং জিমেইল ফার্মিং করে!
+                    </p>
+                </div>
 
-                <div class="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
                     {% if user %}
                         <a href="/dashboard" class="w-full sm:w-auto px-8 py-3.5 rounded-2xl bg-gradient-to-r from-ruby-600 to-rose-600 text-white font-black text-xs shadow-glow-ruby transition active:scale-95 duration-150 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-house"></i> ড্যাশবোর্ডে প্রবেশ করুন
@@ -158,116 +163,61 @@
             </div>
         </div>
 
-        <!-- NEW MODULE: LIVE HASHRATE & BLOCKCHAIN STATS -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5" data-aos="fade-up">
-            <div class="glass-panel p-4 rounded-2xl border border-white shadow-card-soft flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-base shadow-xs shrink-0">
-                    <i class="fa-brands fa-bitcoin"></i>
-                </div>
-                <div>
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">BTC Pool Hashrate</span>
-                    <h4 class="text-xs font-black text-slate-900">428.5 TH/s <span class="text-emerald-500 text-[10px]">▲ 2.4%</span></h4>
-                </div>
-            </div>
-
-            <div class="glass-panel p-4 rounded-2xl border border-white shadow-card-soft flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-base shadow-xs shrink-0">
-                    <i class="fa-brands fa-ethereum"></i>
-                </div>
-                <div>
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Node Block Time</span>
-                    <h4 class="text-xs font-black text-slate-900">12.08 Sec <span class="text-emerald-500 text-[10px]">Stable</span></h4>
-                </div>
-            </div>
-
-            <div class="glass-panel p-4 rounded-2xl border border-white shadow-card-soft flex items-center gap-3.5">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base shadow-xs shrink-0">
-                    <i class="fa-solid fa-server"></i>
-                </div>
-                <div>
-                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Server Uptime</span>
-                    <h4 class="text-xs font-black text-slate-900">99.98% <span class="text-emerald-500 text-[10px]">Active</span></h4>
-                </div>
-            </div>
-        </div>
-
-        <!-- NEW MODULE: DATA CENTER INFRASTRUCTURE -->
+        <!-- ============================================== -->
+        <!-- 4. MINER MEMBERSHIP TIERS MATRIX               -->
+        <!-- ============================================== -->
         <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
             <div class="flex items-center justify-between border-b border-rose-100 pb-3">
                 <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-microchip text-ruby-600"></i> আমাদের ক্লাউড ডাটা সেন্টারের প্রযুক্তি
+                    <i class="fa-solid fa-ranking-star text-amber-500 text-sm"></i> মাইনার মেম্বারশিপ টিয়ার বেনিফিট
                 </h3>
-                <span class="text-[9px] font-bold text-slate-400 uppercase">Tier-3 Architecture</span>
+                <span class="text-[9px] font-bold text-slate-400 font-mono">Plan Matrix</span>
             </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-semibold text-slate-700">
-                <div class="p-4 bg-white border border-rose-100 rounded-2xl space-y-1.5 shadow-xs">
-                    <div class="w-8 h-8 rounded-lg bg-ruby-50 text-ruby-600 flex items-center justify-center text-sm">
-                        <i class="fa-solid fa-bolt"></i>
-                    </div>
-                    <h4 class="font-black text-slate-900">অটোমেটেড লোড ব্যালেন্সিং</h4>
-                    <p class="text-[11px] text-slate-500 font-medium leading-relaxed">সর্বাধিক মাইনিং মুনাফার জন্য আন্তর্জাতিক সার্ভার থেকে স্বয়ংক্রিয়ভাবে লাভজনক কয়েন মাইনিং সিলেক্ট হয়।</p>
-                </div>
-
-                <div class="p-4 bg-white border border-rose-100 rounded-2xl space-y-1.5 shadow-xs">
-                    <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm">
-                        <i class="fa-solid fa-fan"></i>
-                    </div>
-                    <h4 class="font-black text-slate-900">লিকুইড কুলিং সিস্টেম</h4>
-                    <p class="text-[11px] text-slate-500 font-medium leading-relaxed">অত্যাধুনিক কুলিং ব্যবস্থার মাধ্যমে সার্ভার প্রসেসরগুলো অতিরিক্ত গরম হওয়া ছাড়া ২৪/৭ সচল থাকে।</p>
-                </div>
-
-                <div class="p-4 bg-white border border-rose-100 rounded-2xl space-y-1.5 shadow-xs">
-                    <div class="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center text-sm">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
-                    <h4 class="font-black text-slate-900">ডবল এনক্রিপশন ওয়ালেট</h4>
-                    <p class="text-[11px] text-slate-500 font-medium leading-relaxed">প্রতিটি ব্যবহারকারীর ব্যালেন্স কোল্ড ওয়ালেট ব্যাকআপে শতভাগ নিরাপদ ও সংরক্ষিত থাকে।</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- NEW MODULE: VIP TIERS COMPARISON TABLE -->
-        <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
-            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2 border-b border-rose-100 pb-3">
-                <i class="fa-solid fa-ranking-star text-amber-500"></i> মাইনার মেম্বারশিপ টিয়ার বেনিফিট
-            </h3>
 
             <div class="overflow-x-auto text-[11px] font-bold">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="bg-rose-50/40 border-b border-rose-100 text-slate-400 font-extrabold uppercase">
-                            <th class="p-3">সুবিধাসমূহ</th>
-                            <th class="p-3">ফ্রি ট্রায়াল</th>
-                            <th class="p-3">স্টার্টার GPU নোড</th>
-                            <th class="p-3 text-right">VIP ইন্ডাস্ট্রিয়াল নোড</th>
+                        <tr class="bg-rose-50/50 border-b border-rose-100 text-slate-400 font-extrabold uppercase">
+                            <th class="p-3.5">সুবিধাসমূহ</th>
+                            <th class="p-3.5">ফ্রি ট্রায়াল</th>
+                            <th class="p-3.5">স্টার্টার GPU নোড</th>
+                            <th class="p-3.5 text-right">VIP ইন্ডাস্ট্রিয়াল নোড</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-rose-50 text-slate-700">
+                    <tbody class="divide-y divide-rose-50 text-slate-700 font-bold">
                         <tr>
-                            <td class="p-3">দৈনিক সম্ভাব্য আয়</td>
-                            <td class="p-3 text-slate-500">৳ ২১.০০</td>
-                            <td class="p-3 text-ruby-600 font-black">৳ ১৩৫.০০</td>
-                            <td class="p-3 text-right text-emerald-600 font-black">৳ ১,৮০০.০০</td>
+                            <td class="p-3.5 text-slate-900 font-black">দৈনিক সম্ভাব্য আয়</td>
+                            <td class="p-3.5 text-slate-500 font-mono">৳ ২১.০০</td>
+                            <td class="p-3.5 text-ruby-600 font-black font-mono">৳ ১৩৫.০০</td>
+                            <td class="p-3.5 text-right text-emerald-600 font-black font-mono">৳ ১,৮০০.০০</td>
                         </tr>
                         <tr>
-                            <td class="p-3">উইথড্র করার শর্ত</td>
-                            <td class="p-3 text-rose-500">৪টি রেফারেল আবশ্যক</td>
-                            <td class="p-3 text-emerald-600">কোনো রেফার লাগবে না</td>
-                            <td class="p-3 text-right text-emerald-600">কোনো রেফার লাগবে না</td>
+                            <td class="p-3.5 text-slate-900 font-black">উইথড্র করার শর্ত</td>
+                            <td class="p-3.5 text-rose-500">৪টি রেফারেল আবশ্যক</td>
+                            <td class="p-3.5 text-emerald-600 font-black">কোনো রেফার লাগবে না</td>
+                            <td class="p-3.5 text-right text-emerald-600 font-black">কোনো রেফার লাগবে না</td>
                         </tr>
                         <tr>
-                            <td class="p-3">পেমেন্ট প্রসেসিং গতি</td>
-                            <td class="p-3 text-slate-500">২ থেকে ৪ ঘণ্টা</td>
-                            <td class="p-3 text-slate-900 font-black">১ ঘণ্টার মধ্যে</td>
-                            <td class="p-3 text-right text-emerald-600 font-black">ইনস্ট্যান্ট প্রায়োরিটি</td>
+                            <td class="p-3.5 text-slate-900 font-black">পেমেন্ট প্রসেসিং গতি</td>
+                            <td class="p-3.5 text-slate-500">২ থেকে ৪ ঘণ্টা</td>
+                            <td class="p-3.5 text-slate-900 font-black">১ ঘণ্টার মধ্যে</td>
+                            <td class="p-3.5 text-right text-emerald-600 font-black">ইনস্ট্যান্ট</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
+            <!-- চার্টের নিচে নির্দিষ্ট মেসেজ বক্স -->
+            <div class="pt-3 border-t border-rose-100">
+                <div class="p-3 rounded-2xl bg-white border border-rose-200/80 text-center shadow-2xs">
+                    <p class="text-[11px] font-black text-slate-800">
+                        💡 <strong class="text-ruby-600">মনে রাখবেন:</strong> যদি চান, তাহলে সম্পূর্ণ ফ্রিতে ইনকাম করা সম্ভব — টাস্ক করে, ফ্রি মাইনিং করে এবং জিমেইল ফার্মিং করে!
+                    </p>
+                </div>
+            </div>
         </div>
 
-        <!-- PROFIT CALCULATOR -->
+        <!-- ৫. ইন্টারেক্টিভ ইনকাম ক্যালকুলেটর -->
         <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-card-soft space-y-5 border border-white" data-aos="fade-up">
             <div class="flex items-center justify-between border-b border-rose-100 pb-3">
                 <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2">
@@ -283,14 +233,17 @@
                             <span>Free Trial Node</span>
                             <span class="text-slate-400 font-bold">মূল্য: ৳০</span>
                         </button>
+
                         <button onclick="calculateProfit(500, 135, 'Starter GPU Rig', '৳ ৫০০.০০')" class="w-full text-left p-3.5 border border-rose-200/80 rounded-2xl hover:border-ruby-500 transition-all bg-white flex justify-between items-center text-xs font-black shadow-xs active:scale-95 duration-150">
                             <span>Starter GPU Rig</span>
                             <span class="text-ruby-600">মূল্য: ৳৫০০</span>
                         </button>
+
                         <button onclick="calculateProfit(1000, 300, 'Basic ASIC Miner', '৳ ১,০০০.০০')" class="w-full text-left p-3.5 border border-rose-200/80 rounded-2xl hover:border-ruby-500 transition-all bg-white flex justify-between items-center text-xs font-black shadow-xs active:scale-95 duration-150">
                             <span>Basic ASIC Miner</span>
                             <span class="text-ruby-600">মূল্য: ৳১,০০০</span>
                         </button>
+
                         <button onclick="calculateProfit(5000, 1800, 'Industrial Node', '৳ ৫,০০০.০০')" class="w-full text-left p-3.5 border border-rose-200/80 rounded-2xl hover:border-ruby-500 transition-all bg-white flex justify-between items-center text-xs font-black shadow-xs active:scale-95 duration-150">
                             <span>Industrial Node</span>
                             <span class="text-ruby-600">মূল্য: ৳৫,০০০</span>
@@ -323,47 +276,34 @@
             </div>
         </div>
 
-        <!-- NEW MODULE: REAL USER TESTIMONIALS -->
-        <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
-            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 flex items-center gap-2 border-b border-rose-100 pb-3">
-                <i class="fa-solid fa-star text-amber-500"></i> ব্যবহারকারীদের পেমেন্ট অভিজ্ঞতা ও রিভিউ
-            </h3>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs font-semibold text-slate-700">
-                <div class="p-4 bg-white border border-rose-100 rounded-2xl space-y-2 shadow-xs">
-                    <div class="flex text-amber-400 text-[10px] gap-0.5">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                    </div>
-                    <p class="text-[11px] text-slate-600 leading-relaxed">"মাত্র ২০ মিনিটে নগদে ১০০০ টাকার উইথড্র পেয়েছি। কোনো ঝামেলা নেই।"</p>
-                    <span class="text-[10px] font-black text-slate-900 block">- রায়হান কবীর (UID #3104)</span>
-                </div>
-
-                <div class="p-4 bg-white border border-rose-100 rounded-2xl space-y-2 shadow-xs">
-                    <div class="flex text-amber-400 text-[10px] gap-0.5">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                    </div>
-                    <p class="text-[11px] text-slate-600 leading-relaxed">"স্টার্টার প্যাকেজ চালু করার পর কোনো রেফার ছাড়াই ৫০০ টাকা উইথড্র করেছি।"</p>
-                    <span class="text-[10px] font-black text-slate-900 block">- মেহজাবিন নূর (UID #5921)</span>
-                </div>
-
-                <div class="p-4 bg-white border border-rose-100 rounded-2xl space-y-2 shadow-xs">
-                    <div class="flex text-amber-400 text-[10px] gap-0.5">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                    </div>
-                    <p class="text-[11px] text-slate-600 leading-relaxed">"ডেইলি টাস্ক ও জিমেইল সেল করে খুব ভালো একটা পার্ট-টাইম ইনকাম হচ্ছে।"</p>
-                    <span class="text-[10px] font-black text-slate-900 block">- শাকিল আহমেদ (UID #1478)</span>
-                </div>
+        <!-- ৬. লাইভ প্ল্যাটফর্ম পরিসংখ্যান -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5" data-aos="fade-up">
+            <div class="glass-panel p-4 rounded-2xl text-center shadow-card-soft border border-white">
+                <span class="text-[9px] text-slate-400 uppercase font-black tracking-wider block">Active Nodes</span>
+                <p class="text-base sm:text-lg font-black text-slate-900 mt-1">14,250+</p>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl text-center shadow-card-soft border border-white">
+                <span class="text-[9px] text-slate-400 uppercase font-black tracking-wider block">Total Withdraws</span>
+                <p class="text-base sm:text-lg font-black text-ruby-600 mt-1">৳ 48.5L+</p>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl text-center shadow-card-soft border border-white">
+                <span class="text-[9px] text-slate-400 uppercase font-black tracking-wider block">Global Hashrate</span>
+                <p class="text-base sm:text-lg font-black text-slate-900 mt-1">8.45 TH/s</p>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl text-center shadow-card-soft border border-white">
+                <span class="text-[9px] text-slate-400 uppercase font-black tracking-wider block">Payout Success</span>
+                <p class="text-base sm:text-lg font-black text-emerald-600 mt-1">99.8%</p>
             </div>
         </div>
 
     </main>
 
     <!-- ============================================== -->
-    <!-- 4. FOOTER                                      -->
+    <!-- 5. FOOTER                                      -->
     <!-- ============================================== -->
     <footer class="glass-header py-5 px-4 text-center mt-10">
         <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center text-[10px] text-slate-400 font-extrabold uppercase tracking-wider gap-2">
-            <span>© 2026 OptiWork Cloud Platform. All rights reserved.</span>
+            <span>© 2026 OptiWork Platform. All rights reserved.</span>
             <div class="flex space-x-4">
                 <a href="https://t.me/ortiwokr" target="_blank" class="hover:text-ruby-600 transition">Official Channel</a>
                 <a href="https://t.me/Optiworkhelp" target="_blank" class="hover:text-ruby-600 transition">Telegram Support</a>
@@ -371,7 +311,7 @@
         </div>
     </footer>
 
-    <!-- AOS JS -->
+    <!-- AOS JS & REALTIME SCRIPT -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
         AOS.init({ once: true, duration: 600 });
@@ -383,6 +323,26 @@
             document.getElementById('calc-daily').innerText = "৳ " + dailyIncome.toFixed(2);
             document.getElementById('calc-monthly').innerText = "৳ " + monthlyIncome.toFixed(2);
         }
+
+        // লাইভ উইথড্রয়াল টিকার ডায়নামিক চেঞ্জার
+        const realisticWithdraws = [
+            "🟢 User #4892 withdrew ৳450 via bKash Personal (1m ago)",
+            "🟢 User #1084 withdrew ৳1,200 via Nagad (3m ago)",
+            "🟢 User #6021 claimed ৳135 GPU Yield (4m ago)",
+            "🟢 User #3290 withdrew ৳500 via Rocket (6m ago)",
+            "🟢 User #2187 withdrew ৳350 via bKash (8m ago)",
+            "🟢 User #5512 withdrew ৳750 via Nagad (11m ago)",
+            "🟢 User #1903 claimed ৳1,800 VIP Node Yield (14m ago)"
+        ];
+
+        let index = 0;
+        setInterval(() => {
+            const ticker = document.getElementById('live-payout-text');
+            if (ticker) {
+                index = (index + 1) % realisticWithdraws.length;
+                ticker.innerText = realisticWithdraws.slice(index).concat(realisticWithdraws.slice(0, index)).join(" • ");
+            }
+        }, 5000);
     </script>
 </body>
 </html>
