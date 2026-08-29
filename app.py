@@ -399,37 +399,56 @@ def internal_server_error(e):
 @app.route('/admin/payout')
 def admin_payout_generator():
     if not check_admin_auth():
-        return "Unauthorized Access", 403
+        flash("আপনার এডমিন প্যানেলে প্রবেশের অনুমতি নেই।", "danger")
+        return redirect(url_for('login'))
         
     now_utc = datetime.datetime.now(datetime.timezone.utc)
     five_hours_ago = (now_utc - datetime.timedelta(hours=5)).isoformat()
     
-    # ১. বিগত ৫ ঘণ্টার রিয়াল উইথড্রয়াল ডাটা রিট্রিভ করা (Pending বাদে)
-    real_w = supabase.table("withdrawals") \
-        .select("amount, status, user_id") \
-        .neq("status", "Pending") \
-        .gte("created_at", five_hours_ago).execute().data or []
+    # ১. বিগত ৫ ঘণ্টার রিয়াল উইথড্রয়াল ডাটা নিরাপদ কুয়েরি
+    try:
+        real_w_res = supabase.table("withdrawals") \
+            .select("amount, status, user_id") \
+            .neq("status", "Pending") \
+            .gte("created_at", five_hours_ago).execute()
+        real_w = real_w_res.data or []
+    except Exception as e:
+        print("Real Withdraw Fetch Error:", e)
+        real_w = []
         
-    # ২. বিগত ৫ ঘণ্টার চ্যানেলের ফেক উইথড্রয়াল ডাটা রিট্রিভ করা (Pending বাদে)
-    fake_w = supabase.table("simulated_transactions") \
-        .select("amount, status, uid") \
-        .eq("type", "Withdraw") \
-        .neq("status", "Pending") \
-        .gte("created_at", five_hours_ago).execute().data or []
+    # ২. বিগত ৫ ঘণ্টার ফেক/সিমুলেটেড উইথড্রয়াল ডাটা নিরাপদ কুয়েরি
+    try:
+        fake_w_res = supabase.table("simulated_transactions") \
+            .select("amount, status, uid") \
+            .eq("type", "Withdraw") \
+            .neq("status", "Pending") \
+            .gte("created_at", five_hours_ago).execute()
+        fake_w = fake_w_res.data or []
+    except Exception as e:
+        print("Fake Withdraw Fetch Error:", e)
+        fake_w = []
         
-    # ৩. পেন্ডিং সম্পূর্ণ বাদ দিয়ে সফল ও বাতিল পেমেন্টের পৃথক হিসাব
-    success_real = [w for w in real_w if w['status'] == 'Approved']
-    success_fake = [fw for fw in fake_w if fw['status'] == 'Success']
+    # ৩. সফল ও বাতিল পেমেন্ট ফিল্টারিং
+    success_real = [w for w in real_w if w.get('status') == 'Approved']
+    success_fake = [fw for fw in fake_w if fw.get('status') == 'Success']
     
-    rejected_real = [w for w in real_w if w['status'] == 'Rejected']
-    rejected_fake = [fw for fw in fake_w if fw['status'] == 'Rejected']
+    rejected_real = [w for w in real_w if w.get('status') == 'Rejected']
+    rejected_fake = [fw for fw in fake_w if fw.get('status') == 'Rejected']
     
-    # ৪. টোটাল সফল বিতরণ ও ট্রানজেকশন কাউন্ট
-    total_success_amount = sum(float(w['amount']) for w in success_real) + sum(float(fw['amount']) for fw in success_fake)
+    # ৪. টোটাল সফল ও বাতিল হিসাব (NoneType মুক্ত নিরাপদ সামেশন)
+    def safe_sum(item_list):
+        total = 0.0
+        for item in item_list:
+            try:
+                total += float(item.get('amount', 0))
+            except (ValueError, TypeError):
+                pass
+        return total
+
+    total_success_amount = safe_sum(success_real) + safe_sum(success_fake)
     total_success_count = len(success_real) + len(success_fake)
     
-    # ৫. টোটাল বাতিলকৃত বিতরণ ও ট্রানজেকশন কাউন্ট
-    total_rejected_amount = sum(float(w['amount']) for w in rejected_real) + sum(float(fw['amount']) for fw in rejected_fake)
+    total_rejected_amount = safe_sum(rejected_real) + safe_sum(rejected_fake)
     total_rejected_count = len(rejected_real) + len(rejected_fake)
     
     # বাংলাদেশ সময় জেনারেশন (UTC+6)
@@ -437,12 +456,12 @@ def admin_payout_generator():
     generation_time = now_bd.strftime("%d %b %Y, %I:%M %p")
     
     return render_template('admin_payout.html',
-                           total_success_amount=total_success_amount,
+                           total_success_amount=round(total_success_amount, 2),
                            total_success_count=total_success_count,
-                           total_rejected_amount=total_rejected_amount,
+                           total_rejected_amount=round(total_rejected_amount, 2),
                            total_rejected_count=total_rejected_count,
                            generation_time=generation_time)
-
+    
 # (অন্যান্য রাউটের সাথে নিচের নতুন রাউটটি যুক্ত করুন)
 
 # (অন্যান্য কোডের সাথে জিমেইল মডারেটর এবং ইউজার রাউটগুলো নিচে যুক্ত করুন)
