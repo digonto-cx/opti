@@ -1,7 +1,7 @@
 {% extends 'admin_base.html' %}
 {% block admin_content %}
 
-<!-- html2canvas লাইব্রেরি সরাসরি HD স্ক্রিনশট ডাউনলোড করার জন্য -->
+<!-- html2canvas লাইব্রেরি সরাসরি স্ক্রিনশট নেওয়ার জন্য -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <div class="space-y-6 max-w-4xl mx-auto pb-12">
@@ -22,7 +22,7 @@
             </div>
 
             <div class="flex items-center gap-2.5">
-                <button onclick="location.reload()" class="px-4 py-2.5 rounded-xl bg-white border border-rose-200 text-slate-700 hover:bg-rose-50 font-extrabold text-xs shadow-xs transition active:scale-95 duration-150 flex items-center gap-1.5">
+                <button onclick="location.reload()" class="px-4 py-2.5 rounded-xl bg-white border border-rose-200 text-slate-700 hover:bg-rose-50 font-extrabold text-xs shadow-xs transition active:scale-95 duration-150 flex items-center gap-1.5 cursor-pointer">
                     <i class="fa-solid fa-rotate text-xs"></i> রিফ্রেশ ডাটা
                 </button>
             </div>
@@ -133,7 +133,7 @@ function downloadPayoutPoster() {
 
     // html2canvas 3x আল্ট্রা-এইচডি কনফিগারেশন
     html2canvas(poster, { 
-        scale: 3, // 3X আল্ট্রা ক্রিস্টাল ক্লিয়ার কোয়ালিটি
+        scale: 3, 
         logging: false,
         useCORS: true,
         allowTaint: false,
