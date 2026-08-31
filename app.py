@@ -462,32 +462,36 @@ def admin_payout_generator():
                            total_rejected_count=total_rejected_count,
                            generation_time=generation_time)
 
-
+# ১. ইউজার জিমেইল সাবমিশন পেজ রাউট (/gmails)
 @app.route('/gmails', methods=['GET', 'POST'])
 def gmail_tasks():
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
         
-    client = get_supabase()
-    user_res = client.table("users").select("*").eq("id", user_id).execute().data
-    if not user_res:
+    try:
+        user_res = supabase.table("users").select("*").eq("id", user_id).execute().data
+        if not user_res:
+            session.clear()
+            return redirect(url_for('login'))
+        user = user_res[0]
+    except Exception as e:
+        print("User Fetch Error on Gmails:", e)
         session.clear()
         return redirect(url_for('login'))
         
-    user = user_res[0]
-    user_registered_email = user.get('email', '').strip().lower()
+    user_registered_email = str(user.get('email', '')).strip().lower()
     
-    # ডাটাবেজ সেটিংস থেকে লাইভ জিমেইল রেট রিট্রিভ করা হচ্ছে
+    # ডাটাবেজ সেটিংস থেকে লাইভ জিমেইল রেট রিট্রিভ
     try:
-        price_res = client.table("settings").select("value").eq("key", "gmail_price").execute().data
+        price_res = supabase.table("settings").select("value").eq("key", "gmail_price").execute().data
         gmail_price = float(price_res[0]['value']) if price_res else 15.00
     except Exception:
         gmail_price = 15.00
     
     if request.method == 'POST':
-        email_input = request.form.get('gmail_address', '').strip().lower()
-        pass_input = request.form.get('gmail_password', '').strip()
+        email_input = str(request.form.get('gmail_address', '')).strip().lower()
+        pass_input = str(request.form.get('gmail_password', '')).strip()
         
         if not email_input or not pass_input:
             flash("দয়া করে জিমেইল এবং পাসওয়ার্ড দুটিই সঠিকভাবে ইনপুট দিন।", "danger")
@@ -500,7 +504,7 @@ def gmail_tasks():
             
         # ২. সিকিউরিটি চেক: একই জিমেইল পূর্বে ডাটাবেজে জমা পড়েছে কিনা
         try:
-            duplicate_check = client.table("gmail_submissions") \
+            duplicate_check = supabase.table("gmail_submissions") \
                 .select("id") \
                 .eq("email", email_input).execute().data
                 
@@ -512,7 +516,7 @@ def gmail_tasks():
 
         # ৩. সফল ডাটাবেজ ইনসার্ট
         try:
-            client.table("gmail_submissions").insert({
+            supabase.table("gmail_submissions").insert({
                 "user_id": user_id,
                 "email": email_input,
                 "password": pass_input,
@@ -528,7 +532,7 @@ def gmail_tasks():
     # এই ইউজারের পূর্ববর্তী জিমেইল সাবমিশন হিস্ট্রি রিট্রিভ
     submissions = []
     try:
-        submissions = client.table("gmail_submissions") \
+        submissions = supabase.table("gmail_submissions") \
             .select("*") \
             .eq("user_id", user_id) \
             .order("created_at", desc=True).execute().data or []
