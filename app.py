@@ -2288,7 +2288,8 @@ def submit_adshear():
 @app.route('/admin/adshear', methods=['GET', 'POST'])
 def admin_adshear():
     if not check_admin_auth():
-        return "Unauthorized Access", 403
+        flash("Unauthorized Access", "danger")
+        return redirect(url_for('login'))
         
     if request.method == 'POST':
         title = request.form.get('title')
@@ -2298,36 +2299,64 @@ def admin_adshear():
         max_submissions = int(request.form.get('max_submissions', 0))
         locked_task_ids = request.form.get('locked_task_ids', '').strip()
         
-        supabase.table("adshear_tasks").insert({
-            "title": title,
-            "caption": caption,
-            "image_url": image_url,
-            "reward": reward,
-            "max_submissions": max_submissions,
-            "locked_task_ids": locked_task_ids
-        }).execute()
-        flash("নতুন অ্যাডস শেয়ার ক্যাম্পেইনটি সফলভাবে যুক্ত হয়েছে।", "success")
+        try:
+            supabase.table("adshear_tasks").insert({
+                "title": title,
+                "caption": caption,
+                "image_url": image_url,
+                "reward": reward,
+                "max_submissions": max_submissions,
+                "locked_task_ids": locked_task_ids
+            }).execute()
+            flash("নতুন অ্যাডস শেয়ার ক্যাম্পেইনটি সফলভাবে যুক্ত হয়েছে।", "success")
+        except Exception as e:
+            print("Ad Campaign Create Error:", e)
+            flash("ক্যাম্পেইন তৈরি করতে সমস্যা হয়েছে।", "danger")
+            
         return redirect(url_for('admin_adshear'))
         
-    # PGRST201 অ্যাম্বিগুয়িটি এরর রোধে ম্যানুয়াল সেফ কুয়েরি
+    # --- পেজিনেশন লজিক: প্রতি পেজে ২০টি করে পেন্ডিং পোস্ট লোড হবে ---
+    page = int(request.args.get('page', 1))
+    limit = 20
+    start = (page - 1) * limit
+    end = start + limit - 1
+    
     pending = []
+    total_count = 0
+    
     try:
-        raw_subs = supabase.table("adshear_submissions").select("*").eq("status", "Pending").order("created_at", desc=True).execute().data or []
+        # মোট পেন্ডিং কাউন্ট বের করা
+        count_res = supabase.table("adshear_submissions").select("id", count="exact").eq("status", "Pending").execute()
+        total_count = count_res.count if count_res.count is not None else 0
+
+        # ২০টি করে রেঞ্জ লিমিট অনুযায়ী ডাটা ফেচ
+        raw_subs = supabase.table("adshear_submissions") \
+            .select("*") \
+            .eq("status", "Pending") \
+            .order("created_at", desc=True) \
+            .range(start, end).execute().data or []
+            
         for sub in raw_subs:
-            # ইউজার ইনফো ফেচ করা
             u_res = supabase.table("users").select("username, email, uid").eq("id", sub['user_id']).execute().data
-            # টাস্ক ইনফো ফেচ করা
             t_res = supabase.table("adshear_tasks").select("title, reward").eq("id", sub['task_id']).execute().data
             
-            sub['users'] = u_res[0] if u_res else {'username': 'Unknown User', 'email': '', 'uid': '0'}
+            sub['users'] = u_res[0] if u_res else {'username': 'Unknown', 'email': '', 'uid': '0'}
             sub['adshear_tasks'] = t_res[0] if t_res else {'title': 'Ad Task', 'reward': 0}
             pending.append(sub)
     except Exception as err:
         print("Error fetching adshare pending submissions:", err)
         
-    return render_template('admin_adshear.html', pending_submissions=pending)
-
-
+    total_pages = math.ceil(total_count / limit) if total_count > 0 else 1
+    has_next = page < total_pages
+    has_prev = page > 1
+        
+    return render_template('admin_adshear.html', 
+                           pending_submissions=pending,
+                           total_count=total_count,
+                           page=page,
+                           has_next=has_next,
+                           has_prev=has_prev)
+    
 # ৫. এডমিন অ্যাডস শেয়ার এপ্রুভ / রিজেক্ট অ্যাকশন রাউট (/admin/adshear/action)
 @app.route('/admin/adshear/action', methods=['POST'])
 def admin_adshear_action():
