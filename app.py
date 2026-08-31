@@ -14,9 +14,47 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "opti_work_secured_stable_permanent_key_998124")
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(days=30)
 
+# ==========================================
+# VERCEL SERVERLESS SAFE SUPABASE DRIVER
+# ==========================================
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "YOUR_SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "YOUR_SUPABASE_KEY")
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+class SafeSupabaseProxy:
+    """
+    Vercel-এ HTTP/2 Server Disconnected রোধের জন্য
+    ডায়নামিক সকেট অটো-রিকানেক্টর প্রক্সি
+    """
+    def __init__(self, url, key):
+        self.url = url
+        self.key = key
+        self._client = None
+
+    def get_client(self) -> Client:
+        # প্রতিবার সতেজ ক্লায়েন্ট নিশ্চিতকরণ
+        try:
+            if self._client is None:
+                self._client = create_client(self.url, self.key)
+        except Exception:
+            self._client = create_client(self.url, self.key)
+        return self._client
+
+    def table(self, table_name: str):
+        try:
+            return self.get_client().table(table_name)
+        except Exception:
+            self._client = create_client(self.url, self.key)
+            return self._client.table(table_name)
+
+    def rpc(self, func_name: str, params: dict):
+        try:
+            return self.get_client().rpc(func_name, params)
+        except Exception:
+            self._client = create_client(self.url, self.key)
+            return self._client.rpc(func_name, params)
+
+# গ্লোবাল supabase ভেরিয়েবল হিসেবে এই প্রক্সিটি কাজ করবে (অন্য কোনো পেজের কোড বদলাতে হবে না)
+supabase = SafeSupabaseProxy(SUPABASE_URL, SUPABASE_KEY)
 
 
 def send_telegram_notification(text):
