@@ -1,20 +1,21 @@
 {% extends 'admin_base.html' %}
 {% block admin_content %}
 
-<!-- html2canvas লাইব্রেরি -->
+<!-- html2canvas এবং jsPDF লাইব্রেরি -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <div class="space-y-6 max-w-5xl mx-auto pb-16">
 
     <!-- ============================================== -->
-    <!-- 1. SEARCH WIDGET                               -->
+    <!-- 1. SEARCH WIDGET (LIGHT THEME)                 -->
     <!-- ============================================== -->
     <div class="admin-card p-6 bg-white space-y-3" data-aos="fade-down">
         <label class="block text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
             <i class="fa-solid fa-magnifying-glass-chart text-ruby-600"></i> মেম্বার সিকিউরিটি ও ডাটা অডিট ইঞ্জিন
         </label>
         <form action="/admin/user-search" method="GET" class="flex gap-2">
-            <input type="text" name="query" value="{{ query or '' }}" required placeholder="অডিট করার জন্য ইউজারের UID বা ইমেইল লিখুন..." 
+            <input type="text" name="query" value="{{ query if query else '' }}" required placeholder="অডিট করার জন্য ইউজারের UID বা ইমেইল লিখুন..." 
                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 font-bold focus:outline-none focus:border-ruby-600 focus:bg-white transition shadow-xs">
             <button type="submit" class="px-6 py-3 rounded-2xl bg-slate-900 hover:bg-ruby-600 text-white font-black text-xs transition active:scale-95 duration-150 shrink-0 shadow-sm cursor-pointer">
                 অডিট শুরু করুন
@@ -31,41 +32,41 @@
     {% if target_user %}
 
     <!-- ============================================== -->
-    <!-- 2. ADMIN SECRET ACTIONS TOOLBAR (HIDEABLE)     -->
+    <!-- 2. ADMIN SECRET ACTIONS TOOLBAR (LIGHT THEME)  -->
     <!-- ============================================== -->
-    <div id="secret-admin-panel" class="admin-card p-5 bg-gradient-to-r from-dark-900 via-dark-800 to-dark-900 text-white border border-dark-700 space-y-4 shadow-xl" data-aos="fade-up">
-        <div class="flex items-center justify-between border-b border-dark-700 pb-3">
+    <div id="secret-admin-panel" class="admin-card p-5 bg-gradient-to-r from-rose-50/80 via-white to-ruby-50/80 border border-rose-200 space-y-4 shadow-sm" data-aos="fade-up">
+        <div class="flex items-center justify-between border-b border-rose-100 pb-3">
             <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-                <span class="text-xs font-black tracking-widest text-ruby-400 uppercase">Admin Secret Actions Tool</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-ruby-600 animate-ping"></span>
+                <span class="text-xs font-black tracking-widest text-ruby-700 uppercase">Admin Secret Actions Tool</span>
             </div>
             <!-- পার্মানেন্ট ওয়ান-ওয়ে হাইড বাটন -->
-            <button type="button" onclick="permanentHideSecretPanel()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 border border-rose-500/30 text-[10px] font-black transition active:scale-95 duration-150 flex items-center gap-1 cursor-pointer">
+            <button type="button" onclick="permanentHideSecretPanel()" class="px-3 py-1.5 rounded-xl bg-white hover:bg-rose-100 text-rose-700 border border-rose-200 text-[10px] font-black transition active:scale-95 duration-150 flex items-center gap-1.5 shadow-2xs cursor-pointer">
                 <i class="fa-solid fa-eye-slash"></i>
                 <span>Hide Secret Panel (Permanent)</span>
             </button>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-            <!-- বাটন ১: নরমাল অডিট এক্সপোর্ট -->
-            <button type="button" onclick="exportOfficialAuditReport()" class="p-3.5 rounded-2xl bg-dark-700 hover:bg-ruby-600 text-white text-xs font-black transition active:scale-95 duration-150 flex flex-col items-center justify-center gap-1.5 border border-dark-600 shadow-sm cursor-pointer">
-                <i class="fa-solid fa-file-pdf text-lg text-rose-400"></i>
-                <span>Normal Report (Export Document)</span>
-                <span class="text-[9px] text-slate-400 font-medium">With Digital Stamp & Sign</span>
+            <!-- বাটন ১: সরাসরি PDF এক্সপোর্ট বাটন -->
+            <button type="button" onclick="exportOfficialAuditPDF()" class="p-4 rounded-2xl bg-white hover:bg-rose-50 border border-rose-200 text-slate-800 text-xs font-black transition active:scale-95 duration-150 flex flex-col items-center justify-center gap-1.5 shadow-xs cursor-pointer">
+                <i class="fa-solid fa-file-pdf text-xl text-ruby-600"></i>
+                <span>অফিসিয়াল PDF রিপোর্ট ডাউনলোড</span>
+                <span class="text-[9px] text-slate-400 font-medium">Auto A4 Layout & Digital Seal</span>
             </button>
 
             <!-- বাটন ২: রেফারেল ব্লক নোটিশ -->
-            <button type="button" onclick="toggleReferralBlockNotice()" class="p-3.5 rounded-2xl bg-dark-700 hover:bg-amber-600 text-white text-xs font-black transition active:scale-95 duration-150 flex flex-col items-center justify-center gap-1.5 border border-dark-600 shadow-sm cursor-pointer">
-                <i class="fa-solid fa-users-slash text-lg text-amber-400"></i>
-                <span>Toggle Referral Blocker</span>
-                <span class="text-[9px] text-slate-400 font-medium">Fraud Hold Notice</span>
+            <button type="button" onclick="toggleReferralBlockNotice()" class="p-4 rounded-2xl bg-white hover:bg-amber-50 border border-amber-200 text-slate-800 text-xs font-black transition active:scale-95 duration-150 flex flex-col items-center justify-center gap-1.5 shadow-xs cursor-pointer">
+                <i class="fa-solid fa-users-slash text-xl text-amber-600"></i>
+                <span>রেফারেল ফ্রড নোটিশ টগল</span>
+                <span class="text-[9px] text-slate-400 font-medium">Show/Hide Fraud Warning</span>
             </button>
 
             <!-- বাটন ৩: জিমেইল রিজেক্ট ব্লক নোটিশ -->
-            <button type="button" onclick="toggleGmailBlockNotice()" class="p-3.5 rounded-2xl bg-dark-700 hover:bg-rose-600 text-white text-xs font-black transition active:scale-95 duration-150 flex flex-col items-center justify-center gap-1.5 border border-dark-600 shadow-sm cursor-pointer">
-                <i class="fa-solid fa-envelope-circle-check text-lg text-purple-400"></i>
-                <span>Toggle Gmail Blocker</span>
-                <span class="text-[9px] text-slate-400 font-medium">3+ Rejections Warning</span>
+            <button type="button" onclick="toggleGmailBlockNotice()" class="p-4 rounded-2xl bg-white hover:bg-purple-50 border border-purple-200 text-slate-800 text-xs font-black transition active:scale-95 duration-150 flex flex-col items-center justify-center gap-1.5 shadow-xs cursor-pointer">
+                <i class="fa-solid fa-envelope-circle-check text-xl text-purple-600"></i>
+                <span>জিমেইল রিজেক্ট নোটিশ টগল</span>
+                <span class="text-[9px] text-slate-400 font-medium">Show/Hide Gmail Warning</span>
             </button>
         </div>
     </div>
@@ -82,7 +83,7 @@
         <p class="text-xs font-bold leading-relaxed">
             আপনার অ্যাকাউন্টে ভুয়া/অকার্যকর (Fake/Failed) রেফারেল শনাক্ত হওয়ায় সিস্টেম স্বয়ংক্রিয়ভাবে উইথড্রয়াল সাময়িকভাবে স্থগিত রেখেছে।
         </p>
-        <div class="p-3 bg-white/80 rounded-xl border border-rose-200 text-[11px] font-bold text-rose-800">
+        <div class="p-3.5 bg-white/90 rounded-2xl border border-rose-200 text-[11px] font-bold text-rose-800">
             👉 <strong>করণীয়:</strong> অনুগ্রহ করে এখনই আরও <strong>৪টি ১০০% আসল ও সক্রিয় মেম্বার</strong> রেফার করুন। নতুন রেফারেল সফলভাবে যুক্ত হলেই আপনার স্থগিত উইথড্রয়াল পেমেন্ট প্রসেস করা হবে।
         </div>
     </div>
@@ -99,11 +100,11 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- 4. OFFICIAL AUDIT REPORT POSTER / DOCUMENT     -->
+    <!-- 4. OFFICIAL AUDIT REPORT (A4 PDF PRINTABLE)    -->
     <!-- ============================================== -->
-    <div id="printable-audit-doc" class="admin-card p-6 sm:p-8 bg-white border border-slate-200/90 shadow-card-soft space-y-6 relative overflow-hidden">
+    <div id="printable-audit-doc" class="admin-card p-6 sm:p-9 bg-white border border-slate-200 shadow-card-soft space-y-6 relative overflow-hidden">
         
-        <!-- অফিসিয়াল ডকুমেন্ট হেডার -->
+        <!-- অফিসিয়াল ডকুমেন্ট ব্র্যান্ড হেডার -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-5">
             <div class="flex items-center gap-3.5">
                 <img src="{{ target_user.avatar_url or 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80' }}" class="w-14 h-14 rounded-2xl object-cover border-2 border-rose-200 shadow-xs">
@@ -119,13 +120,13 @@
                 </div>
             </div>
 
-            <div class="bg-slate-50 border border-slate-200/80 p-3.5 rounded-2xl text-left sm:text-right shrink-0">
-                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Main Balance</span>
-                <span class="text-xl font-black text-emerald-600">৳ {{ target_user.balance }}</span>
+            <div class="bg-gradient-to-r from-rose-50/40 via-white to-ruby-50/30 border border-rose-200/90 p-3.5 rounded-2xl text-left sm:text-right shrink-0">
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest block">Main Wallet Balance</span>
+                <span class="text-2xl font-black text-emerald-600">৳ {{ target_user.balance }}</span>
             </div>
         </div>
 
-        <!-- ৫-ট্যাব বিশিষ্ট হিস্ট্রি নেভিগেশন -->
+        <!-- ৫-ট্যাব বিশিষ্ট হিস্ট্রি নেভিগেশন (লাইট বাটনস) -->
         <div class="flex border border-slate-200 bg-slate-50/80 p-1.5 rounded-2xl gap-1 overflow-x-auto text-xs font-bold">
             <button type="button" onclick="switchAuditTab('task', this)" class="audit-tab-btn px-4 py-2 rounded-xl bg-slate-900 text-white shadow-xs cursor-pointer">
                 টাস্ক হিস্টোরি ({{ task_history|length }})
@@ -160,14 +161,14 @@
                     {% for item in task_history %}
                     <tr class="text-slate-700">
                         <td class="p-3">
-                            <span class="font-black text-slate-900 text-xs">{{ item.tasks.title if item.tasks else 'General Task' }}</span><br>
+                            <span class="font-black text-slate-900 text-xs">{{ item.tasks.title if item.tasks else 'Task' }}</span><br>
                             <span class="text-emerald-600 font-bold">৳ {{ item.tasks.reward if item.tasks else 0 }}</span>
                         </td>
                         <td class="p-3">
                             {% if item.proof_image_url %}
                                 <a href="{{ item.proof_image_url }}" target="_blank" class="text-sky-600 hover:underline">View Screenshot <i class="fa-solid fa-external-link text-[9px]"></i></a>
                             {% else %}
-                                <span class="text-slate-400">No URL</span>
+                                <span class="text-slate-400 font-normal">N/A</span>
                             {% endif %}
                         </td>
                         <td class="p-3 text-right">
@@ -181,7 +182,7 @@
                         </td>
                     </tr>
                     {% else %}
-                    <tr><td colspan="3" class="p-6 text-center text-slate-400 font-medium">কোনো টাস্ক রেকর্ড নেই।</td></tr>
+                    <tr><td colspan="3" class="p-6 text-center text-slate-400 font-medium">কোনো টাস্ক সাবমিশন পাওয়া যায়নি।</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -193,7 +194,7 @@
                 <thead>
                     <tr class="bg-slate-50 text-slate-400 font-extrabold uppercase border-b border-slate-100">
                         <th class="p-3">পরিমাণ</th>
-                        <th class="p-3">মেথড / নম্বর</th>
+                        <th class="p-3">গেটওয়ে / নম্বর</th>
                         <th class="p-3 text-right">স্ট্যাটাস</th>
                     </tr>
                 </thead>
@@ -202,7 +203,7 @@
                     <tr class="text-slate-700">
                         <td class="p-3 font-black text-slate-900 text-xs">৳ {{ item.amount }}</td>
                         <td class="p-3">
-                            <span>{{ item.payment_method }}</span><br>
+                            <span class="font-extrabold text-slate-900">{{ item.payment_method }}</span><br>
                             <span class="text-[10px] text-slate-400 font-mono">{{ item.payment_number }}</span>
                         </td>
                         <td class="p-3 text-right">
@@ -216,7 +217,7 @@
                         </td>
                     </tr>
                     {% else %}
-                    <tr><td colspan="3" class="p-6 text-center text-slate-400 font-medium">কোনো উইথড্রয়াল হিস্টোরি নেই।</td></tr>
+                    <tr><td colspan="3" class="p-6 text-center text-slate-400 font-medium">কোনো উইথড্রয়াল রেকর্ড পাওয়া যায়নি।</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -239,7 +240,7 @@
                             <span class="font-black text-slate-900 text-xs">{{ item.users.username if item.users else 'Member' }}</span> (UID: #{{ item.users.uid if item.users else '0' }})<br>
                             <span class="text-[10px] text-slate-400 font-mono">{{ item.users.email if item.users else '' }}</span>
                         </td>
-                        <td class="p-3 text-slate-900">৳ {{ item.users.balance if item.users else 0 }}</td>
+                        <td class="p-3 text-slate-900 font-bold">৳ {{ item.users.balance if item.users else 0 }}</td>
                         <td class="p-3 text-right">
                             {% if item.status == 'Success' %}
                                 <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-200">Success</span>
@@ -269,11 +270,11 @@
                     {% for item in ad_share_history %}
                     <tr class="text-slate-700">
                         <td class="p-3">
-                            <span class="font-black text-slate-900 text-xs">{{ item.adshear_tasks.title if item.adshear_tasks else 'Campaign Task' }}</span><br>
-                            <span class="text-emerald-600">৳ {{ item.adshear_tasks.reward if item.adshear_tasks else 0 }}</span>
+                            <span class="font-black text-slate-900 text-xs">{{ item.adshear_tasks.title if item.adshear_tasks else 'Campaign' }}</span><br>
+                            <span class="text-emerald-600 font-bold">৳ {{ item.adshear_tasks.reward if item.adshear_tasks else 0 }}</span>
                         </td>
                         <td class="p-3">
-                            <a href="{{ item.proof_link or item.proof_image_url }}" target="_blank" class="text-sky-600 hover:underline">View Shared Post <i class="fa-solid fa-external-link text-[9px]"></i></a>
+                            <a href="{{ item.proof_link or item.proof_image_url }}" target="_blank" class="text-sky-600 hover:underline">View Post <i class="fa-solid fa-external-link text-[9px]"></i></a>
                         </td>
                         <td class="p-3 text-right">
                             {% if item.status == 'Approved' %}
@@ -321,7 +322,7 @@
                         </td>
                     </tr>
                     {% else %}
-                    <tr><td colspan="3" class="p-6 text-center text-slate-400 font-medium">কোনো জিমেইল সাবমিশন ডাটা নেই।</td></tr>
+                    <tr><td colspan="3" class="p-6 text-center text-slate-400 font-medium">কোনো জিমেইল রেকর্ড নেই।</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -329,7 +330,7 @@
 
         <!-- ================= অফিশিয়াল ডিজিটাল স্ট্যাম্প ও সিগনেচার ================= -->
         <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3.5">
                 <div class="w-14 h-14 rounded-full border-2 border-dashed border-ruby-600 p-1 flex items-center justify-center text-center">
                     <div class="w-full h-full rounded-full bg-ruby-50 border border-ruby-200 flex flex-col items-center justify-center text-[7px] font-black text-ruby-700 uppercase leading-none">
                         <span>OPTIWORK</span>
@@ -355,10 +356,10 @@
 </div>
 
 <!-- ============================================== -->
-<!-- JAVASCRIPT: TABS, ONE-WAY HIDE & PDF EXPORT    -->
+<!-- JAVASCRIPT: TABS, HIDE & REAL PDF EXPORT       -->
 <!-- ============================================== -->
 <script>
-// ১. পার্মানেন্ট ওয়ান-ওয়ে হাইড ফাংশন
+// ১. ওয়ান-ওয়ে সিক্রেট প্যানেল পার্মানেন্ট হাইড
 function permanentHideSecretPanel() {
     const panel = document.getElementById('secret-admin-panel');
     if (panel) {
@@ -382,7 +383,7 @@ function toggleGmailBlockNotice() {
     }
 }
 
-// ৪. ৫-ট্যাব সুইচিং ফাংশন
+// ৪. ৫-ট্যাব সুইচিং
 function switchAuditTab(tabName, btn) {
     const tabs = ['task', 'withdraw', 'referral', 'adshare', 'gmail'];
     
@@ -401,25 +402,48 @@ function switchAuditTab(tabName, btn) {
     btn.className = "audit-tab-btn px-4 py-2 rounded-xl bg-slate-900 text-white shadow-xs cursor-pointer";
 }
 
-// ৫. নরমাল অডিট রিপোর্ট (PNG Export with Brand & Sign)
-function exportOfficialAuditReport() {
+// ৫. সরাসরি PDF এক্সপোর্ট ফাংশন (jsPDF + html2canvas)
+async function exportOfficialAuditReport() {
+    exportOfficialAuditPDF();
+}
+
+async function exportOfficialAuditPDF() {
     permanentHideSecretPanel();
 
     const docElement = document.getElementById('printable-audit-doc');
-    
-    html2canvas(docElement, {
-        scale: 3,
-        logging: false,
-        useCORS: true,
-        backgroundColor: '#FFFFFF'
-    }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `OptiWork-Audit-Report-UID-${Date.now()}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-    }).catch(err => {
-        alert("রিপোর্ট এক্সপোর্ট করতে সমস্যা হয়েছে।");
-    });
+    const { jsPDF } = window.jspdf;
+
+    try {
+        const canvas = await html2canvas(docElement, {
+            scale: 2.5,
+            logging: false,
+            useCORS: true,
+            backgroundColor: '#FFFFFF'
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgWidth = 210; 
+        const pageHeight = 295;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+
+        pdf.save(`OptiWork-Official-Audit-UID-{{ target_user.uid if target_user else 'Report' }}.pdf`);
+    } catch (err) {
+        console.error("PDF Export Error:", err);
+        alert("PDF তৈরিতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।");
+    }
 }
 </script>
 
