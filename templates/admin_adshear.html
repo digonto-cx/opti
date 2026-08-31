@@ -3,19 +3,22 @@
 
 <div class="space-y-6">
     
+    <!-- ফ্ল্যাশ মেসেজ -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
-                <div class="p-3.5 text-xs text-center rounded-2xl border font-bold shadow-sm {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-200{% else %}bg-red-50 text-red-600 border-red-200{% endif %}">
+                <div class="p-3.5 text-xs text-center rounded-2xl border font-bold shadow-xs {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-200{% else %}bg-red-50 text-red-600 border-red-200{% endif %}">
                     {{ message }}
                 </div>
             {% endfor %}
         {% endif %}
     {% endwith %}
 
-    <!-- ১. নতুন টাস্ক তৈরি ফরম -->
-    <div class="blockio-card p-6 bg-white border border-slate-200 rounded-3xl space-y-4">
-        <h2 class="text-xs font-black uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+    <!-- ============================================== -->
+    <!-- 1. নতুন অ্যাডস শেয়ার ক্যাম্পেইন তৈরি ফরম       -->
+    <!-- ============================================== -->
+    <div class="admin-card p-6 bg-white space-y-4">
+        <h2 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
             <i class="fa-solid fa-rectangle-ad text-purple-600"></i> নতুন অ্যাডস শেয়ার ক্যাম্পেইন যুক্ত করুন
         </h2>
 
@@ -25,85 +28,140 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">ক্যাম্পেইন টাইটেল</label>
-                    <input type="text" name="title" required placeholder="যেমন: নতুন ইনকাম প্রজেক্ট শেয়ার করুন" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-bold focus:outline-none focus:border-purple-500">
+                    <input type="text" name="title" required placeholder="যেমন: নতুন ইনকাম প্রজেক্ট শেয়ার করুন" 
+                           class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-bold focus:outline-none focus:border-purple-500">
                 </div>
                 <div>
                     <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">পুরস্কার (৳)</label>
-                    <input type="number" step="0.1" name="reward" required placeholder="10.0" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-bold focus:outline-none focus:border-purple-500">
+                    <input type="number" step="0.1" name="reward" required placeholder="10.0" 
+                           class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-bold focus:outline-none focus:border-purple-500">
                 </div>
             </div>
 
-            <!-- লিমিট ও লকড আইডি ফিল্ড -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">সর্বোচ্চ সাবমিশন লিমিট (0 = আনলিমিটেড)</label>
-                    <input type="number" name="max_submissions" value="50" required placeholder="যেমন: 50" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-bold focus:outline-none focus:border-purple-500">
+                    <input type="number" name="max_submissions" value="50" required placeholder="যেমন: 50" 
+                           class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-bold focus:outline-none focus:border-purple-500">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">সম্পর্কিত লকড টাস্ক আইডি (যেমন: 2, 5, 8)</label>
-                    <input type="text" name="locked_task_ids" placeholder="যেমন: 2, 5, 8" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-bold focus:outline-none focus:border-purple-500">
+                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">সম্পর্কিত লকড টাস্ক আইডি (ঐচ্ছিক: যেমন 2, 5)</label>
+                    <input type="text" name="locked_task_ids" placeholder="যেমন: 2, 5" 
+                           class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-bold focus:outline-none focus:border-purple-500">
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-1.5">শেয়ার ব্যানার আপলোড</label>
-                    <div class="flex items-center gap-3">
-                        <label for="admin-ad-file" class="cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-extrabold px-4 py-2 rounded-xl border border-slate-200 transition">
-                            Upload Banner
-                        </label>
-                        <input type="file" id="admin-ad-file" class="hidden" accept="image/*" onchange="uploadAdBanner(this)">
-                        <span id="label-admin-ad" class="text-[9px] text-slate-400 font-bold">আপলোড করা হয়নি</span>
-                    </div>
+            <div>
+                <label class="block text-[10px] font-black text-slate-400 uppercase mb-1.5">শেয়ার ব্যানার আপলোড</label>
+                <div class="flex items-center gap-3">
+                    <label for="admin-ad-file" class="cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700 text-[10px] font-black px-4 py-2 rounded-xl border border-slate-200 transition">
+                        <i class="fa-solid fa-cloud-arrow-up mr-1"></i> Upload Banner
+                    </label>
+                    <input type="file" id="admin-ad-file" class="hidden" accept="image/*" onchange="uploadAdBanner(this)">
+                    <span id="label-admin-ad" class="text-[9px] text-slate-400 font-bold">ছবি সিলেক্ট করা হয়নি</span>
                 </div>
             </div>
 
             <div>
                 <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">ক্যাপশন টেক্সট</label>
-                <textarea name="caption" required placeholder="শেয়ার করার সময় ব্যবহারের জন্য ক্যাপশন লিখুন..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-semibold focus:outline-none focus:border-purple-500 h-20"></textarea>
+                <textarea name="caption" required placeholder="পোস্ট করার জন্য প্রমোশনাল ক্যাপশন লিখুন..." 
+                          class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-medium focus:outline-none focus:border-purple-500 h-20 resize-none"></textarea>
             </div>
 
-            <button type="submit" id="submit-ad-btn" disabled class="w-full bg-slate-300 cursor-not-allowed text-white font-black text-xs py-3 rounded-2xl transition">
+            <button type="submit" id="submit-ad-btn" disabled class="w-full bg-slate-200 text-slate-400 cursor-not-allowed font-black text-xs py-3 rounded-xl transition">
                 ক্যাম্পেইনটি লাইভ করুন
             </button>
         </form>
     </div>
 
-    <!-- ২. পেন্ডিং লিঙ্ক ভেরিফিকেশন লিস্ট -->
-    <div class="blockio-card p-6 bg-white border border-slate-200 rounded-3xl space-y-4">
-        <h2 class="text-xs font-black uppercase tracking-wider text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
-            <i class="fa-solid fa-hourglass-half text-amber-500"></i> পেন্ডিং পোস্ট লিংক ভেরিফিকেশন প্যানেল
-        </h2>
+    <!-- ============================================== -->
+    <!-- 2. পেন্ডিং পোস্ট লিঙ্ক ভেরিফিকেশন প্যানেল (২০টি) -->
+    <!-- ============================================== -->
+    <div class="admin-card p-6 bg-white space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <h2 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-hourglass-half text-amber-500"></i> পেন্ডিং পোস্ট লিঙ্ক ভেরিফিকেশন প্যানেল
+            </h2>
+            <span class="text-[10px] font-black text-slate-500 font-mono">মোট পেন্ডিং: {{ total_count }}টি</span>
+        </div>
 
         <div class="space-y-3">
             {% for sub in pending_submissions %}
-            <div class="border border-slate-150 p-4 rounded-2xl bg-slate-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-xs font-semibold">
-                <div class="space-y-1.5">
-                    <p class="font-extrabold text-slate-900 text-xs">{{ sub.adshear_tasks.title }}</p>
-                    <p class="text-[10px] text-slate-500">ইউজার: <span class="font-bold text-slate-800">{{ sub.users.username }}</span> (UID: {{ sub.users.uid }})</p>
-                    <p class="text-[10px] text-emerald-600 font-bold">রিওয়ার্ড: ৳ {{ sub.adshear_tasks.reward }}</p>
-                    <a href="{{ sub.proof_link or sub.proof_image_url }}" target="_blank" class="inline-flex items-center gap-1.5 text-blue-600 bg-blue-50 border border-blue-100 px-3 py-1 rounded-xl text-[10px] font-black hover:underline mt-1">
-                        <i class="fa-solid fa-external-link"></i> পোস্ট লিংক চেক করুন (Click to Open)
-                    </a>
+            <div class="border border-slate-150 p-4 rounded-2xl bg-slate-50/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-xs font-semibold">
+                
+                <div class="space-y-1">
+                    <p class="font-black text-slate-900 text-xs">{{ sub.adshear_tasks.title }}</p>
+                    <p class="text-[10px] text-slate-500">
+                        ইউজার: <strong class="text-slate-800">{{ sub.users.username }}</strong> (UID: #{{ sub.users.uid }})
+                    </p>
+                    <p class="text-[10px] text-emerald-600 font-black">রিওয়ার্ড: ৳ {{ sub.adshear_tasks.reward }}</p>
+                    
+                    <div class="pt-1">
+                        <a href="{{ sub.proof_link or sub.proof_image_url }}" target="_blank" class="inline-flex items-center gap-1 text-sky-600 bg-sky-50 border border-sky-200 px-3 py-1 rounded-xl text-[10px] font-black hover:underline">
+                            <i class="fa-solid fa-external-link"></i> পোস্ট লিঙ্ক দেখুন (Open Link)
+                        </a>
+                    </div>
                 </div>
                 
+                <!-- এপ্রুভ ও রিজেক্ট বাটনস -->
                 <div class="flex gap-2 w-full sm:w-auto shrink-0">
                     <form action="/admin/adshear/action" method="POST" class="w-full sm:w-auto">
                         <input type="hidden" name="submission_id" value="{{ sub.id }}">
                         <input type="hidden" name="action" value="approve">
-                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[10px] px-4 py-2 rounded-xl transition">Approve</button>
+                        <button type="submit" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-black text-[10px] px-4 py-2 rounded-xl transition active:scale-95 duration-150">
+                            Approve
+                        </button>
                     </form>
-                    <form action="/admin/adshear/action" method="POST" class="w-full sm:w-auto">
+                    <form action="/admin/adshear/action" method="POST" class="w-full sm:w-auto" onsubmit="return confirm('আপনি কি নিশ্চিত যে এই কাজটি বাতিল করতে চান?');">
                         <input type="hidden" name="submission_id" value="{{ sub.id }}">
                         <input type="hidden" name="action" value="reject">
-                        <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold text-[10px] px-4 py-2 rounded-xl transition">Reject</button>
+                        <button type="submit" class="w-full sm:w-auto bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-black text-[10px] px-4 py-2 rounded-xl transition active:scale-95 duration-150">
+                            Reject
+                        </button>
                     </form>
                 </div>
+
             </div>
             {% else %}
-            <p class="text-xs text-slate-400 text-center py-4">বর্তমানে কোনো পেন্ডিং পোস্ট লিংক নেই।</p>
+            <div class="p-6 text-center text-slate-400 font-medium">
+                বর্তমানে কোনো পেন্ডিং পোস্ট লিঙ্ক নেই।
+            </div>
             {% endfor %}
         </div>
+
+        <!-- ============================================== -->
+        <!-- 3. পেজিনেশন নেভিগেশন (Prev / Next)             -->
+        <!-- ============================================== -->
+        <div class="flex justify-between items-center pt-4 border-t border-slate-100 text-xs font-bold text-slate-500">
+            <div>
+                {% if has_prev %}
+                    <a href="/admin/adshear?page={{ page - 1 }}" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white transition active:scale-95 duration-150 shadow-xs">
+                        <i class="fa-solid fa-chevron-left mr-1"></i> Prev Page
+                    </a>
+                {% else %}
+                    <span class="px-4 py-2 rounded-xl bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed">
+                        <i class="fa-solid fa-chevron-left mr-1"></i> Prev Page
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="text-slate-900 font-black font-mono">
+                Page {{ page }}
+            </div>
+
+            <div>
+                {% if has_next %}
+                    <a href="/admin/adshear?page={{ page + 1 }}" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white transition active:scale-95 duration-150 shadow-xs">
+                        Next Page <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </a>
+                {% else %}
+                    <span class="px-4 py-2 rounded-xl bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed">
+                        Next Page <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -119,8 +177,8 @@ function uploadAdBanner(input) {
     const label = document.getElementById("label-admin-ad");
     const submitBtn = document.getElementById("submit-ad-btn");
     
-    label.innerText = "Uploading Banner...";
-    label.className = "text-[9px] text-slate-500 font-bold animate-pulse";
+    label.innerText = "ব্যানার আপলোড হচ্ছে...";
+    label.className = "text-[9px] text-ruby-600 font-bold animate-pulse";
 
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/api/upload", true);
@@ -130,11 +188,11 @@ function uploadAdBanner(input) {
             const data = JSON.parse(xhr.responseText);
             if (data.status === "success") {
                 document.getElementById("proof-input-admin-ad").value = data.url;
-                label.innerText = "Banner Uploaded! ✓";
+                label.innerText = "ব্যানার আপলোড সম্পন্ন! ✓";
                 label.className = "text-[9px] text-emerald-600 font-black";
                 
                 submitBtn.removeAttribute('disabled');
-                submitBtn.className = "w-full bg-slate-950 hover:bg-slate-800 text-white font-black text-xs py-3 rounded-2xl transition cursor-pointer shadow-sm";
+                submitBtn.className = "w-full bg-slate-900 hover:bg-purple-700 text-white font-black text-xs py-3 rounded-xl transition cursor-pointer shadow-xs active:scale-95 duration-150";
             }
         }
     };
