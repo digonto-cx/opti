@@ -1466,64 +1466,94 @@ def submit_normal():
         
     return redirect(url_for('tasks'))
 
-# app.py ফাইলের /history রাউটটি এটি দিয়ে পরিবর্তন করুন
-# (এখানে tasks সম্পর্কের বদলে সুনির্দিষ্ট "tasks:task_id" রিলেশন ম্যাপ করা হয়েছে)
 @app.route('/history')
 def history():
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
         
-    deposits = supabase.table("deposits").select("*").eq("user_id", user_id).order("created_at", desc=True).execute().data
-    withdrawals = supabase.table("withdrawals").select("*").eq("user_id", user_id).order("created_at", desc=True).execute().data
-    
-    # শতভাগ নিরাপদ ও নিখুঁত জয়েনিং কুয়েরি
-    task_history = supabase.table("task_submissions") \
-        .select("proof_image_url, status, created_at, tasks:task_id(title, reward)") \
-        .eq("user_id", user_id).order("created_at", desc=True).execute().data or []
-    
-    transactions = supabase.table("transactions") \
-        .select("*") \
-        .eq("user_id", user_id) \
-        .order("created_at", desc=True).execute().data or []
-
-    today_income = 0.00
-    yesterday_income = 0.00
-    total_income = 0.00
-    
-    for tx in transactions:
-        amount = float(tx['amount'])
-        tx_date = datetime.datetime.fromisoformat(tx['created_at'].replace('Z', '+00:00'))
+    # ১. ইউজার ডাটা ফেচ (সেইফ রিট্রাই)
+    user = None
+    for _ in range(2):
+        try:
+            u_res = supabase.table("users").select("*").eq("id", user_id).execute().data
+            if u_res:
+                user = u_res[0]
+                break
+        except Exception as e:
+            print("History User Fetch Retry:", e)
+            
+    if not user:
+        session.clear()
+        return redirect(url_for('login'))
         
-        if amount > 0:
-            total_income += amount
-            if tx_date >= today_start if 'today_start' in locals() else now.replace(hour=0, minute=0, second=0, microsecond=0) if 'now' in locals() else datetime.datetime.now(datetime.timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0):
-                today_income += amount
-            elif (yesterday_start if 'yesterday_start' in locals() else today_start - datetime.timedelta(days=1)) <= tx_date < (yesterday_end if 'yesterday_end' in locals() else today_start):
-                yesterday_income += amount
-                
-    # টাইমস্ট্যাম্প ডেট ক্যালকুলেশন ফিক্সড সেফটি ব্লক
+    # ২. ডিপোজিট হিস্ট্রি
+    deposits = []
+    try:
+        dep_res = supabase.table("deposits").select("*").eq("user_id", user_id).order("created_at", desc=True).execute()
+        deposits = dep_res.data or []
+    except Exception as e:
+        print("History Deposits Error:", e)
+        deposits = []
+
+    # ৩. উইথড্রয়াল হিস্ট্রি
+    withdrawals = []
+    try:
+        with_res = supabase.table("withdrawals").select("*").eq("user_id", user_id).order("created_at", desc=True).execute()
+        withdrawals = with_res.data or []
+    except Exception as e:
+        print("History Withdrawals Error:", e)
+        withdrawals = []
+
+    # ৪. টাস্ক সাবমিশন হিস্ট্রি
+    task_history = []
+    try:
+        t_res = supabase.table("task_submissions") \
+            .select("proof_image_url, status, created_at, tasks:task_id(title, reward)") \
+            .eq("user_id", user_id).order("created_at", desc=True).execute()
+        task_history = t_res.data or []
+    except Exception as e:
+        print("History Task History Error:", e)
+        task_history = []
+
+    # ৫. ট্রানজেকশন হিস্ট্রি
+    transactions = []
+    try:
+        tx_res = supabase.table("transactions") \
+            .select("*").eq("user_id", user_id).order("created_at", desc=True).execute()
+        transactions = tx_res.data or []
+    except Exception as e:
+        print("History Transactions Error:", e)
+        transactions = []
+
+    # ৬. নিরাপদ ডেট ও ইনকাম হিসাব
     now = datetime.datetime.now(datetime.timezone.utc)
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     yesterday_start = today_start - datetime.timedelta(days=1)
     yesterday_end = today_start
-    
+
     today_income = 0.00
     yesterday_income = 0.00
     total_income = 0.00
-    
+
     for tx in transactions:
-        amount = float(tx['amount'])
-        tx_date = datetime.datetime.fromisoformat(tx['created_at'].replace('Z', '+00:00'))
-        
-        if amount > 0:
-            total_income += amount
-            if tx_date >= today_start:
-                today_income += amount
-            elif yesterday_start <= tx_date < yesterday_end:
-                yesterday_income += amount
+        try:
+            amount = float(tx.get('amount', 0))
+            raw_date = str(tx.get('created_at', ''))
+            
+            if amount > 0 and raw_date:
+                total_income += amount
+                tx_date = datetime.datetime.fromisoformat(raw_date.replace('Z', '+00:00'))
+                
+                if tx_date >= today_start:
+                    today_income += amount
+                elif yesterday_start <= tx_date < yesterday_end:
+                    yesterday_income += amount
+        except Exception:
+            pass
 
     return render_template('history.html', 
+                           user=user,
                            transactions=transactions, 
                            withdrawals=withdrawals, 
                            task_history=task_history,
