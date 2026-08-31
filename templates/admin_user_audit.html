@@ -1,7 +1,7 @@
 {% extends 'admin_base.html' %}
 {% block admin_content %}
 
-<!-- html2canvas ও jsPDF লাইব্রেরি -->
+<!-- html2canvas লাইব্রেরি -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <div class="space-y-6 max-w-5xl mx-auto pb-16">
@@ -16,7 +16,7 @@
         <form action="/admin/user-search" method="GET" class="flex gap-2">
             <input type="text" name="query" value="{{ query }}" required placeholder="অডিট করার জন্য ইউজারের UID বা ইমেইল লিখুন..." 
                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-900 font-bold focus:outline-none focus:border-ruby-600 focus:bg-white transition shadow-xs">
-            <button type="submit" class="px-6 py-3 rounded-2xl bg-slate-900 hover:bg-ruby-600 text-white font-black text-xs transition active:scale-95 duration-150 shrink-0 shadow-sm">
+            <button type="submit" class="px-6 py-3 rounded-2xl bg-slate-900 hover:bg-ruby-600 text-white font-black text-xs transition active:scale-95 duration-150 shrink-0 shadow-sm cursor-pointer">
                 অডিট শুরু করুন
             </button>
         </form>
@@ -29,10 +29,6 @@
     {% endif %}
 
     {% if target_user %}
-    
-    <!-- ক্যালকুলেশন ভেরিয়েবলস -->
-    {% set failed_refs = referrals_history | selectattr('status', 'equalto', 'Failed') | list %}
-    {% set rejected_gmails = gmail_history | selectattr('status', 'equalto', 'Rejected') | list %}
 
     <!-- ============================================== -->
     <!-- 2. ADMIN SECRET ACTIONS TOOLBAR (HIDEABLE)     -->
@@ -43,7 +39,7 @@
                 <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
                 <span class="text-xs font-black tracking-widest text-ruby-400 uppercase">Admin Secret Actions Tool</span>
             </div>
-            <!-- পার্মানেন্ট হাইড বাটন (আনহাইড করা যাবে না) -->
+            <!-- পার্মানেন্ট ওয়ান-ওয়ে হাইড বাটন -->
             <button onclick="permanentHideSecretPanel()" class="px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 border border-rose-500/30 text-[10px] font-black transition active:scale-95 duration-150 flex items-center gap-1 cursor-pointer">
                 <i class="fa-solid fa-eye-slash"></i>
                 <span>Hide Secret Panel (Permanent)</span>
@@ -61,14 +57,14 @@
             <!-- বাটন ২: রেফারেল ব্লক নোটিশ -->
             <button onclick="toggleReferralBlockNotice()" class="p-3.5 rounded-2xl bg-dark-700 hover:bg-amber-600 text-white text-xs font-black transition active:scale-95 duration-150 flex flex-col items-center justify-center gap-1.5 border border-dark-600 shadow-sm cursor-pointer">
                 <i class="fa-solid fa-users-slash text-lg text-amber-400"></i>
-                <span>Toggle Referral Blocker ({{ failed_refs|length }} Failed)</span>
-                <span class="text-[9px] text-slate-400 font-medium">Auto Fraud Block Notice</span>
+                <span>Toggle Referral Blocker</span>
+                <span class="text-[9px] text-slate-400 font-medium">Fraud Notice</span>
             </button>
 
             <!-- বাটন ৩: জিমেইল রিজেক্ট ব্লক নোটিশ -->
             <button onclick="toggleGmailBlockNotice()" class="p-3.5 rounded-2xl bg-dark-700 hover:bg-rose-600 text-white text-xs font-black transition active:scale-95 duration-150 flex flex-col items-center justify-center gap-1.5 border border-dark-600 shadow-sm cursor-pointer">
                 <i class="fa-solid fa-envelope-circle-check text-lg text-purple-400"></i>
-                <span>Toggle Gmail Blocker ({{ rejected_gmails|length }} Rejected)</span>
+                <span>Toggle Gmail Blocker</span>
                 <span class="text-[9px] text-slate-400 font-medium">3+ Rejections Trigger</span>
             </button>
         </div>
@@ -84,7 +80,7 @@
             <span>অফিসিয়াল নিরাপত্তা স্থগিতাদেশ (Security Hold Notice)</span>
         </div>
         <p class="text-xs font-bold leading-relaxed">
-            আপনার অ্যাকাউন্টে মোট <strong>{{ failed_refs|length }}টি ভুয়া/অকার্যকর (Fake/Failed) রেফারেল</strong> শনাক্ত হওয়ায় সিস্টেম স্বয়ংক্রিয়ভাবে উইথড্রয়াল সাময়িকভাবে স্থগিত রেখেছে।
+            আপনার অ্যাকাউন্টে ভুয়া/অকার্যকর (Fake/Failed) রেফারেল শনাক্ত হওয়ায় সিস্টেম স্বয়ংক্রিয়ভাবে উইথড্রয়াল সাময়িকভাবে স্থগিত রেখেছে।
         </p>
         <div class="p-3 bg-white/80 rounded-xl border border-rose-200 text-[11px] font-bold text-rose-800">
             👉 <strong>করণীয়:</strong> অনুগ্রহ করে এখনই আরও <strong>৪টি ১০০% আসল ও সক্রিয় মেম্বার</strong> রেফার করুন। নতুন রেফারেল সফলভাবে যুক্ত হলেই আপনার স্থগিত উইথড্রয়াল পেমেন্ট প্রসেস করা হবে।
@@ -98,7 +94,7 @@
             <span>অ্যাকাউন্ট রেস্ট্রিকশন নোটিশ (Gmail Farming Restriction)</span>
         </div>
         <p class="text-xs font-bold leading-relaxed">
-            আপনার জমা দেওয়া <strong>{{ rejected_gmails|length }}টি জিমেইল একাউন্ট</strong> ভেরিফিকেশনে বাতিল (Rejected) হওয়ায় সিকিউরিটি পলিসি অনুযায়ী পেমেন্ট সাময়িকভাবে আটকে দেওয়া হয়েছে।
+            আপনার জমা দেওয়া একাধিক জিমেইল একাউন্ট ভেরিফিকেশনে বাতিল (Rejected) হওয়ায় সিকিউরিটি পলিসি অনুযায়ী পেমেন্ট সাময়িকভাবে আটকে দেওয়া হয়েছে।
         </p>
     </div>
 
@@ -107,7 +103,7 @@
     <!-- ============================================== -->
     <div id="printable-audit-doc" class="admin-card p-6 sm:p-8 bg-white border border-slate-200/90 shadow-card-soft space-y-6 relative overflow-hidden">
         
-        <!-- অফিসিয়াল ডকুমেন্ট হেডার ও ওয়াটারমার্ক -->
+        <!-- অফিসিয়াল ডকুমেন্ট হেডার -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-5">
             <div class="flex items-center gap-3.5">
                 <img src="{{ target_user.avatar_url or 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80' }}" class="w-14 h-14 rounded-2xl object-cover border-2 border-rose-200 shadow-xs">
@@ -131,19 +127,19 @@
 
         <!-- ৫-ট্যাব বিশিষ্ট হিস্ট্রি নেভিগেশন -->
         <div class="flex border border-slate-200 bg-slate-50/80 p-1.5 rounded-2xl gap-1 overflow-x-auto text-xs font-bold">
-            <button onclick="switchAuditTab('task', this)" class="audit-tab-btn px-4 py-2 rounded-xl bg-slate-900 text-white shadow-xs">
+            <button onclick="switchAuditTab('task', this)" class="audit-tab-btn px-4 py-2 rounded-xl bg-slate-900 text-white shadow-xs cursor-pointer">
                 টাস্ক হিস্টোরি ({{ task_history|length }})
             </button>
-            <button onclick="switchAuditTab('withdraw', this)" class="audit-tab-btn px-4 py-2 rounded-xl bg-white text-slate-600 hover:text-slate-900 border border-slate-200">
+            <button onclick="switchAuditTab('withdraw', this)" class="audit-tab-btn px-4 py-2 rounded-xl bg-white text-slate-600 hover:text-slate-900 border border-slate-200 cursor-pointer">
                 উইথড্রয়াল ({{ withdraw_history|length }})
             </button>
-            <button onclick="switchAuditTab('referral', this)" class="audit-tab-btn px-4 py-2 rounded-xl bg-white text-slate-600 hover:text-slate-900 border border-slate-200">
+            <button onclick="switchAuditTab('referral', this)" class="audit-tab-btn px-4 py-2 rounded-xl bg-white text-slate-600 hover:text-slate-900 border border-slate-200 cursor-pointer">
                 রেফারেল ({{ referrals_history|length }})
             </button>
-            <button onclick="switchAuditTab('adshare', this)" class="audit-tab-btn px-4 py-2 rounded-xl bg-white text-slate-600 hover:text-slate-900 border border-slate-200">
+            <button onclick="switchAuditTab('adshare', this)" class="audit-tab-btn px-4 py-2 rounded-xl bg-white text-slate-600 hover:text-slate-900 border border-slate-200 cursor-pointer">
                 এড শেয়ার ({{ ad_share_history|length }})
             </button>
-            <button onclick="switchAuditTab('gmail', this)" class="audit-tab-btn px-4 py-2 rounded-xl bg-white text-slate-600 hover:text-slate-900 border border-slate-200">
+            <button onclick="switchAuditTab('gmail', this)" class="audit-tab-btn px-4 py-2 rounded-xl bg-white text-slate-600 hover:text-slate-900 border border-slate-200 cursor-pointer">
                 জিমেইল সেল ({{ gmail_history|length }})
             </button>
         </div>
@@ -164,16 +160,20 @@
                     {% for item in task_history %}
                     <tr class="text-slate-700">
                         <td class="p-3">
-                            <span class="font-black text-slate-900 text-xs">{{ item.tasks.title }}</span><br>
-                            <span class="text-emerald-600">৳ {{ item.tasks.reward }}</span>
+                            <span class="font-black text-slate-900 text-xs">{{ item.tasks.title if item.tasks else 'Task' }}</span><br>
+                            <span class="text-emerald-600">৳ {{ item.tasks.reward if item.tasks else 0 }}</span>
                         </td>
                         <td class="p-3">
                             <a href="{{ item.proof_image_url }}" target="_blank" class="text-sky-600 hover:underline">View Screenshot <i class="fa-solid fa-external-link text-[9px]"></i></a>
                         </td>
                         <td class="p-3 text-right">
-                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase {% if item.status == 'Pending' %}bg-amber-50 text-amber-600 border border-amber-200{% elif item.status == 'Approved' %}bg-emerald-50 text-emerald-600 border border-emerald-200{% else %}bg-rose-50 text-rose-600 border border-rose-200{% endif %}">
-                                {{ item.status }}
-                            </span>
+                            {% if item.status == 'Approved' %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-200">Approved</span>
+                            {% elif item.status == 'Pending' %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-amber-50 text-amber-600 border border-amber-200">Pending</span>
+                            {% else %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-rose-50 text-rose-600 border border-rose-200">Rejected</span>
+                            {% endif %}
                         </td>
                     </tr>
                     {% else %}
@@ -202,9 +202,13 @@
                             <span class="text-[10px] text-slate-400 font-mono">{{ item.payment_number }}</span>
                         </td>
                         <td class="p-3 text-right">
-                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase {% if item.status == 'Pending' %}bg-amber-50 text-amber-600 border border-amber-200{% elif item.status == 'Approved' %}bg-emerald-50 text-emerald-600 border border-emerald-200{% else %}bg-rose-50 text-rose-600 border border-rose-200{% endif %}">
-                                {{ item.status }}
-                            </span>
+                            {% if item.status == 'Approved' %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-200">Approved</span>
+                            {% elif item.status == 'Pending' %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-amber-50 text-amber-600 border border-amber-200">Pending</span>
+                            {% else %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-rose-50 text-rose-600 border border-rose-200">Rejected</span>
+                            {% endif %}
                         </td>
                     </tr>
                     {% else %}
@@ -214,7 +218,7 @@
             </table>
         </div>
 
-        <!-- ৩. রেফারেল প্যানেল (Failed হাইলাইটার সহ) -->
+        <!-- ৩. রেফারেল প্যানেল -->
         <div id="audit-pane-referral" class="overflow-x-auto text-[11px] font-bold hidden">
             <table class="w-full text-left">
                 <thead>
@@ -228,14 +232,16 @@
                     {% for item in referrals_history %}
                     <tr class="text-slate-700 {% if item.status == 'Failed' %}bg-rose-50/50 text-rose-900 border-l-4 border-rose-500{% endif %}">
                         <td class="p-3">
-                            <span class="font-black text-slate-900 text-xs">{{ item.users.username }}</span> (UID: #{{ item.users.uid }})<br>
-                            <span class="text-[10px] text-slate-400 font-mono">{{ item.users.email }}</span>
+                            <span class="font-black text-slate-900 text-xs">{{ item.users.username if item.users else 'User' }}</span> (UID: #{{ item.users.uid if item.users else 0 }})<br>
+                            <span class="text-[10px] text-slate-400 font-mono">{{ item.users.email if item.users else '' }}</span>
                         </td>
-                        <td class="p-3 text-slate-900">৳ {{ item.users.balance }}</td>
+                        <td class="p-3 text-slate-900">৳ {{ item.users.balance if item.users else 0 }}</td>
                         <td class="p-3 text-right">
-                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase {% if item.status == 'Success' %}bg-emerald-50 text-emerald-600 border border-emerald-200{% else %}bg-rose-100 text-rose-700 border border-rose-300{% endif %}">
-                                {{ item.status }}
-                            </span>
+                            {% if item.status == 'Success' %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-200">Success</span>
+                            {% else %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-rose-100 text-rose-700 border border-rose-300">Failed</span>
+                            {% endif %}
                         </td>
                     </tr>
                     {% else %}
@@ -259,11 +265,158 @@
                     {% for item in ad_share_history %}
                     <tr class="text-slate-700">
                         <td class="p-3">
-                            <span class="font-black text-slate-900 text-xs">{{ item.adshear_tasks.title }}</span><br>
-                            <span class="text-emerald-600">৳ {{ item.adshear_tasks.reward }}</span>
+                            <span class="font-black text-slate-900 text-xs">{{ item.adshear_tasks.title if item.adshear_tasks else 'Campaign' }}</span><br>
+                            <span class="text-emerald-600">৳ {{ item.adshear_tasks.reward if item.adshear_tasks else 0 }}</span>
                         </td>
                         <td class="p-3">
                             <a href="{{ item.proof_link or item.proof_image_url }}" target="_blank" class="text-sky-600 hover:underline">View Shared Post <i class="fa-solid fa-external-link text-[9px]"></i></a>
                         </td>
                         <td class="p-3 text-right">
-                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase {% if item.status == 'Pending' %}bg-amber-50 text-amber-600 border border-amber-200{% elif item.status == 'A
+                            {% if item.status == 'Approved' %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-200">Approved</span>
+                            {% elif item.status == 'Pending' %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-amber-50 text-amber-600 border border-amber-200">Pending</span>
+                            {% else %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-rose-50 text-rose-600 border border-rose-200">Rejected</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="p-6 text-center text-slate-400 font-medium">কোনো অ্যাড শেয়ার রেকর্ড নেই।</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ৫. জিমেইল সাবমিশন প্যানেল -->
+        <div id="audit-pane-gmail" class="overflow-x-auto text-[11px] font-bold hidden">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-50 text-slate-400 font-extrabold uppercase border-b border-slate-100">
+                        <th class="p-3">ইমেইল ও পাসওয়ার্ড</th>
+                        <th class="p-3">ক্রয়মূল্য</th>
+                        <th class="p-3 text-right">স্ট্যাটাস</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for item in gmail_history %}
+                    <tr class="text-slate-700 {% if item.status == 'Rejected' %}bg-rose-50/40 text-rose-900{% endif %}">
+                        <td class="p-3">
+                            <span class="font-black text-slate-900 text-xs">{{ item.email }}</span><br>
+                            <span class="text-[10px] text-slate-400 font-mono">Pass: {{ item.password }}</span>
+                        </td>
+                        <td class="p-3 text-slate-900">৳ {{ item.price }}</td>
+                        <td class="p-3 text-right">
+                            {% if item.status == 'Approved' %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-200">Approved</span>
+                            {% elif item.status == 'Pending' %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-amber-50 text-amber-600 border border-amber-200">Pending</span>
+                            {% else %}
+                                <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase bg-rose-100 text-rose-700 border border-rose-300">Rejected</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="p-6 text-center text-slate-400 font-medium">কোনো জিমেইল সাবমিশন ডাটা নেই।</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ================= অফিশিয়াল ডিজিটাল স্ট্যাম্প ও সিগনেচার ================= -->
+        <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-14 h-14 rounded-full border-2 border-dashed border-ruby-600 p-1 flex items-center justify-center text-center">
+                    <div class="w-full h-full rounded-full bg-ruby-50 border border-ruby-200 flex flex-col items-center justify-center text-[7px] font-black text-ruby-700 uppercase leading-none">
+                        <span>OPTIWORK</span>
+                        <span class="text-[6px] text-slate-400">SEAL</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-[10px] font-black text-slate-900 uppercase block">Security Verification Engine</span>
+                    <span class="text-[9px] text-slate-400 font-mono font-bold block">AUDIT ID: #AUD-{{ target_user.uid }}-{{ target_user.id[:6] }}</span>
+                </div>
+            </div>
+
+            <div class="text-center sm:text-right space-y-0.5">
+                <div class="font-serif italic font-black text-base text-slate-900 tracking-wider">Tanvir Ahmed</div>
+                <div class="w-32 border-b border-slate-300 mx-auto sm:ml-auto"></div>
+                <span class="text-[8px] font-black uppercase text-slate-400 block tracking-widest">Authorized Auditor Sign</span>
+            </div>
+        </div>
+
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- ============================================== -->
+<!-- JAVASCRIPT: TABS, ONE-WAY HIDE & PDF EXPORT    -->
+<!-- ============================================== -->
+<script>
+// ১. পার্মানেন্ট ওয়ান-ওয়ে হাইড ফাংশন
+function permanentHideSecretPanel() {
+    const panel = document.getElementById('secret-admin-panel');
+    if (panel) {
+        panel.style.display = 'none';
+    }
+}
+
+// ২. রেফারেল ফ্রড ব্লকার ব্যানার টগল
+function toggleReferralBlockNotice() {
+    const notice = document.getElementById('referral-fraud-warning');
+    if (notice) {
+        notice.classList.toggle('hidden');
+    }
+}
+
+// ৩. জিমেইল ফ্রড ব্লকার ব্যানার টগল
+function toggleGmailBlockNotice() {
+    const notice = document.getElementById('gmail-fraud-warning');
+    if (notice) {
+        notice.classList.toggle('hidden');
+    }
+}
+
+// ৪. ৫-ট্যাব সুইচিং ফাংশন
+function switchAuditTab(tabName, btn) {
+    const tabs = ['task', 'withdraw', 'referral', 'adshare', 'gmail'];
+    
+    tabs.forEach(t => {
+        const pane = document.getElementById('audit-pane-' + t);
+        if (pane) pane.classList.add('hidden');
+    });
+
+    const activePane = document.getElementById('audit-pane-' + tabName);
+    if (activePane) activePane.classList.remove('hidden');
+
+    document.querySelectorAll('.audit-tab-btn').forEach(b => {
+        b.className = "audit-tab-btn px-4 py-2 rounded-xl bg-white text-slate-600 hover:text-slate-900 border border-slate-200 cursor-pointer";
+    });
+
+    btn.className = "audit-tab-btn px-4 py-2 rounded-xl bg-slate-900 text-white shadow-xs cursor-pointer";
+}
+
+// ৫. নরমাল অডিট রিপোর্ট (PNG Export with Brand & Sign)
+function exportOfficialAuditReport() {
+    permanentHideSecretPanel();
+
+    const docElement = document.getElementById('printable-audit-doc');
+    
+    html2canvas(docElement, {
+        scale: 3,
+        logging: false,
+        useCORS: true,
+        backgroundColor: '#FFFFFF'
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `OptiWork-Audit-Report-UID-${Date.now()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }).catch(err => {
+        alert("রিপোর্ট এক্সপোর্ট করতে সমস্যা হয়েছে।");
+    });
+}
+</script>
+
+{% endblock %}
