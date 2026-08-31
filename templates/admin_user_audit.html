@@ -36,7 +36,6 @@
                 <span class="w-2.5 h-2.5 rounded-full bg-ruby-600 animate-ping"></span>
                 <span class="text-xs font-black tracking-widest text-ruby-700 uppercase">Admin Secret Actions Tool</span>
             </div>
-            <!-- পার্মানেন্ট ওয়ান-ওয়ে হাইড বাটন -->
             <button type="button" onclick="permanentHideSecretPanel()" class="px-3 py-1.5 rounded-xl bg-white hover:bg-rose-100 text-rose-700 border border-rose-200 text-[10px] font-black transition active:scale-95 duration-150 flex items-center gap-1.5 shadow-2xs cursor-pointer">
                 <i class="fa-solid fa-eye-slash"></i>
                 <span>Hide Secret Panel</span>
@@ -44,21 +43,18 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-            <!-- বাটন ১: সরাসরি PDF ডাউনলোড বাটন -->
             <button type="button" onclick="exportOfficialAuditPDF()" class="p-4 rounded-2xl bg-white hover:bg-rose-50 border border-rose-200 text-slate-800 text-xs font-black transition active:scale-95 duration-150 flex flex-col items-center justify-center gap-1.5 shadow-xs cursor-pointer">
                 <i class="fa-solid fa-file-pdf text-xl text-ruby-600"></i>
                 <span>অফিসিয়াল PDF রিপোর্ট প্রিন্ট</span>
-                <span class="text-[9px] text-slate-400 font-medium">Clean 1-Page Document</span>
+                <span class="text-[9px] text-slate-400 font-medium">All Tables Included</span>
             </button>
 
-            <!-- বাটন ২: রেফারেল ফ্রড নোটিশ টগল -->
             <button type="button" onclick="toggleReferralBlockNotice()" class="p-4 rounded-2xl bg-white hover:bg-amber-50 border border-amber-200 text-slate-800 text-xs font-black transition active:scale-95 duration-150 flex flex-col items-center justify-center gap-1.5 shadow-xs cursor-pointer">
                 <i class="fa-solid fa-users-slash text-xl text-amber-600"></i>
                 <span>রেফারেল ফ্রড নোটিশ টগল</span>
                 <span class="text-[9px] text-slate-400 font-medium">Show/Hide Warning</span>
             </button>
 
-            <!-- বাটন ৩: জিমেইল রিজেক্ট নোটিশ টগল -->
             <button type="button" onclick="toggleGmailBlockNotice()" class="p-4 rounded-2xl bg-white hover:bg-purple-50 border border-purple-200 text-slate-800 text-xs font-black transition active:scale-95 duration-150 flex flex-col items-center justify-center gap-1.5 shadow-xs cursor-pointer">
                 <i class="fa-solid fa-envelope-circle-check text-xl text-purple-600"></i>
                 <span>জিমেইল রিজেক্ট নোটিশ টগল</span>
@@ -68,7 +64,7 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- 3. OFFICIAL AUDIT REPORT (EXACT 1-PAGE A4)     -->
+    <!-- 3. OFFICIAL AUDIT REPORT (A4 FULL PRINTABLE)   -->
     <!-- ============================================== -->
     <div id="printable-audit-doc" class="bg-white border border-slate-200 p-6 sm:p-8 rounded-[28px] shadow-sm space-y-5 relative">
         
@@ -93,7 +89,7 @@
             </div>
         </div>
 
-        <!-- ২. রেফারেল ফ্রড নোটিশ ব্যানার (প্রিন্টে সুন্দর লুক) -->
+        <!-- ২. রেফারেল ফ্রড নোটিশ ব্যানার -->
         <div id="referral-fraud-warning" class="hidden p-4 rounded-2xl bg-rose-50 border border-rose-300 text-rose-900 space-y-1.5">
             <div class="flex items-center gap-2 text-rose-700 font-black text-[11px] uppercase tracking-wider">
                 <i class="fa-solid fa-triangle-exclamation text-xs"></i>
@@ -140,10 +136,10 @@
             </div>
         </div>
 
-        <!-- ৪. ৫-ট্যাব নেভিগেশন (অন-স্ক্রিনের জন্য) -->
+        <!-- ৪. ৫-ট্যাব নেভিগেশন (শুধুমাত্র স্ক্রিনের জন্য, প্রিন্টে হাইড থাকবে) -->
         <div class="flex border border-slate-200 bg-slate-50 p-1 rounded-xl gap-1 overflow-x-auto text-[11px] font-bold no-print">
             <button type="button" onclick="switchAuditTab('task', this)" class="audit-tab-btn px-3.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-xs cursor-pointer">
-                টাস্ক হিস্টোরি ({{ task_history|length }})
+                টাস্ক ({{ task_history|length }})
             </button>
             <button type="button" onclick="switchAuditTab('withdraw', this)" class="audit-tab-btn px-3.5 py-1.5 rounded-lg bg-white text-slate-600 hover:text-slate-900 border border-slate-200 cursor-pointer">
                 উইথড্রয়াল ({{ withdraw_history|length }})
@@ -159,191 +155,181 @@
             </button>
         </div>
 
-        <!-- ================= ৫. হিস্ট্রি ডাটা টেবিলস ================= -->
-        
-        <!-- ক. টাস্ক হিস্ট্রি -->
-        <div id="audit-pane-task" class="overflow-x-auto text-[10px] font-bold">
-            <table class="w-full text-left">
-                <thead>
-                    <tr class="bg-slate-50 text-slate-400 font-extrabold uppercase border-b border-slate-200">
-                        <th class="p-2.5">কাজের বিবরণ</th>
-                        <th class="p-2.5">প্রমাণ স্ক্রিনশট</th>
-                        <th class="p-2.5 text-right">স্ট্যাটাস</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    {% for item in task_history %}
-                    <tr class="text-slate-700">
-                        <td class="p-2.5">
-                            <span class="font-black text-slate-900">{{ item.tasks.title if item.tasks else 'Task' }}</span><br>
-                            <span class="text-emerald-600">৳ {{ item.tasks.reward if item.tasks else 0 }}</span>
-                        </td>
-                        <td class="p-2.5">
-                            {% if item.proof_image_url %}
-                                <a href="{{ item.proof_image_url }}" target="_blank" class="text-sky-600 hover:underline">View Screenshot <i class="fa-solid fa-external-link text-[8px]"></i></a>
+        <!-- ================= ৫. অল-ইন-ওয়ান অডিট ডাটা সেকশনস ================= -->
+        <div class="space-y-4 audit-print-container">
+            
+            <!-- ক. টাস্ক হিস্ট্রি টেবিল -->
+            <div id="audit-pane-task" class="audit-section space-y-1.5">
+                <h3 class="text-[10px] font-black uppercase text-slate-700 flex items-center gap-1.5 border-b border-slate-100 pb-1">
+                    <i class="fa-solid fa-list-check text-ruby-600"></i> টাস্ক সাবমিশন রেকর্ড ({{ task_history|length }})
+                </h3>
+                <div class="overflow-x-auto text-[10px] font-bold">
+                    <table class="w-full text-left border border-slate-200 rounded-xl">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 font-extrabold uppercase border-b border-slate-200">
+                                <th class="p-2">কাজের বিবরণ</th>
+                                <th class="p-2">রিওয়ার্ড</th>
+                                <th class="p-2 text-right">স্ট্যাটাস</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            {% for item in task_history %}
+                            <tr class="text-slate-700">
+                                <td class="p-2 font-black text-slate-900">{{ item.tasks.title if item.tasks else 'Task' }}</td>
+                                <td class="p-2 text-emerald-600">৳ {{ item.tasks.reward if item.tasks else 0 }}</td>
+                                <td class="p-2 text-right">
+                                    <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase {% if item.status == 'Approved' %}bg-emerald-50 text-emerald-600 border border-emerald-200{% elif item.status == 'Pending' %}bg-amber-50 text-amber-600 border border-amber-200{% else %}bg-rose-50 text-rose-600 border border-rose-200{% endif %}">
+                                        {{ item.status }}
+                                    </span>
+                                </td>
+                            </tr>
                             {% else %}
-                                <span class="text-slate-400 font-normal">N/A</span>
-                            {% endif %}
-                        </td>
-                        <td class="p-2.5 text-right">
-                            {% if item.status == 'Approved' %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-200">Approved</span>
-                            {% elif item.status == 'Pending' %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-amber-50 text-amber-600 border border-amber-200">Pending</span>
-                            {% else %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-rose-50 text-rose-600 border border-rose-200">Rejected</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr><td colspan="3" class="p-4 text-center text-slate-400 font-medium">কোনো টাস্ক সাবমিশন নেই।</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                            <tr><td colspan="3" class="p-3 text-center text-slate-400 font-medium">কোনো টাস্ক রেকর্ড নেই।</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-        <!-- খ. উইথড্রয়াল -->
-        <div id="audit-pane-withdraw" class="overflow-x-auto text-[10px] font-bold hidden">
-            <table class="w-full text-left">
-                <thead>
-                    <tr class="bg-slate-50 text-slate-400 font-extrabold uppercase border-b border-slate-200">
-                        <th class="p-2.5">পরিমাণ</th>
-                        <th class="p-2.5">গেটওয়ে / নম্বর</th>
-                        <th class="p-2.5 text-right">স্ট্যাটাস</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    {% for item in withdraw_history %}
-                    <tr class="text-slate-700">
-                        <td class="p-2.5 font-black text-slate-900">৳ {{ item.amount }}</td>
-                        <td class="p-2.5">
-                            <span>{{ item.payment_method }}</span><br>
-                            <span class="text-[9px] text-slate-400 font-mono">{{ item.payment_number }}</span>
-                        </td>
-                        <td class="p-2.5 text-right">
-                            {% if item.status == 'Approved' %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-200">Approved</span>
-                            {% elif item.status == 'Pending' %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-amber-50 text-amber-600 border border-amber-200">Pending</span>
+            <!-- খ. উইথড্রয়াল টেবিল -->
+            <div id="audit-pane-withdraw" class="audit-section space-y-1.5">
+                <h3 class="text-[10px] font-black uppercase text-slate-700 flex items-center gap-1.5 border-b border-slate-100 pb-1">
+                    <i class="fa-solid fa-money-bill-transfer text-ruby-600"></i> উইথড্রয়াল ক্যাশআউট হিস্টোরি ({{ withdraw_history|length }})
+                </h3>
+                <div class="overflow-x-auto text-[10px] font-bold">
+                    <table class="w-full text-left border border-slate-200 rounded-xl">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 font-extrabold uppercase border-b border-slate-200">
+                                <th class="p-2">পরিমাণ</th>
+                                <th class="p-2">গেটওয়ে ও নম্বর</th>
+                                <th class="p-2 text-right">স্ট্যাটাস</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            {% for item in withdraw_history %}
+                            <tr class="text-slate-700">
+                                <td class="p-2 font-black text-slate-900">৳ {{ item.amount }}</td>
+                                <td class="p-2">
+                                    <span>{{ item.payment_method }}</span> - <span class="text-[9px] text-slate-400 font-mono">{{ item.payment_number }}</span>
+                                </td>
+                                <td class="p-2 text-right">
+                                    <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase {% if item.status == 'Approved' %}bg-emerald-50 text-emerald-600 border border-emerald-200{% elif item.status == 'Pending' %}bg-amber-50 text-amber-600 border border-amber-200{% else %}bg-rose-50 text-rose-600 border border-rose-200{% endif %}">
+                                        {{ item.status }}
+                                    </span>
+                                </td>
+                            </tr>
                             {% else %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-rose-50 text-rose-600 border border-rose-200">Rejected</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr><td colspan="3" class="p-4 text-center text-slate-400 font-medium">কোনো উইথড্রয়াল হিস্টোরি নেই।</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                            <tr><td colspan="3" class="p-3 text-center text-slate-400 font-medium">কোনো উইথড্রয়াল হিস্টোরি নেই।</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-        <!-- গ. রেফারেল -->
-        <div id="audit-pane-referral" class="overflow-x-auto text-[10px] font-bold hidden">
-            <table class="w-full text-left">
-                <thead>
-                    <tr class="bg-slate-50 text-slate-400 font-extrabold uppercase border-b border-slate-200">
-                        <th class="p-2.5">রেফারকৃত সদস্য</th>
-                        <th class="p-2.5">লাইভ ব্যালেন্স</th>
-                        <th class="p-2.5 text-right">স্ট্যাটাস</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    {% for item in referrals_history %}
-                    <tr class="text-slate-700 {% if item.status == 'Failed' %}bg-rose-50 text-rose-900 border-l-2 border-rose-500{% endif %}">
-                        <td class="p-2.5">
-                            <span class="font-black text-slate-900">{{ item.users.username if item.users else 'Member' }}</span> (UID: #{{ item.users.uid if item.users else '0' }})<br>
-                            <span class="text-[9px] text-slate-400 font-mono">{{ item.users.email if item.users else '' }}</span>
-                        </td>
-                        <td class="p-2.5 text-slate-900">৳ {{ item.users.balance if item.users else 0 }}</td>
-                        <td class="p-2.5 text-right">
-                            {% if item.status == 'Success' %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-200">Success</span>
+            <!-- গ. রেফারেল টেবিল -->
+            <div id="audit-pane-referral" class="audit-section space-y-1.5">
+                <h3 class="text-[10px] font-black uppercase text-slate-700 flex items-center gap-1.5 border-b border-slate-100 pb-1">
+                    <i class="fa-solid fa-users text-ruby-600"></i> রেফারেল মেম্বার রেকর্ড ({{ referrals_history|length }})
+                </h3>
+                <div class="overflow-x-auto text-[10px] font-bold">
+                    <table class="w-full text-left border border-slate-200 rounded-xl">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 font-extrabold uppercase border-b border-slate-200">
+                                <th class="p-2">রেফার সদস্য (UID)</th>
+                                <th class="p-2">ব্যালেন্স</th>
+                                <th class="p-2 text-right">স্ট্যাটাস</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            {% for item in referrals_history %}
+                            <tr class="text-slate-700 {% if item.status == 'Failed' %}bg-rose-50 text-rose-900 border-l-2 border-rose-500{% endif %}">
+                                <td class="p-2">
+                                    <span class="font-black text-slate-900">{{ item.users.username if item.users else 'Member' }}</span> (#{{ item.users.uid if item.users else '0' }})
+                                </td>
+                                <td class="p-2 text-slate-900">৳ {{ item.users.balance if item.users else 0 }}</td>
+                                <td class="p-2 text-right">
+                                    {% if item.status == 'Success' %}
+                                        <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-200">Success</span>
+                                    {% else %}
+                                        <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-rose-100 text-rose-700 border border-rose-300">Failed</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
                             {% else %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-rose-100 text-rose-700 border border-rose-300">Failed</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr><td colspan="3" class="p-4 text-center text-slate-400 font-medium">কোনো রেফারেল রেকর্ড নেই।</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                            <tr><td colspan="3" class="p-3 text-center text-slate-400 font-medium">কোনো রেফারেল রেকর্ড নেই।</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-        <!-- ঘ. ফেসবুক ক্যাম্পেইন -->
-        <div id="audit-pane-campaign" class="overflow-x-auto text-[10px] font-bold hidden">
-            <table class="w-full text-left">
-                <thead>
-                    <tr class="bg-slate-50 text-slate-400 font-extrabold uppercase border-b border-slate-200">
-                        <th class="p-2.5">ক্যাম্পেইন নাম</th>
-                        <th class="p-2.5">পোস্ট লিঙ্ক</th>
-                        <th class="p-2.5 text-right">স্ট্যাটাস</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    {% for item in ad_share_history %}
-                    <tr class="text-slate-700">
-                        <td class="p-2.5">
-                            <span class="font-black text-slate-900">{{ item.adshear_tasks.title if item.adshear_tasks else 'Campaign' }}</span><br>
-                            <span class="text-emerald-600">৳ {{ item.adshear_tasks.reward if item.adshear_tasks else 0 }}</span>
-                        </td>
-                        <td class="p-2.5">
-                            <a href="{{ item.proof_link or item.proof_image_url }}" target="_blank" class="text-sky-600 hover:underline">View Post <i class="fa-solid fa-external-link text-[8px]"></i></a>
-                        </td>
-                        <td class="p-2.5 text-right">
-                            {% if item.status == 'Approved' %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-200">Approved</span>
-                            {% elif item.status == 'Pending' %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-amber-50 text-amber-600 border border-amber-200">Pending</span>
-                            {% else %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-rose-50 text-rose-600 border border-rose-200">Rejected</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr><td colspan="3" class="p-4 text-center text-slate-400 font-medium">কোনো ক্যাম্পেইন রেকর্ড নেই।</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+            <!-- ঘ. ফেসবুক ক্যাম্পেইন ও জিমেইল টেবিলস -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+                
+                <!-- ক্যাম্পেইন টেবিল -->
+                <div id="audit-pane-campaign" class="audit-section space-y-1.5">
+                    <h3 class="text-[10px] font-black uppercase text-slate-700 flex items-center gap-1 border-b border-slate-100 pb-1">
+                        <i class="fa-solid fa-rectangle-ad text-purple-600"></i> এড শেয়ার ক্যাম্পেইন ({{ ad_share_history|length }})
+                    </h3>
+                    <div class="overflow-x-auto text-[9px] font-bold">
+                        <table class="w-full text-left border border-slate-200 rounded-xl">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 font-extrabold uppercase border-b border-slate-200">
+                                    <th class="p-1.5">ক্যাম্পেইন</th>
+                                    <th class="p-1.5 text-right">স্ট্যাটাস</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                {% for item in ad_share_history %}
+                                <tr class="text-slate-700">
+                                    <td class="p-1.5 font-black text-slate-900 truncate max-w-[140px]">{{ item.adshear_tasks.title if item.adshear_tasks else 'Campaign' }}</td>
+                                    <td class="p-1.5 text-right">
+                                        <span class="px-1.5 py-0.2 rounded-full text-[7px] font-black uppercase {% if item.status == 'Approved' %}bg-emerald-50 text-emerald-600{% else %}bg-amber-50 text-amber-600{% endif %}">{{ item.status }}</span>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="2" class="p-2 text-center text-slate-400">রেকর্ড নেই</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-        <!-- ঙ. জিমেইল সেল -->
-        <div id="audit-pane-gmail" class="overflow-x-auto text-[10px] font-bold hidden">
-            <table class="w-full text-left">
-                <thead>
-                    <tr class="bg-slate-50 text-slate-400 font-extrabold uppercase border-b border-slate-200">
-                        <th class="p-2.5">ইমেইল ও পাসওয়ার্ড</th>
-                        <th class="p-2.5">ক্রয়মূল্য</th>
-                        <th class="p-2.5 text-right">স্ট্যাটাস</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    {% for item in gmail_history %}
-                    <tr class="text-slate-700">
-                        <td class="p-2.5">
-                            <span class="font-black text-slate-900">{{ item.email }}</span><br>
-                            <span class="text-[9px] text-slate-400 font-mono">Pass: {{ item.password }}</span>
-                        </td>
-                        <td class="p-2.5 text-slate-900">৳ {{ item.price }}</td>
-                        <td class="p-2.5 text-right">
-                            {% if item.status == 'Approved' %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-200">Approved</span>
-                            {% elif item.status == 'Pending' %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-amber-50 text-amber-600 border border-amber-200">Pending</span>
-                            {% else %}
-                                <span class="px-2 py-0.5 rounded-full text-[8px] font-black uppercase bg-rose-100 text-rose-700 border border-rose-300">Rejected</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr><td colspan="3" class="p-4 text-center text-slate-400 font-medium">কোনো জিমেইল রেকর্ড নেই।</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                <!-- জিমেইল টেবিল -->
+                <div id="audit-pane-gmail" class="audit-section space-y-1.5">
+                    <h3 class="text-[10px] font-black uppercase text-slate-700 flex items-center gap-1 border-b border-slate-100 pb-1">
+                        <i class="fa-solid fa-envelope text-amber-600"></i> জিমেইল সেলস ডাটা ({{ gmail_history|length }})
+                    </h3>
+                    <div class="overflow-x-auto text-[9px] font-bold">
+                        <table class="w-full text-left border border-slate-200 rounded-xl">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 font-extrabold uppercase border-b border-slate-200">
+                                    <th class="p-1.5">ইমেইল</th>
+                                    <th class="p-1.5 text-right">স্ট্যাটাস</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                {% for item in gmail_history %}
+                                <tr class="text-slate-700">
+                                    <td class="p-1.5 font-black text-slate-900 truncate max-w-[140px]">{{ item.email }}</td>
+                                    <td class="p-1.5 text-right">
+                                        <span class="px-1.5 py-0.2 rounded-full text-[7px] font-black uppercase {% if item.status == 'Approved' %}bg-emerald-50 text-emerald-600{% else %}bg-rose-50 text-rose-600{% endif %}">{{ item.status }}</span>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr><td colspan="2" class="p-2 text-center text-slate-400">রেকর্ড নেই</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
         <!-- ================= ৬. অফিশিয়াল ডিজিটাল স্ট্যাম্প ও সিগনেচার ================= -->
-        <div class="pt-5 border-t border-slate-200 flex justify-between items-center">
+        <div class="pt-4 border-t border-slate-200 flex justify-between items-center">
             <div class="flex items-center gap-2.5">
                 <div class="w-12 h-12 rounded-full border-2 border-dashed border-ruby-600 p-0.5 flex items-center justify-center text-center shrink-0">
                     <div class="w-full h-full rounded-full bg-ruby-50 flex flex-col items-center justify-center text-[6px] font-black text-ruby-700 uppercase leading-none">
@@ -370,20 +356,18 @@
 </div>
 
 <!-- ============================================== -->
-<!-- ৭. কড়া প্রিন্ট সিএসএস (সব নেভবার ও ২য় পেজ বন্ধ)   -->
+<!-- ৭. কড়া প্রিন্ট সিএসএস (হেডার বন্ধ ও অল টেবিল ওপেন)-->
 <!-- ============================================== -->
 <style>
 @media print {
-    /* পেজের বাইরে থাকা সমস্ত উপাদান, মোবাইল হেডার ও ন্যাভিগেশন সম্পূর্ণ বন্ধ */
+    /* পেজের বাইরে থাকা সমস্ত হেডার, সাইডবার ও বাটন সম্পূর্ণ বন্ধ */
     html, body {
         background: #FFFFFF !important;
         margin: 0 !important;
         padding: 0 !important;
-        height: auto !important;
-        overflow: visible !important;
     }
     
-    .no-print, nav, header, aside, .admin-sidebar, #secret-admin-panel, form {
+    .no-print, nav, header, aside, .admin-sidebar, #secret-admin-panel, form, .sticky, .md\\:flex {
         display: none !important;
     }
     
@@ -393,21 +377,24 @@
         max-width: 100% !important;
     }
 
-    /* শুধুমাত্র রিপোর্ট কার্ডটি ১টি সিঙ্গেল A4 পেজে ফিট করা */
+    /* প্রিন্ট করার সময় সমস্ত টেবিল স্বয়ংক্রিয়ভাবে দৃশ্যমান হবে */
+    .audit-section {
+        display: block !important;
+    }
+    
     #printable-audit-doc {
         display: block !important;
         border: 1px solid #CBD5E1 !important;
         box-shadow: none !important;
-        padding: 24px !important;
+        padding: 20px !important;
         margin: 0 auto !important;
         width: 100% !important;
         page-break-inside: avoid !important;
-        page-break-after: avoid !important;
     }
 
     @page {
         size: A4 portrait;
-        margin: 10mm;
+        margin: 8mm;
     }
 }
 </style>
@@ -431,6 +418,7 @@ function toggleGmailBlockNotice() {
     if (notice) notice.classList.toggle('hidden');
 }
 
+// অন-স্ক্রিন ট্যাব সিস্টেম
 function switchAuditTab(tabName, btn) {
     const tabs = ['task', 'withdraw', 'referral', 'campaign', 'gmail'];
     
@@ -449,6 +437,7 @@ function switchAuditTab(tabName, btn) {
     btn.className = "audit-tab-btn px-3.5 py-1.5 rounded-lg bg-slate-900 text-white shadow-xs cursor-pointer";
 }
 
+// ফুল ১-পেজ PDF প্রিন্ট ফাংশন
 function exportOfficialAuditPDF() {
     permanentHideSecretPanel();
     setTimeout(() => {
