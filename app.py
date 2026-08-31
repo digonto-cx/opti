@@ -461,54 +461,83 @@ def admin_payout_generator():
                            total_rejected_amount=round(total_rejected_amount, 2),
                            total_rejected_count=total_rejected_count,
                            generation_time=generation_time)
-    
-# (অন্যান্য রাউটের সাথে নিচের নতুন রাউটটি যুক্ত করুন)
 
-# (অন্যান্য কোডের সাথে জিমেইল মডারেটর এবং ইউজার রাউটগুলো নিচে যুক্ত করুন)
 
-# ১. ইউজার জিমেইল সাবমিশন পেজ রাউট (/gmails)
 @app.route('/gmails', methods=['GET', 'POST'])
 def gmail_tasks():
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
         
-    user = supabase.table("users").select("*").eq("id", user_id).execute().data[0]
+    client = get_supabase()
+    user_res = client.table("users").select("*").eq("id", user_id).execute().data
+    if not user_res:
+        session.clear()
+        return redirect(url_for('login'))
+        
+    user = user_res[0]
+    user_registered_email = user.get('email', '').strip().lower()
     
     # ডাটাবেজ সেটিংস থেকে লাইভ জিমেইল রেট রিট্রিভ করা হচ্ছে
-    price_res = supabase.table("settings").select("value").eq("key", "gmail_price").execute().data
-    gmail_price = float(price_res[0]['value']) if price_res else 15.00
+    try:
+        price_res = client.table("settings").select("value").eq("key", "gmail_price").execute().data
+        gmail_price = float(price_res[0]['value']) if price_res else 15.00
+    except Exception:
+        gmail_price = 15.00
     
     if request.method == 'POST':
-        email_input = request.form.get('gmail_address')
-        pass_input = request.form.get('gmail_password')
+        email_input = request.form.get('gmail_address', '').strip().lower()
+        pass_input = request.form.get('gmail_password', '').strip()
         
         if not email_input or not pass_input:
-            flash("দয়া করে জিমেইল এবং পাসওয়ার্ড দুটিই ইনপুট দিন।", "danger")
+            flash("দয়া করে জিমেইল এবং পাসওয়ার্ড দুটিই সঠিকভাবে ইনপুট দিন।", "danger")
             return redirect(url_for('gmail_tasks'))
             
+        # ১. সিকিউরিটি চেক: নিজস্ব রেজিস্ট্রেশন ইমেইল সাবমিট করা নিষিদ্ধ
+        if email_input == user_registered_email:
+            flash("নিরাপত্তা সতর্কতা: আপনার নিজস্ব একাউন্ট খোলার ইমেইলটি বিক্রয়ের জন্য জমা দেওয়া যাবে না। অনুগ্রহ করে নতুন ফ্রেশ জিমেইল দিন।", "danger")
+            return redirect(url_for('gmail_tasks'))
+            
+        # ২. সিকিউরিটি চেক: একই জিমেইল পূর্বে ডাটাবেজে জমা পড়েছে কিনা
         try:
-            supabase.table("gmail_submissions").insert({
+            duplicate_check = client.table("gmail_submissions") \
+                .select("id") \
+                .eq("email", email_input).execute().data
+                
+            if duplicate_check:
+                flash("এই জিমেইল অ্যাকাউন্টটি ইতিমধ্যে পূর্বে সাবমিট করা হয়েছে। অনুগ্রহ করে সম্পূর্ণ নতুন জিমেইল দিন।", "danger")
+                return redirect(url_for('gmail_tasks'))
+        except Exception as e:
+            print("Duplicate Gmail Check Error:", e)
+
+        # ৩. সফল ডাটাবেজ ইনসার্ট
+        try:
+            client.table("gmail_submissions").insert({
                 "user_id": user_id,
-                "email": email_input.strip(),
-                "password": pass_input.strip(),
-                "price": gmail_price, # সাবমিট করার সময়ের নির্ধারিত মূল্য ডাটাবেজে লক থাকবে
+                "email": email_input,
+                "password": pass_input,
+                "price": gmail_price, # সাবমিটের সময়ের রেট লক থাকবে
                 "status": "Pending"
             }).execute()
-            flash("জিমেইল অ্যাকাউন্টটি সফলভাবে জমা দেওয়া হয়েছে। এডমিন ভেরিফাই করবে।", "success")
+            flash("জিমেইল অ্যাকাউন্টটি সফলভাবে জমা দেওয়া হয়েছে! এডমিন ভেরিফাই করে ওয়ালেটে টাকা যোগ করবে।", "success")
             return redirect(url_for('gmail_tasks'))
-        except Exception:
-            flash("ত্রুটি ঘটেছে। আবার চেষ্টা করুন।", "danger")
+        except Exception as insert_err:
+            print("Gmail Insert Error:", insert_err)
+            flash("জিমেইল সাবমিট করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।", "danger")
             
-    # এই ইউজারের পূর্ববর্তী জিমেইল সাবমিশন হিস্ট্রি রিট্রিভ করা
-    submissions = supabase.table("gmail_submissions") \
-        .select("*") \
-        .eq("user_id", user_id) \
-        .order("created_at", desc=True).execute().data or []
+    # এই ইউজারের পূর্ববর্তী জিমেইল সাবমিশন হিস্ট্রি রিট্রিভ
+    submissions = []
+    try:
+        submissions = client.table("gmail_submissions") \
+            .select("*") \
+            .eq("user_id", user_id) \
+            .order("created_at", desc=True).execute().data or []
+    except Exception as fetch_err:
+        print("Gmail History Fetch Error:", fetch_err)
+        submissions = []
         
     return render_template('gmails.html', user=user, gmail_price=gmail_price, submissions=submissions)
-
-
+    
 # ২. এডমিন জিমেইল রিভিউ ও রেট পরিবর্তনের পেজ রাউট (/admin/gmails)
 @app.route('/admin/gmails', methods=['GET', 'POST'])
 def admin_gmails():
