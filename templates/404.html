@@ -1,56 +1,157 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Page Not Found</title>
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tailwind CSS -->
+    <title>404 - পেজটি খুঁজে পাওয়া যায়নি | OptiWork</title>
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts (Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Vanilla Tilt JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+    <!-- Tailwind Ruby Theme Config -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        ruby: {
+                            50: '#FFF1F2',
+                            100: '#FFE4E6',
+                            200: '#FECDD3',
+                            500: '#F43F5E',
+                            600: '#E11D48',
+                            700: '#BE123C',
+                            800: '#9F1239',
+                            900: '#881337',
+                        }
+                    },
+                    boxShadow: {
+                        'glow-ruby': '0 10px 30px -5px rgba(225, 29, 72, 0.4)',
+                        'card-soft': '0 25px 50px -15px rgba(225, 29, 72, 0.12), 0 1px 3px rgba(0,0,0,0.02)',
                     }
                 }
             }
         }
     </script>
+
     <style>
-        body { background-color: #EDEDF0; }
-        .blockio-card {
-            background: #FFFFFF;
-            border: 1px solid #E5E5E9;
-            border-radius: 28px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.015);
+        body {
+            background-color: #FFF9FA;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(254, 205, 211, 0.5) 0px, transparent 55%),
+                radial-gradient(at 100% 100%, rgba(255, 228, 230, 0.6) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(255, 241, 242, 0.7) 0px, transparent 60%);
+            background-attachment: fixed;
+        }
+        .glass-panel-404 {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+        }
+        @keyframes radarScan {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes floatingObj {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-8px) scale(1.03); }
+        }
+        .radar-spinner {
+            animation: radarScan 4s linear infinite;
+        }
+        .float-animate {
+            animation: floatingObj 3s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body class="text-slate-800 font-sans antialiased flex items-center justify-center min-h-screen p-4 py-8 selection:bg-ruby-600 selection:text-white">
 
-    <div class="blockio-card p-6 sm:p-8 max-w-sm w-full text-center space-y-4">
-        <!-- ৪0৪ নিয়ন আইকন -->
-        <div class="w-14 h-14 bg-red-500/10 border border-red-500/20 text-red-500 rounded-2xl flex items-center justify-center mx-auto text-xl shadow-[0_0_15px_rgba(239,68,68,0.05)] animate-pulse">
-            <i class="fa-solid fa-triangle-exclamation"></i>
+    <!-- গ্লাস ইনফোগ্রাফিক ৪০৪ কার্ড -->
+    <div class="glass-panel-404 p-7 sm:p-9 rounded-[36px] shadow-card-soft max-w-md w-full text-center relative overflow-hidden border border-white space-y-6" data-tilt data-tilt-max="4" data-tilt-speed="400">
+        
+        <!-- সফট ব্যাকগ্রাউন্ড গ্লো -->
+        <div class="absolute -right-12 -top-12 w-44 h-44 bg-ruby-600/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-12 -bottom-12 w-44 h-44 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- ব্র্যান্ড হেডার -->
+        <div class="flex items-center justify-center gap-2 relative z-10">
+            <div class="w-7 h-7 rounded-xl bg-ruby-600 flex items-center justify-center text-white shadow-glow-ruby">
+                <i class="fa-solid fa-fire text-xs"></i>
+            </div>
+            <span class="text-sm font-black tracking-wider text-slate-900 uppercase">
+                OPTI<span class="text-ruby-600">WORK</span> ⚡
+            </span>
         </div>
 
-        <div class="space-y-1.5 leading-normal">
-            <h1 class="text-base font-black text-slate-900 leading-none">404 - Page Not Found</h1>
-            <p class="text-xs font-bold text-slate-800 leading-normal">পেজটি খুঁজে পাওয়া যায়নি</p>
-            <p class="text-[10px] text-slate-400 font-medium leading-relaxed">দুঃখিত, আপনি যে লিংকটি খুঁজছেন তা হয়তো ভুল অথবা ডিলিট করে দেওয়া হয়েছে। দয়া করে সঠিক লিংক ভেরিফাই করুন।</p>
+        <!-- ইনফোগ্রাফিক অ্যানিমেটেড রাডার স্ক্যানার -->
+        <div class="relative w-28 h-28 mx-auto flex items-center justify-center float-animate z-10">
+            <!-- বাইরের পালসিং রিং -->
+            <div class="absolute inset-0 rounded-full border-2 border-dashed border-rose-300 animate-spin" style="animation-duration: 12s;"></div>
+            <div class="absolute inset-2 rounded-full border border-rose-200/80"></div>
+            
+            <!-- রাডার রশ্মি -->
+            <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-ruby-600/20 to-transparent radar-spinner pointer-events-none"></div>
+            
+            <!-- সেন্টার আইকন বক্স -->
+            <div class="w-16 h-16 rounded-2xl bg-white border border-rose-200 shadow-sm flex items-center justify-center text-ruby-600 text-2xl relative z-20">
+                <i class="fa-solid fa-satellite-dish animate-pulse"></i>
+            </div>
         </div>
 
-        <!-- হোমে ফিরে যাওয়ার বাটন -->
-        <div class="pt-2">
-            <a href="/dashboard" class="block w-full bg-black hover:opacity-90 text-white font-extrabold text-xs py-2.5 rounded-xl transition text-center shadow">
-                হোম ড্যাশবোর্ডে ফিরে যান
+        <!-- টেক্সট ইনফরমেশন -->
+        <div class="space-y-1.5 relative z-10">
+            <div class="flex items-center justify-center gap-2">
+                <span class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">404</span>
+                <span class="px-2.5 py-0.5 rounded-md bg-ruby-50 text-ruby-600 border border-ruby-100 text-[10px] font-black uppercase tracking-wider">Page Missing</span>
+            </div>
+            <h2 class="text-sm font-black text-slate-900">কাঙ্ক্ষিত পৃষ্ঠাটি পাওয়া যায়নি</h2>
+            <p class="text-[11px] text-slate-500 font-medium leading-relaxed max-w-xs mx-auto">
+                আপনি যে লিঙ্কটিতে প্রবেশের চেষ্টা করছেন তা ভুল অথবা স্থানান্তরিত করা হয়েছে।
+            </p>
+        </div>
+
+        <!-- ইনফোগ্রাফিক ডায়াগনস্টিক ট্র্যাকার -->
+        <div class="grid grid-cols-3 gap-2 bg-white/70 border border-rose-100 p-3 rounded-2xl text-[10px] font-bold text-slate-700 relative z-10 shadow-2xs">
+            <div class="text-center space-y-0.5">
+                <span class="text-slate-400 block text-[8px] uppercase">Node Status</span>
+                <span class="text-emerald-600 flex items-center justify-center gap-1"><i class="fa-solid fa-circle text-[6px]"></i> Online</span>
+            </div>
+            <div class="text-center space-y-0.5 border-x border-rose-100">
+                <span class="text-slate-400 block text-[8px] uppercase">Routing</span>
+                <span class="text-rose-600">Failed</span>
+            </div>
+            <div class="text-center space-y-0.5">
+                <span class="text-slate-400 block text-[8px] uppercase">Security</span>
+                <span class="text-sky-600">Encrypted</span>
+            </div>
+        </div>
+
+        <!-- অ্যাকশন বাটন গ্রুপ -->
+        <div class="space-y-2.5 pt-1 relative z-10">
+            <a href="/dashboard" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-ruby-600 via-rose-600 to-red-600 hover:opacity-95 text-white font-black text-xs shadow-glow-ruby transition active:scale-95 duration-150 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-house text-xs"></i>
+                <span>হোম ড্যাশবোর্ডে ফিরে যান</span>
+            </a>
+
+            <!-- হেল্পলাইন লিঙ্ক -->
+            <a href="https://t.me/helpline_opti" target="_blank" class="w-full py-3 rounded-2xl bg-white border border-rose-200 text-slate-800 hover:bg-rose-50 font-extrabold text-xs shadow-xs transition active:scale-95 duration-150 flex items-center justify-center gap-2">
+                <i class="fa-brands fa-telegram text-sky-500 text-sm"></i>
+                <span>টেলিগ্রাম হেল্পলাইন সাপোর্ট</span>
             </a>
         </div>
+
     </div>
 
 </body>
