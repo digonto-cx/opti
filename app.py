@@ -2085,8 +2085,6 @@ def claim_daily():
     except Exception as e:
         return jsonify({"status": "error", "message": f"ডাটাবেজ ত্রুটি: {str(e)}"}), 500
         
-# (অন্যান্য কোড অপরিবর্তিত থাকবে, কেবল /dashboard রাউটটি নিচের কোড দ্বারা প্রতিস্থাপন করুন)
-# app.py ফাইলের ড্যাশবোর্ড রাউটটি নিচের কোড দ্বারা সম্পূর্ণ আপডেট করে নিন:
 @app.route('/dashboard')
 def dashboard():
     user_id = session.get('user_id')
@@ -2095,65 +2093,84 @@ def dashboard():
         
     now = datetime.datetime.now(datetime.timezone.utc)
     
-    # মেয়াদোত্তীর্ণ প্যাকেজ ডিলিট (নিরাপদ চেকিং)
+    # মেয়াদোত্তীর্ণ প্যাকেজ ডিলিট
     try:
         supabase.table("user_packages").delete().eq("user_id", user_id).not_.is_("expires_at", "null").lt("expires_at", now.isoformat()).execute()
-    except Exception:
-        pass
+    except Exception as e:
+        print("Package clean error:", e)
         
-    user = supabase.table("users").select("*").eq("id", user_id).execute().data[0]
-    balance = float(user['balance'])
+    try:
+        user_res = supabase.table("users").select("*").eq("id", user_id).execute().data
+        if not user_res:
+            session.clear()
+            return redirect(url_for('login'))
+        user = user_res[0]
+    except Exception as e:
+        print("User fetch retry on dashboard:", e)
+        user_res = create_client(SUPABASE_URL, SUPABASE_KEY).table("users").select("*").eq("id", user_id).execute().data
+        if not user_res:
+            session.clear()
+            return redirect(url_for('login'))
+        user = user_res[0]
+
+    balance = float(user.get('balance', 0))
     
     # ডেইলি চেক-ইন ভ্যালিডেশন
     is_daily_eligible = True
     last_checkin_str = user.get('last_daily_checkin')
     if last_checkin_str:
-        last_checkin = datetime.datetime.fromisoformat(last_checkin_str.replace('Z', '+00:00'))
-        cooldown = datetime.timedelta(hours=24)
-        if now < last_checkin + cooldown:
-            is_daily_eligible = False
+        try:
+            last_checkin = datetime.datetime.fromisoformat(last_checkin_str.replace('Z', '+00:00'))
+            cooldown = datetime.timedelta(hours=24)
+            if now < last_checkin + cooldown:
+                is_daily_eligible = False
+        except Exception:
+            pass
     
-    # মেয়াদ (expires_at) সহ ইউজারের সক্রিয় প্যাকেজগুলোর তালিকা রিট্রিভ করা
-    all_pkgs = supabase.table("user_packages") \
-        .select("id, last_claimed_at, expires_at, packages(name, duration_hours, yield_amount, is_premium)") \
-        .eq("user_id", user_id).execute().data or []
-        
-    # সেলফ-হিলিং কন্ডিশন: যদি ইউজারের কোনো প্যাকেজই সচল না থাকে
-    if not all_pkgs:
-        free_expiry = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=365)
-        supabase.table("user_packages").insert({
-            "user_id": user_id,
-            "package_id": 1,
-            "expires_at": free_expiry.isoformat()
-        }).execute()
-        
-        all_pkgs = supabase.table("user_packages") \
+    # সক্রিয় প্যাকেজ তালিকা রিট্রিভ
+    all_pkgs = []
+    try:
+        pkg_res = supabase.table("user_packages") \
             .select("id, last_claimed_at, expires_at, packages(name, duration_hours, yield_amount, is_premium)") \
-            .eq("user_id", user_id).execute().data or []
-
-    owned_pkgs = []
-    for p in all_pkgs:
-        # যদি কোনো প্যাকেজের মূল ইনফরমেশন ডাটাবেজে না পাওয়া যায় তবে ক্র্যাশ এড়াতে স্কিপ করবে
-        if not p.get('packages'):
-            continue
-        owned_pkgs.append(p)
+            .eq("user_id", user_id).execute()
+        all_pkgs = pkg_res.data or []
+    except Exception as e:
+        print("Package fetch error:", e)
+        try:
+            pkg_res = create_client(SUPABASE_URL, SUPABASE_KEY).table("user_packages") \
+                .select("id, last_claimed_at, expires_at, packages(name, duration_hours, yield_amount, is_premium)") \
+                .eq("user_id", user_id).execute()
+            all_pkgs = pkg_res.data or []
+        except Exception:
+            all_pkgs = []
         
-    has_premium_pkg = any(p['packages']['is_premium'] for p in owned_pkgs if p.get('packages'))
-    success_refs_query = supabase.table("referrals").select("id").eq("referrer_id", user_id).eq("status", "Success").execute().data
-    success_ref_count = len(success_refs_query)
-    
-    ref_progress = 50 if (success_ref_count >= 3 or has_premium_pkg) else min(success_ref_count / 3, 1.0) * 50
-    bal_progress = min(balance / 300, 1.0) * 50
-    progress_percent = int(ref_progress + bal_progress)
+    # সেলফ-হিলিং: প্যাকেজ না থাকলে ফ্রি প্যাকেজ সক্রিয় করা
+    if not all_pkgs:
+        try:
+            free_expiry = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=365)
+            supabase.table("user_packages").insert({
+                "user_id": user_id,
+                "package_id": 1,
+                "expires_at": free_expiry.isoformat()
+            }).execute()
+            
+            pkg_res = supabase.table("user_packages") \
+                .select("id, last_claimed_at, expires_at, packages(name, duration_hours, yield_amount, is_premium)") \
+                .eq("user_id", user_id).execute()
+            all_pkgs = pkg_res.data or []
+        except Exception:
+            pass
 
-    notice = "সবাইকে টেলিগ্রাম চ্যানেলে জয়েন হওয়ার জন্য অনুরোধ করা হলো, যাদের টেলিগ্রাম নেই তারা আপাডেট পেজ একবার ঘুরে আসুন!"
+    owned_pkgs = [p for p in all_pkgs if p.get('packages')]
+    
+    notice = "সবাইকে টেলিগ্রাম চ্যানেলে জয়েন হওয়ার জন্য অনুরোধ করা হলো, যাদের টেলিগ্রাম নেই তারা আপডেট পেজ একবার ঘুরে আসুন!"
     return render_template('dashboard.html', 
                            user=user, 
                            owned_packages=owned_pkgs, 
                            notice=notice,
-                           progress_percent=progress_percent,
                            is_daily_eligible=is_daily_eligible)
-    
+
+
 @app.route('/buy-package', methods=['POST'])
 def buy_package():
     user_id = session.get('user_id')
