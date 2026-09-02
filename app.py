@@ -6,6 +6,7 @@ import urllib.parse
 import json
 import base64
 import math
+import re
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from supabase import create_client, Client
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -2386,37 +2387,40 @@ def submit_adshear():
         return redirect(url_for('login'))
         
     task_id = request.form.get('task_id')
-    proof_link = request.form.get('proof_link', '').strip()
+    proof_link = str(request.form.get('proof_link', '')).strip()
     
-    # ১. ইউজার https:// না লিখলেও স্বয়ংক্রিয়ভাবে https:// যোগ করে নেওয়া
+    # ১. ইউজার http/https না লিখলেও স্বয়ংক্রিয়ভাবে https:// প্রিফিক্স যোগ করা
     if proof_link and not (proof_link.startswith("http://") or proof_link.startswith("https://")):
         proof_link = "https://" + proof_link
         
-    if not proof_link or len(proof_link) < 8:
-        flash("দয়া করে একটি সঠিক পোস্ট লিংক (URL) প্রদান করুন।", "danger")
+    # ২. কঠোর ফেসবুক লিঙ্ক ভ্যালিডেশন (Regex Validation)
+    fb_pattern = r'^(https?:\/\/)?(www\.|m\.|web\.)?(facebook\.com|fb\.com|fb\.watch)\/.+$'
+    
+    if not proof_link or len(proof_link) < 12 or not re.match(fb_pattern, proof_link, re.IGNORECASE):
+        flash("ভুল লিংক! দয়া করে একটি সঠিক ফেসবুক পোস্টের লিঙ্ক (যেমন: https://facebook.com/groups/...) প্রদান করুন।", "danger")
         return redirect(url_for('adshear_detail', task_id=task_id))
 
     try:
-        # ২. টাস্ক অস্তিত্ব ও লিমিট চেক
+        # ৩. টাস্ক অস্তিত্ব ও সর্বোচ্চ লিমিট চেক
         task_res = supabase.table("adshear_tasks").select("*").eq("id", task_id).execute().data
         if not task_res:
             flash("টাস্ক আইডি খুঁজে পাওয়া যায়নি।", "danger")
             return redirect(url_for('adshear_list'))
             
         task = task_res[0]
-        max_limit = task.get('max_submissions') or 0
+        max_limit = int(task.get('max_submissions') or 0)
+        
         if max_limit > 0:
             sub_count_res = supabase.table("adshear_submissions").select("id", count="exact").eq("task_id", task_id).neq("status", "Rejected").execute()
             current_subs = sub_count_res.count if sub_count_res.count is not None else 0
             if current_subs >= max_limit:
-                flash("দুঃখিত, এই কাজের নির্ধারিত লিমিট পূর্ণ হয়ে গেছে!", "danger")
+                flash("দুঃখিত, এই ক্যাম্পেইনের নির্ধারিত লিমিট পূর্ণ হয়ে গেছে!", "danger")
                 return redirect(url_for('adshear_list'))
 
-        # ৩. এই টাস্ক ও ইউজারের আগের সব পুরোনো ইনপুট ডিলিট করে নেওয়া (ডুপ্লিকেট কি এরর সম্পূর্ণ বন্ধ)
+        # ৪. পূর্বের ডুপ্লিকেট রেকর্ড ডিলিট করে নতুন পেন্ডিং ইনসার্ট
         supabase.table("adshear_submissions").delete() \
             .eq("user_id", user_id).eq("task_id", task_id).execute()
             
-        # 4. ডাটাবেজ সেফ ইনসার্ট (সকল কলাম ব্যাকআপসহ)
         insert_payload = {
             "user_id": user_id,
             "task_id": int(task_id) if str(task_id).isdigit() else task_id,
@@ -2426,11 +2430,11 @@ def submit_adshear():
         }
         
         supabase.table("adshear_submissions").insert(insert_payload).execute()
-        flash("পোস্ট লিংক সফলভাবে জমা দেওয়া হয়েছে। এডমিন দ্রুত ভেরিফাই করবে।", "success")
+        flash("ফেসবুক পোস্ট লিংক সফলভাবে জমা দেওয়া হয়েছে! এডমিন দ্রুত ভেরিফাই করে রিওয়ার্ড যোগ করবে।", "success")
         return redirect(url_for('adshear_list'))
         
     except Exception as e:
-        print("CRITICAL AdShare Submit Error:", str(e))
+        print("AdShare Submit Error:", e)
         flash("লিংক সাবমিট করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।", "danger")
         return redirect(url_for('adshear_detail', task_id=task_id))
         
