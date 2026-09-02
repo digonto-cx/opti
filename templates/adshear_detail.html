@@ -1,115 +1,213 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="space-y-6 max-w-3xl mx-auto pb-10">
+<div class="space-y-6 max-w-3xl mx-auto pb-12">
     
-    <!-- টাস্ক হেডার -->
-    <div class="premium-card p-5 flex justify-between items-center rounded-3xl border border-white/40 shadow-sm bg-white">
-        <div class="space-y-1.5">
-            <span class="text-[9px] bg-purple-50 text-purple-600 border border-purple-100 font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full">Ad Share Panel</span>
-            <h2 class="text-base font-black text-slate-900 leading-tight pt-1">
+    <!-- ============================================== -->
+    <!-- 1. CAMPAIGN DETAIL HEADER                      -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-5 rounded-3xl flex justify-between items-center shadow-card-soft border border-white" data-aos="fade-down">
+        <div class="space-y-1">
+            <span class="text-[9px] bg-purple-50 text-purple-600 border border-purple-100 font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-md">
+                Facebook Group Share Job
+            </span>
+            <h2 class="text-sm sm:text-base font-black text-slate-900 leading-tight">
                 {{ task.title }}
             </h2>
         </div>
         <div class="text-right shrink-0">
-            <span class="text-[9px] text-slate-400 uppercase tracking-widest font-extrabold block mb-1">পুরস্কার</span>
-            <span class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md px-4 py-2 rounded-2xl text-xs font-black">
+            <span class="text-[9px] text-slate-400 uppercase tracking-widest font-black block">পুরস্কার</span>
+            <span class="text-base font-black text-emerald-600">
                 ৳ {{ task.reward }}
             </span>
         </div>
     </div>
 
-    <div class="premium-card p-6 md:p-8 border border-white/40 shadow-sm bg-white rounded-3xl space-y-6">
+    <!-- ফ্ল্যাশ মেসেজ -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="p-3.5 text-xs text-center rounded-2xl border font-bold shadow-xs {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-200{% else %}bg-red-50 text-red-600 border-red-200{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- ============================================== -->
+    <!-- 2. NEW RULES & WORKSPACE CARD                  -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-card-soft space-y-6 border border-white" data-aos="fade-up">
         
+        <!-- ৩-ধাপের কাজের নিয়মাবলী বক্স -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-50/60 via-white to-purple-50/40 border border-rose-200/80 space-y-3">
+            <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-ruby-600"></i> কাজের সহজ ৩টি নিয়ম (Rules)
+            </h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-semibold text-slate-700">
+                <div class="p-3 bg-white rounded-xl border border-rose-100 shadow-2xs space-y-1">
+                    <span class="text-[10px] font-black text-ruby-600">১. ডাউনলোড ও কপি</span>
+                    <p class="text-[10px] text-slate-500 font-medium">নিচের ব্যানার ডাউনলোড এবং ক্যাপশনটি কপি করুন।</p>
+                </div>
+
+                <div class="p-3 bg-white rounded-xl border border-rose-100 shadow-2xs space-y-1">
+                    <span class="text-[10px] font-black text-purple-600">২. গ্রুপে পোস্ট করুন</span>
+                    <p class="text-[10px] text-slate-500 font-medium">যেকোনো একটি সক্রিয় ফেসবুক গ্রুপে ক্যাপশনসহ পোস্ট করুন।</p>
+                </div>
+
+                <div class="p-3 bg-white rounded-xl border border-rose-100 shadow-2xs space-y-1">
+                    <span class="text-[10px] font-black text-emerald-600">৩. লিঙ্ক সাবমিট</span>
+                    <p class="text-[10px] text-slate-500 font-medium">আপনার সেই ফেসবুক পোস্টের লিঙ্কটি কপি করে নিচে জমা দিন।</p>
+                </div>
+            </div>
+        </div>
+
         {% if status == 'Pending' or status == 'Approved' %}
-            <div class="text-center py-8 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
-                <i class="fa-solid fa-circle-check text-emerald-500 mb-3 text-3xl block animate-bounce"></i>
-                <p class="text-xs font-extrabold text-slate-800">আপনার পোস্ট লিংক সফলভাবে জমা দেওয়া হয়েছে!</p>
-                <div class="mt-3">
-                    <span class="text-[10px] uppercase font-black px-4 py-1.5 rounded-full border {% if status == 'Pending' %}bg-amber-50 text-amber-600 border-amber-100{% else %}bg-emerald-50 text-emerald-600 border-emerald-100{% endif %}">
-                        স্ট্যাটাস: {{ status }}
+            <div class="text-center py-10 bg-white/60 rounded-3xl border border-dashed border-rose-200 space-y-2">
+                <i class="fa-solid fa-circle-check text-emerald-500 text-4xl block animate-bounce"></i>
+                <h3 class="text-sm font-black text-slate-900">আপনার পোস্ট লিঙ্ক জমা হয়েছে!</h3>
+                <p class="text-xs text-slate-500 font-medium">এডমিন আপনার পোস্টটি ভেরিফাই করে দ্রুত রিওয়ার্ড প্রদান করবে।</p>
+                <div class="pt-2">
+                    <span class="text-[10px] uppercase font-black px-4 py-2 rounded-full border {% if status == 'Pending' %}bg-amber-50 text-amber-600 border-amber-200{% else %}bg-emerald-50 text-emerald-600 border-emerald-200{% endif %}">
+                        বর্তমান অবস্থা: {{ status }}
                     </span>
                 </div>
             </div>
         {% elif is_limit_reached %}
-            <div class="text-center py-8 bg-red-50 rounded-3xl border border-red-100">
-                <i class="fa-solid fa-ban text-red-500 mb-2 text-2xl block"></i>
-                <p class="text-xs font-extrabold text-red-700">দুঃখিত, এই কাজের মোট লিমিট পূর্ণ হয়ে গেছে!</p>
+            <div class="text-center py-10 bg-rose-50/60 rounded-3xl border border-rose-200 space-y-2">
+                <i class="fa-solid fa-ban text-rose-500 text-3xl block"></i>
+                <h3 class="text-xs font-black text-rose-700">দুঃখিত, এই ক্যাম্পেইনের মোট সাবমিশন লিমিট পূর্ণ হয়ে গেছে!</h3>
             </div>
         {% else %}
             
-            <form action="/adshear/submit" method="POST" class="space-y-6">
+            <form action="/adshear/submit" method="POST" onsubmit="return validateAndSubmitAdForm(event)" class="space-y-6">
                 <input type="hidden" name="task_id" value="{{ task.id }}">
 
-                <!-- ১. ক্যাপশন কপি -->
+                <!-- ধাপ ১: ক্যাপশন কপি -->
                 <div class="space-y-2">
-                    <label class="block text-[10px] font-black text-slate-500 uppercase">১. প্রমোশনাল ক্যাপশন কপি করুন</label>
-                    <textarea id="ad-caption" readonly class="w-full bg-slate-50 border border-slate-200 p-3 rounded-2xl text-xs text-slate-700 focus:outline-none h-16 font-semibold select-all resize-none">{{ task.caption }}</textarea>
-                    <button type="button" onclick="copyCaption()" id="copy-cap-btn" class="bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-bold px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-xs">
-                        <i class="fa-solid fa-copy"></i> Copy Caption
+                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider">১. প্রমোশনাল ক্যাপশন কপি করুন</label>
+                    <textarea id="ad-caption" readonly class="w-full bg-white border border-rose-200 p-3.5 rounded-2xl text-xs text-slate-700 focus:outline-none h-20 font-semibold select-all resize-none shadow-xs">{{ task.caption }}</textarea>
+                    
+                    <button type="button" onclick="copyCaptionText()" id="copy-cap-btn" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white text-[10px] font-extrabold transition active:scale-95 duration-150 flex items-center gap-1.5 shadow-xs cursor-pointer">
+                        <i id="copy-cap-icon" class="fa-solid fa-copy"></i>
+                        <span id="copy-cap-text">ক্যাপশন কপি করুন</span>
                     </button>
                 </div>
 
-                <!-- 🖼️ ২. ব্যানার ইমেজ ডাউনলোড -->
+                <!-- ধাপ ২: ব্যানার ডাউনলোড -->
                 {% if task.image_url %}
-                <div class="space-y-3 pt-3 border-t border-slate-100">
-                    <label class="block text-[10px] font-black text-slate-500 uppercase">২. শেয়ার করার ব্যানার ইমেজ ডাউনলোড করুন</label>
+                <div class="space-y-3 pt-3 border-t border-rose-100">
+                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider">২. পোস্ট করার ব্যানার ডাউনলোড করুন</label>
 
-                    <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="bg-white border border-rose-200/80 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
                         <div class="flex items-center gap-3">
-                            <img src="{{ task.image_url }}" alt="Ad Banner" class="w-16 h-16 rounded-xl object-cover border border-slate-200 shadow-xs shrink-0">
+                            <img src="{{ task.image_url }}" alt="Ad Banner" class="w-14 h-14 rounded-xl object-cover border border-rose-100 shadow-xs shrink-0">
                             <div>
-                                <h4 class="text-xs font-extrabold text-slate-800">ক্যাম্পেইন ব্যানার</h4>
-                                <p class="text-[9px] text-slate-400 font-bold mt-0.5">ছবিটি ডাউনলোড করে ফেসবুকে ক্যাপশনসহ পোস্ট করুন</p>
+                                <h4 class="text-xs font-black text-slate-900">ক্যাম্পেইন পোস্টার ইমেজ</h4>
+                                <p class="text-[10px] text-slate-400 font-medium">ছবিটি সেভ করে ফেসবুক গ্রুপে ক্যাপশনসহ পোস্ট করুন</p>
                             </div>
                         </div>
 
-                        <button type="button" id="download-img-btn" onclick="downloadCampaignImage('{{ task.image_url }}')" class="bg-purple-600 hover:bg-purple-700 text-white text-[10px] font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-1.5 shadow-xs shrink-0 w-full sm:w-auto justify-center">
-                            <i class="fa-solid fa-download"></i> Download Image
+                        <button type="button" id="download-img-btn" onclick="downloadCampaignImage('{{ task.image_url }}')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-[10px] font-extrabold transition active:scale-95 duration-150 flex items-center justify-center gap-1.5 shadow-xs shrink-0 cursor-pointer">
+                            <i class="fa-solid fa-download"></i>
+                            <span>ডাউনলোড ইমেজ</span>
                         </button>
                     </div>
                 </div>
                 {% endif %}
 
-                <!-- ৩. পোস্ট লিংক ইনপুট -->
-                <div class="space-y-2 pt-3 border-t border-slate-100">
-                    <label class="block text-[10px] font-black text-slate-500 uppercase">৩. ফেসবুকে পোস্ট করে সেই পোস্টের লিংক (URL) এখানে দিন</label>
+                <!-- ধাপ ৩: ফেসবুক পোস্ট লিঙ্ক ইনপুট ও লাইভ ভ্যালিডেশন -->
+                <div class="space-y-2 pt-3 border-t border-rose-100">
+                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider">
+                        ৩. আপনার ফেসবুক পোস্টের লিঙ্ক (URL) এখানে দিন <span class="text-rose-500 font-bold">*</span>
+                    </label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
-                            <i class="fa-solid fa-link text-xs"></i>
+                            <i class="fa-brands fa-facebook text-blue-600 text-sm"></i>
                         </span>
-                        <input type="text" name="proof_link" required placeholder="facebook.com/..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 font-extrabold focus:outline-none focus:border-blue-500">
+                        <input type="text" name="proof_link" id="fb-proof-link" required 
+                               placeholder="https://facebook.com/groups/..." 
+                               class="w-full pl-10 pr-4 py-3 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-800 font-bold focus:outline-none focus:border-ruby-600 focus:ring-2 focus:ring-rose-100 transition shadow-xs">
                     </div>
+                    <p id="fb-link-warning" class="hidden text-[10px] font-bold text-rose-600 pl-1">
+                        <i class="fa-solid fa-circle-exclamation"></i> শুধুমাত্র সঠিক ফেসবুক পোস্টের লিংক (facebook.com / fb.watch) গ্রহণযোগ্য।
+                    </p>
                 </div>
 
-                <button type="submit" class="w-full glow-btn-light bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-xs py-3.5 rounded-2xl transition shadow">
-                    পোস্ট লিংক সাবমিট করুন
+                <!-- সাবমিট বাটন -->
+                <button type="submit" id="submit-ad-btn" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-ruby-600 to-rose-600 hover:opacity-95 text-white font-black text-xs shadow-glow-ruby transition active:scale-95 duration-150 flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>ফেসবুক পোস্ট লিঙ্ক সাবমিট করুন</span>
                 </button>
             </form>
         {% endif %}
     </div>
+
 </div>
 
+<!-- ============================================== -->
+<!-- JAVASCRIPT: VALIDATION, COPY & DOWNLOAD        -->
+<!-- ============================================== -->
 <script>
-function copyCaption() {
+// ক্লায়েন্ট সাইড ফেসবুক লিঙ্ক ভ্যালিডেশন
+function validateAndSubmitAdForm(event) {
+    const input = document.getElementById('fb-proof-link');
+    const warning = document.getElementById('fb-link-warning');
+    const url = input.value.trim().toLowerCase();
+
+    // ফেসবুক ডোমেন প্যাটার্ন
+    const isValidFB = url.includes('facebook.com') || url.includes('fb.com') || url.includes('fb.watch');
+
+    if (!url || !isValidFB || url.length < 12) {
+        event.preventDefault();
+        warning.classList.remove('hidden');
+        input.classList.add('border-rose-500', 'bg-rose-50/20');
+        input.focus();
+        return false;
+    }
+
+    warning.classList.add('hidden');
+    input.classList.remove('border-rose-500', 'bg-rose-50/20');
+
+    // Confetti Animation
+    if (typeof confetti === 'function') {
+        confetti({
+            particleCount: 80,
+            spread: 60,
+            origin: { y: 0.7 },
+            colors: ['#E11D48', '#10B981', '#F59E0B']
+        });
+    }
+
+    return true;
+}
+
+function copyCaptionText() {
     const capText = document.getElementById('ad-caption');
     capText.select();
+    capText.setSelectionRange(0, 99999);
     navigator.clipboard.writeText(capText.value);
 
     const btn = document.getElementById('copy-cap-btn');
-    btn.innerHTML = `<i class="fa-solid fa-check"></i> Copied!`;
-    btn.className = "bg-emerald-500 text-white text-[10px] font-bold px-4 py-2 rounded-xl transition shadow-xs";
+    const icon = document.getElementById('copy-cap-icon');
+    const text = document.getElementById('copy-cap-text');
+
+    text.innerText = "ক্যাপশন কপি হয়েছে!";
+    icon.className = "fa-solid fa-check";
+    btn.className = "px-5 py-2.5 rounded-xl bg-emerald-600 text-white text-[10px] font-extrabold transition active:scale-95 duration-150 flex items-center gap-1.5 shadow-xs cursor-pointer";
 
     setTimeout(() => {
-        btn.innerHTML = `<i class="fa-solid fa-copy"></i> Copy Caption`;
-        btn.className = "bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-bold px-4 py-2 rounded-xl transition shadow-xs";
-    }, 1500);
+        text.innerText = "ক্যাপশন কপি করুন";
+        icon.className = "fa-solid fa-copy";
+        btn.className = "px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white text-[10px] font-extrabold transition active:scale-95 duration-150 flex items-center gap-1.5 shadow-xs cursor-pointer";
+    }, 1800);
 }
 
 async function downloadCampaignImage(imageUrl) {
     const btn = document.getElementById('download-img-btn');
     const originalHtml = btn.innerHTML;
-    btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Downloading...';
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ডাউনলোড হচ্ছে...';
 
     try {
         const response = await fetch(imageUrl);
@@ -118,11 +216,11 @@ async function downloadCampaignImage(imageUrl) {
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = 'OptiWork-Campaign-Banner.jpg';
+        a.download = 'OptiWork-Facebook-Campaign.jpg';
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
-        btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Downloaded';
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> ডাউনলোড সম্পন্ন!';
         setTimeout(() => { btn.innerHTML = originalHtml; }, 2000);
     } catch (error) {
         window.open(imageUrl, '_blank');
