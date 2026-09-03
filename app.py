@@ -2437,8 +2437,7 @@ def submit_adshear():
         print("AdShare Submit Error:", e)
         flash("লিংক সাবমিট করতে সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।", "danger")
         return redirect(url_for('adshear_detail', task_id=task_id))
-        
-# ৪. এডমিন প্যানেল অ্যাডস শেয়ার ম্যানেজার (/admin/adshear)
+    
 @app.route('/admin/adshear', methods=['GET', 'POST'])
 def admin_adshear():
     if not check_admin_auth():
@@ -2469,7 +2468,7 @@ def admin_adshear():
             
         return redirect(url_for('admin_adshear'))
         
-    # --- পেজিনেশন লজিক: প্রতি পেজে ২০টি করে পেন্ডিং পোস্ট লোড হবে ---
+    # --- পেজিনেশন ও ক্রনোলজিক্যাল ওল্ডেস্ট-ফার্স্ট সর্টিং (Oldest Submissions First) ---
     page = int(request.args.get('page', 1))
     limit = 20
     start = (page - 1) * limit
@@ -2479,15 +2478,14 @@ def admin_adshear():
     total_count = 0
     
     try:
-        # মোট পেন্ডিং কাউন্ট বের করা
         count_res = supabase.table("adshear_submissions").select("id", count="exact").eq("status", "Pending").execute()
         total_count = count_res.count if count_res.count is not None else 0
 
-        # ২০টি করে রেঞ্জ লিমিট অনুযায়ী ডাটা ফেচ
+        # desc=False দেওয়া হয়েছে যাতে সবচেয়ে পুরানো পেন্ডিং পোস্ট সবার আগে আসে
         raw_subs = supabase.table("adshear_submissions") \
             .select("*") \
             .eq("status", "Pending") \
-            .order("created_at", desc=True) \
+            .order("created_at", desc=False) \
             .range(start, end).execute().data or []
             
         for sub in raw_subs:
@@ -2510,7 +2508,6 @@ def admin_adshear():
                            page=page,
                            has_next=has_next,
                            has_prev=has_prev)
-    
 # ৫. এডমিন অ্যাডস শেয়ার এপ্রুভ / রিজেক্ট অ্যাকশন রাউট (/admin/adshear/action)
 @app.route('/admin/adshear/action', methods=['POST'])
 def admin_adshear_action():
