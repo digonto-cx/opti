@@ -2508,6 +2508,7 @@ def admin_adshear():
                            page=page,
                            has_next=has_next,
                            has_prev=has_prev)
+    
 # ৫. এডমিন অ্যাডস শেয়ার এপ্রুভ / রিজেক্ট অ্যাকশন রাউট (/admin/adshear/action)
 @app.route('/admin/adshear/action', methods=['POST'])
 def admin_adshear_action():
