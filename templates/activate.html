@@ -1,114 +1,159 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- কাস্টম পালস ও শাইনিং অ্যানিমেশন -->
+<!-- কাস্টম টাইমার ও নিওন পালস অ্যানিমেশন -->
 <style>
-    @keyframes glowPulse {
-        0%, 100% { box-shadow: 0 0 15px rgba(225, 29, 72, 0.4); }
-        50% { box-shadow: 0 0 30px rgba(225, 29, 72, 0.7); }
+    @keyframes offerGlow {
+        0%, 100% { box-shadow: 0 0 15px rgba(225, 29, 72, 0.35); }
+        50% { box-shadow: 0 0 30px rgba(225, 29, 72, 0.65); }
     }
-    .active-badge-glow {
-        animation: glowPulse 2s infinite;
+    .neon-offer-card {
+        animation: offerGlow 2.5s infinite ease-in-out;
     }
 </style>
 
 <div class="space-y-6 max-w-2xl mx-auto pb-16">
 
     <!-- ============================================== -->
-    <!-- 1. LIMITED TIME OFFER BANNER (FOMO)            -->
+    <!-- 1. LIMITED TIME OFFER BANNER WITH LIVE TIMER   -->
     <!-- ============================================== -->
-    <div class="glass-panel p-5 rounded-3xl shadow-card-soft border-2 border-ruby-500/80 bg-gradient-to-r from-rose-500 via-ruby-600 to-red-600 text-white relative overflow-hidden active-badge-glow" data-aos="fade-down">
-        <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/20 rounded-full blur-2xl pointer-events-none"></div>
+    <div class="glass-panel p-6 sm:p-7 rounded-[32px] shadow-card-soft border-2 border-ruby-500/80 bg-gradient-to-br from-rose-500 via-ruby-600 to-red-600 text-white relative overflow-hidden neon-offer-card" data-aos="fade-down">
+        <!-- ব্যাকগ্রাউন্ড নিওন গ্লো -->
+        <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/20 rounded-full blur-2xl pointer-events-none"></div>
 
-        <div class="flex items-center gap-3.5 relative z-10">
-            <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shrink-0 shadow-xs">
-                ⏳
-            </div>
-            <div class="space-y-1">
-                <span class="px-2.5 py-0.5 rounded-full bg-yellow-300 text-slate-950 text-[9px] font-black uppercase tracking-wider inline-block">
+        <div class="space-y-4 relative z-10 text-center sm:text-left">
+            
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
+                <span class="px-3 py-1 rounded-full bg-yellow-300 text-slate-950 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5 shadow-xs">
+                    <span class="w-1.5 h-1.5 rounded-full bg-ruby-600 animate-ping"></span>
                     সীমিত সময়ের মেগা অফার 🔥
                 </span>
-                <h2 class="text-sm sm:text-base font-black leading-snug">
-                    আগামী <span class="underline decoration-yellow-300 text-yellow-200">৮ তারিখ পর্যন্ত অফারে মাত্র ৩৫ টাকা!</span>
-                </h2>
-                <p class="text-[11px] text-rose-100 font-bold">
-                    ৮ তারিখের পর অ্যাক্টিভেশন ফি বেড়ে হবে <span class="line-through opacity-80">৳৯০ টাকা</span>। এখনই সুযোগ নিন!
-                </p>
+                <span class="text-xs font-black text-rose-100 font-mono">অফার শেষ হতে বাকি:</span>
             </div>
+
+            <!-- লাইভ ৪-ডিজিট কাউন্টডাউন টাইমার বক্স -->
+            <div class="grid grid-cols-4 gap-2 text-center">
+                <div class="bg-black/30 backdrop-blur-md p-2.5 rounded-2xl border border-white/20">
+                    <span id="timer-days" class="text-xl sm:text-2xl font-black font-mono block">02</span>
+                    <span class="text-[8px] uppercase tracking-wider font-bold text-rose-200">দিন</span>
+                </div>
+                <div class="bg-black/30 backdrop-blur-md p-2.5 rounded-2xl border border-white/20">
+                    <span id="timer-hours" class="text-xl sm:text-2xl font-black font-mono block">14</span>
+                    <span class="text-[8px] uppercase tracking-wider font-bold text-rose-200">ঘণ্টা</span>
+                </div>
+                <div class="bg-black/30 backdrop-blur-md p-2.5 rounded-2xl border border-white/20">
+                    <span id="timer-minutes" class="text-xl sm:text-2xl font-black font-mono block">35</span>
+                    <span class="text-[8px] uppercase tracking-wider font-bold text-rose-200">মিনিট</span>
+                </div>
+                <div class="bg-black/30 backdrop-blur-md p-2.5 rounded-2xl border border-white/20">
+                    <span id="timer-seconds" class="text-xl sm:text-2xl font-black font-mono text-yellow-300 block">48</span>
+                    <span class="text-[8px] uppercase tracking-wider font-bold text-rose-200">সেকেন্ড</span>
+                </div>
+            </div>
+
+            <!-- ৩৫ টাকা ফি হাইলাইটেড মেসেজ -->
+            <div class="p-3.5 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+                <div>
+                    <h2 class="text-sm sm:text-base font-black leading-tight text-white">
+                        আগামী ৮ তারিখ পর্যন্ত অফার ফি মাত্র <span class="bg-yellow-300 text-slate-950 px-2 py-0.5 rounded-md text-sm sm:text-base font-black shadow-xs">৳৩৫ টাকা</span>!
+                    </h2>
+                    <p class="text-[10px] text-rose-100 font-bold mt-0.5">
+                        ৮ তারিখের পর অ্যাক্টিভেশন ফি বেড়ে হবে <span class="line-through text-yellow-200 opacity-90">৳৯০ টাকা</span>।
+                    </p>
+                </div>
+                
+                <span class="text-xs font-black text-yellow-300 font-mono shrink-0">SAVE 61%</span>
+            </div>
+
         </div>
     </div>
 
     <!-- ============================================== -->
-    <!-- 2. 5 VIP ACTIVATION PRIVILEGES (FACILITIES)    -->
+    <!-- 2. DETAILED NOTICE CTA BANNER                  -->
     <!-- ============================================== -->
-    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
+    <div class="glass-panel p-4 rounded-2xl border border-rose-200/90 shadow-card-soft bg-gradient-to-r from-rose-50/70 via-white to-ruby-50/70 flex flex-col sm:flex-row items-center justify-between gap-3" data-aos="fade-up">
+        <div class="flex items-center gap-3 text-center sm:text-left">
+            <div class="w-9 h-9 rounded-xl bg-ruby-100 text-ruby-700 flex items-center justify-center text-sm shrink-0 shadow-2xs">
+                <i class="fa-solid fa-bullhorn animate-pulse"></i>
+            </div>
+            <div>
+                <h4 class="text-xs font-black text-slate-900">বিস্তারিত নিয়মাবলী ও ঘোষণা দেখতে চান?</h4>
+                <p class="text-[10px] text-slate-500 font-medium">অ্যাকাউন্ট ভেরিফিকেশনের অফিসিয়াল নোটিশ দেখে নিন।</p>
+            </div>
+        </div>
+
+        <a href="/updates" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white text-[10px] font-black uppercase tracking-wider transition active:scale-95 duration-150 shrink-0 shadow-xs flex items-center gap-1.5">
+            <span>নোটিশ দেখুন</span>
+            <i class="fa-solid fa-arrow-right text-[8px]"></i>
+        </a>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 3. 5 VIP PRIVILEGES INFOGRAPHIC                -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-3.5 border border-white" data-aos="fade-up">
         <div class="flex items-center justify-between border-b border-rose-100 pb-3">
             <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
-                <i class="fa-solid fa-crown text-amber-500 text-sm"></i> অ্যাকাউন্ট সচল করার বিশেষ ৫টি সুবিধা
+                <i class="fa-solid fa-crown text-amber-500 text-sm"></i> অ্যাকাউন্ট সচল করার ৫টি নিশ্চিত সুবিধা
             </h3>
-            <span class="text-[9px] font-black text-ruby-600 bg-ruby-50 border border-ruby-100 px-2.5 py-0.5 rounded-md">VIP PASS</span>
+            <span class="text-[9px] font-black text-ruby-600 bg-ruby-50 border border-ruby-100 px-2 py-0.5 rounded-md">VIP PASS</span>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold text-slate-700">
-            <!-- সুবিধা ১ -->
-            <div class="p-3.5 bg-gradient-to-r from-emerald-50/60 to-white border border-emerald-200 rounded-2xl flex items-center gap-3 shadow-2xs">
-                <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+            <div class="p-3 bg-gradient-to-r from-emerald-50/50 to-white border border-emerald-200 rounded-2xl flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs shrink-0">
                     <i class="fa-solid fa-money-bill-wave"></i>
                 </div>
                 <div>
                     <span class="text-slate-900 font-black block text-xs">৳১০০ হলেই উইথড্র</span>
-                    <span class="text-[10px] text-slate-400 font-medium">যেকোনো সময় টাকা তোলার সুবিধা</span>
+                    <span class="text-[9px] text-slate-400 font-medium">যেকোনো সময় টাকা তোলার সুবিধা</span>
                 </div>
             </div>
 
-            <!-- সুবিধা ২ -->
-            <div class="p-3.5 bg-gradient-to-r from-ruby-50/60 to-white border border-rose-200 rounded-2xl flex items-center gap-3 shadow-2xs">
-                <div class="w-8 h-8 rounded-xl bg-ruby-600 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+            <div class="p-3 bg-gradient-to-r from-ruby-50/50 to-white border border-rose-200 rounded-2xl flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-ruby-600 text-white flex items-center justify-center text-xs shrink-0">
                     <i class="fa-solid fa-user-xmark"></i>
                 </div>
                 <div>
                     <span class="text-slate-900 font-black block text-xs">কোনো রেফার লাগবে না</span>
-                    <span class="text-[10px] text-slate-400 font-medium">Zero Referral Required</span>
+                    <span class="text-[9px] text-slate-400 font-medium">Zero Referral Required</span>
                 </div>
             </div>
 
-            <!-- সুবিধা ৩ -->
-            <div class="p-3.5 bg-gradient-to-r from-sky-50/60 to-white border border-sky-200 rounded-2xl flex items-center gap-3 shadow-2xs">
-                <div class="w-8 h-8 rounded-xl bg-sky-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+            <div class="p-3 bg-gradient-to-r from-sky-50/50 to-white border border-sky-200 rounded-2xl flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-sky-500 text-white flex items-center justify-center text-xs shrink-0">
                     <i class="fa-solid fa-bolt"></i>
                 </div>
                 <div>
                     <span class="text-slate-900 font-black block text-xs">ইনস্ট্যান্ট ১০ মিনিটে পেমেন্ট</span>
-                    <span class="text-[10px] text-slate-400 font-medium">সুপারফাস্ট অটোমেটেড ক্যাশআউট</span>
+                    <span class="text-[9px] text-slate-400 font-medium">সুপারফাস্ট অটো ক্যাশআউট</span>
                 </div>
             </div>
 
-            <!-- সুবিধা ৪ -->
-            <div class="p-3.5 bg-gradient-to-r from-amber-50/60 to-white border border-amber-200 rounded-2xl flex items-center gap-3 shadow-2xs">
-                <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+            <div class="p-3 bg-gradient-to-r from-amber-50/50 to-white border border-amber-200 rounded-2xl flex items-center gap-2.5">
+                <div class="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center text-xs shrink-0">
                     <i class="fa-solid fa-coins"></i>
                 </div>
                 <div>
                     <span class="text-slate-900 font-black block text-xs">৪০ টাকা ওয়ালেটে ফেরত</span>
-                    <span class="text-[10px] text-slate-400 font-medium">পুরো ফি মূল ব্যালেন্সে যোগ হবে</span>
+                    <span class="text-[9px] text-slate-400 font-medium">পুরো ফি মূল ব্যালেন্সে যোগ হবে</span>
                 </div>
             </div>
 
-            <!-- সুবিধা ৫ -->
-            <div class="p-3.5 bg-gradient-to-r from-purple-50/60 to-white border border-purple-200 rounded-2xl flex items-center gap-3 shadow-2xs sm:col-span-2">
-                <div class="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+            <div class="p-3 bg-gradient-to-r from-purple-50/50 to-white border border-purple-200 rounded-2xl flex items-center gap-2.5 sm:col-span-2">
+                <div class="w-7 h-7 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs shrink-0">
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <div>
-                    <span class="text-slate-900 font-black block text-xs">নো ব্যান ও নো অডিট রিপোর্ট</span>
-                    <span class="text-[10px] text-slate-400 font-medium">শতভাগ নিরাপদ ও আজীবন ভেরিফাইড মেম্বারশিপ</span>
+                    <span class="text-slate-900 font-black block text-xs">নো ব্যান ও নো অডিট রিপোর্ট ঝামেলা</span>
+                    <span class="text-[9px] text-slate-400 font-medium">আজীবন ভেরিফাইড মেম্বারশিপ ও ১০০% নিরাপদ প্রোফাইল</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- ============================================== -->
-    <!-- 3. OFFICIAL PAYMENT ACCOUNTS (SEND MONEY)      -->
+    <!-- 4. OFFICIAL PAYMENT ACCOUNTS (SEND MONEY)      -->
     <!-- ============================================== -->
     <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
         <div class="flex items-center justify-between border-b border-rose-100 pb-3">
@@ -119,7 +164,7 @@
         </div>
 
         <p class="text-[11px] text-slate-500 font-medium leading-relaxed">
-            নিচের যেকোনো নম্বরে বিকাশ বা নগদ অ্যাপ থেকে মাত্র <strong class="text-ruby-600 font-black">৳৩৫ (অফার)</strong> সেন্ড মানি করুন এবং Transaction ID সংগ্রহ করুন।
+            নিচের যেকোনো নম্বরে বিকাশ বা নগদ অ্যাপ থেকে অফার ফি মাত্র <strong class="text-ruby-600 font-black">৳৩৫ (অফার)</strong> সেন্ড মানি করুন এবং Transaction ID সংগ্রহ করুন।
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -158,7 +203,7 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- 4. SUBMISSION FORM & VERIFICATION STATUS       -->
+    <!-- 5. ACTIVATION DATA SUBMISSION FORM             -->
     <!-- ============================================== -->
     <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-card-soft space-y-5 border border-white" data-aos="fade-up">
         <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 border-b border-rose-100 pb-3 flex items-center gap-2">
@@ -197,7 +242,7 @@
             </div>
             {% endif %}
 
-            <form action="/activate" method="POST" class="space-y-4">
+            <form action="/activate" method="POST" onsubmit="triggerActivationConfetti()" class="space-y-4">
                 
                 <!-- পেমেন্ট মেথড -->
                 <div class="space-y-1">
@@ -241,22 +286,53 @@
         {% endif %}
     </div>
 
-    <!-- ============================================== -->
-    <!-- 5. 24/7 SUPPORT HELP CARD                      -->
-    <!-- ============================================== -->
-    <div class="glass-panel p-5 rounded-3xl border border-white text-center space-y-2 shadow-xs">
-        <p class="text-xs font-black text-slate-800">কোনো সমস্যা হচ্ছে বা সরাসরি সহায়তা চান?</p>
-        <p class="text-[11px] text-slate-500 font-medium">আমাদের সাপোর্ট টিম ২৪ ঘণ্টা আপনার পাশে আছে।</p>
-        <a href="https://t.me/helpline_opti" target="_blank" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-[11px] font-black transition active:scale-95 duration-150 shadow-xs mt-1">
-            <i class="fa-brands fa-telegram text-sm"></i>
-            <span>টেলিগ্রাম হেল্পলাইন সাপোর্ট (@helpline_opti)</span>
-        </a>
-    </div>
-
 </div>
 
-<!-- কপি নম্বর স্ক্রিপ্ট -->
+<!-- ============================================== -->
+<!-- JAVASCRIPT: TIMER, COPY & CONFETTI             -->
+<!-- ============================================== -->
 <script>
+// ১. লাইভ ৮ তারিখ কাউন্টডাউন টাইমার ইঞ্জিন
+function initCountdownTimer() {
+    // প্রতি মাসের ৮ তারিখ রাত ১১:৫৯ পর্যন্ত টার্গেট সময়
+    const now = new Date();
+    let targetDate = new Date(now.getFullYear(), now.getMonth(), 8, 23, 59, 59);
+
+    // যদি বর্তমান তারিখ ৮ এর বেশি হয়, তবে পরবর্তী মাসের ৮ তারিখ সেট হবে
+    if (now.getDate() > 8) {
+        targetDate = new Date(now.getFullYear(), now.getMonth() + 1, 8, 23, 59, 59);
+    }
+
+    function update() {
+        const currentTime = new Date().getTime();
+        const diff = targetDate.getTime() - currentTime;
+
+        if (diff > 0) {
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            const pad = (n) => String(n).padStart(2, '0');
+            document.getElementById('timer-days').innerText = pad(days);
+            document.getElementById('timer-hours').innerText = pad(hours);
+            document.getElementById('timer-minutes').innerText = pad(minutes);
+            document.getElementById('timer-seconds').innerText = pad(seconds);
+        } else {
+            document.getElementById('timer-days').innerText = "00";
+            document.getElementById('timer-hours').innerText = "00";
+            document.getElementById('timer-minutes').innerText = "00";
+            document.getElementById('timer-seconds').innerText = "00";
+        }
+    }
+
+    setInterval(update, 1000);
+    update();
+}
+
+document.addEventListener("DOMContentLoaded", initCountdownTimer);
+
+// ২. ওয়ান-ক্লিক নম্বর কপি
 function copyNumber(num, btnId) {
     navigator.clipboard.writeText(num);
     const btn = document.getElementById(btnId);
@@ -267,6 +343,17 @@ function copyNumber(num, btnId) {
         btn.innerHTML = `<i class="fa-regular fa-copy"></i> Copy`;
         btn.className = "px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white text-[10px] font-black transition active:scale-95 duration-150 shadow-2xs flex items-center gap-1 cursor-pointer";
     }, 1800);
+}
+
+function triggerActivationConfetti() {
+    if (typeof confetti === 'function') {
+        confetti({
+            particleCount: 85,
+            spread: 60,
+            origin: { y: 0.7 },
+            colors: ['#E11D48', '#10B981', '#F59E0B']
+        });
+    }
 }
 </script>
 
