@@ -1,119 +1,174 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="space-y-4 max-w-md mx-auto pb-12 px-2">
+<!-- কাস্টম পালস ও শাইনিং অ্যানিমেশন -->
+<style>
+    @keyframes glowPulse {
+        0%, 100% { box-shadow: 0 0 15px rgba(225, 29, 72, 0.4); }
+        50% { box-shadow: 0 0 30px rgba(225, 29, 72, 0.7); }
+    }
+    .active-badge-glow {
+        animation: glowPulse 2s infinite;
+    }
+</style>
 
-    <!-- ⏰ 🔥 লিমিটেড টাইম অফার নোটিশ (নতুন যোগ করা হয়েছে) -->
-    <div class="bg-gradient-to-r from-amber-500 to-red-500 p-3.5 rounded-2xl text-white shadow-md relative overflow-hidden border border-amber-300">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-white/20 rounded-xl flex items-center justify-center shrink-0 text-lg">
+<div class="space-y-6 max-w-2xl mx-auto pb-16">
+
+    <!-- ============================================== -->
+    <!-- 1. LIMITED TIME OFFER BANNER (FOMO)            -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-5 rounded-3xl shadow-card-soft border-2 border-ruby-500/80 bg-gradient-to-r from-rose-500 via-ruby-600 to-red-600 text-white relative overflow-hidden active-badge-glow" data-aos="fade-down">
+        <div class="absolute -right-10 -top-10 w-32 h-32 bg-white/20 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="flex items-center gap-3.5 relative z-10">
+            <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shrink-0 shadow-xs">
                 ⏳
             </div>
-            <div class="text-xs">
-                <span class="bg-white/20 text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider block w-max mb-0.5">সীমিত সময়ের অফার</span>
-                <p class="font-bold leading-snug">
-                    আগামী <span class="underline decoration-yellow-300 font-extrabold text-yellow-200">২৩ তারিখের পর</span> ফি হবে <span class="line-through opacity-80">৳১০০</span> টাকা! এখন অফারে মাত্র <span class="bg-yellow-300 text-slate-950 font-black px-1.5 py-0.5 rounded-md text-sm shadow-sm animate-pulse">৳৪০</span> টাকা!
+            <div class="space-y-1">
+                <span class="px-2.5 py-0.5 rounded-full bg-yellow-300 text-slate-950 text-[9px] font-black uppercase tracking-wider inline-block">
+                    সীমিত সময়ের মেগা অফার 🔥
+                </span>
+                <h2 class="text-sm sm:text-base font-black leading-snug">
+                    আগামী <span class="underline decoration-yellow-300 text-yellow-200">৮ তারিখ পর্যন্ত অফারে মাত্র ৩৫ টাকা!</span>
+                </h2>
+                <p class="text-[11px] text-rose-100 font-bold">
+                    ৮ তারিখের পর অ্যাক্টিভেশন ফি বেড়ে হবে <span class="line-through opacity-80">৳৯০ টাকা</span>। এখনই সুযোগ নিন!
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- 🛡️ ২. ইমোশনাল সিকিউরিটি ও টাকা নেওয়ার স্পষ্ট কারণ -->
-    <div class="blockio-card p-5 bg-white border border-slate-200 shadow-sm rounded-2xl relative overflow-hidden">
-        <div class="absolute -right-8 -top-8 w-24 h-24 bg-blue-500/5 rounded-full blur-2xl"></div>
-        
-        <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-800 mb-3 flex items-center gap-2">
-            <i class="fa-solid fa-shield-heart text-red-500 text-sm"></i> অ্যাকাউন্ট সচল করার নিয়ম ও কারণ
-        </h2>
-        
-        <div class="bg-slate-50 border border-slate-100 p-3.5 rounded-xl space-y-2.5 text-xs text-slate-600 leading-relaxed text-justify">
-            <p>
-                <strong class="text-slate-800">কেন এই চার্জ নেওয়া হচ্ছে?</strong><br>
-                আমাদের ক্লাউড জিপিইউ সার্ভার সচল রাখতে, ভিপিএন বা বটের ক্ষতিকর স্প্যামিং প্রতিরোধ করতে, ফেক সাবমিট আটকাতে এবং ১০০% আসল ইউজার ভেরিফাই করতে এই ওয়ান-টাইম নিরাপত্তা চার্জটি নেওয়া হয়। এটি কোনো লাভজনক ফি নয়, বরং নেটওয়ার্ক সিকিউরিটি ও কেওয়াইসি (KYC) প্রসেসিং ফি।
-            </p>
-            
-            <div class="p-2.5 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg text-[11px] text-amber-900 font-medium">
-                <i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i>
-                <strong>জরুরি নোট:</strong> অ্যাকাউন্ট সচল করা ছাড়া আপনি কোনো টাস্ক সম্পূর্ণ করতে অথবা টাকা উইথড্র করতে পারবেন না।
+    <!-- ============================================== -->
+    <!-- 2. 5 VIP ACTIVATION PRIVILEGES (FACILITIES)    -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
+        <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+            <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-crown text-amber-500 text-sm"></i> অ্যাকাউন্ট সচল করার বিশেষ ৫টি সুবিধা
+            </h3>
+            <span class="text-[9px] font-black text-ruby-600 bg-ruby-50 border border-ruby-100 px-2.5 py-0.5 rounded-md">VIP PASS</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold text-slate-700">
+            <!-- সুবিধা ১ -->
+            <div class="p-3.5 bg-gradient-to-r from-emerald-50/60 to-white border border-emerald-200 rounded-2xl flex items-center gap-3 shadow-2xs">
+                <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                </div>
+                <div>
+                    <span class="text-slate-900 font-black block text-xs">৳১০০ হলেই উইথড্র</span>
+                    <span class="text-[10px] text-slate-400 font-medium">যেকোনো সময় টাকা তোলার সুবিধা</span>
+                </div>
+            </div>
+
+            <!-- সুবিধা ২ -->
+            <div class="p-3.5 bg-gradient-to-r from-ruby-50/60 to-white border border-rose-200 rounded-2xl flex items-center gap-3 shadow-2xs">
+                <div class="w-8 h-8 rounded-xl bg-ruby-600 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+                    <i class="fa-solid fa-user-xmark"></i>
+                </div>
+                <div>
+                    <span class="text-slate-900 font-black block text-xs">কোনো রেফার লাগবে না</span>
+                    <span class="text-[10px] text-slate-400 font-medium">Zero Referral Required</span>
+                </div>
+            </div>
+
+            <!-- সুবিধা ৩ -->
+            <div class="p-3.5 bg-gradient-to-r from-sky-50/60 to-white border border-sky-200 rounded-2xl flex items-center gap-3 shadow-2xs">
+                <div class="w-8 h-8 rounded-xl bg-sky-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                    <span class="text-slate-900 font-black block text-xs">ইনস্ট্যান্ট ১০ মিনিটে পেমেন্ট</span>
+                    <span class="text-[10px] text-slate-400 font-medium">সুপারফাস্ট অটোমেটেড ক্যাশআউট</span>
+                </div>
+            </div>
+
+            <!-- সুবিধা ৪ -->
+            <div class="p-3.5 bg-gradient-to-r from-amber-50/60 to-white border border-amber-200 rounded-2xl flex items-center gap-3 shadow-2xs">
+                <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+                    <i class="fa-solid fa-coins"></i>
+                </div>
+                <div>
+                    <span class="text-slate-900 font-black block text-xs">৪০ টাকা ওয়ালেটে ফেরত</span>
+                    <span class="text-[10px] text-slate-400 font-medium">পুরো ফি মূল ব্যালেন্সে যোগ হবে</span>
+                </div>
+            </div>
+
+            <!-- সুবিধা ৫ -->
+            <div class="p-3.5 bg-gradient-to-r from-purple-50/60 to-white border border-purple-200 rounded-2xl flex items-center gap-3 shadow-2xs sm:col-span-2">
+                <div class="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <span class="text-slate-900 font-black block text-xs">নো ব্যান ও নো অডিট রিপোর্ট</span>
+                    <span class="text-[10px] text-slate-400 font-medium">শতভাগ নিরাপদ ও আজীবন ভেরিফাইড মেম্বারশিপ</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 📲 ৩. সহজ ৪-স্টেপ গাইডলাইন -->
-    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-        <h3 class="text-[11px] font-bold text-slate-700 uppercase tracking-wide mb-3 flex items-center gap-1.5">
-            <i class="fa-solid fa-list-check text-indigo-500"></i> কীভাবে পেমেন্ট করবেন? (সহজ ৪ ধাপ)
-        </h3>
-        <div class="grid grid-cols-2 gap-2 text-[10px]">
-            <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
-                <span class="font-bold text-indigo-600">১. নম্বর কপি:</span> বিকাশ/নগদ নম্বরটি কপি করুন।
-            </div>
-            <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
-                <span class="font-bold text-indigo-600">২. সেন্ড মানি:</span> আপনার অ্যাপ থেকে <strong class="text-emerald-600 font-black">৳৪০</strong> সেন্ড মানি করুন।
-            </div>
-            <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
-                <span class="font-bold text-indigo-600">৩. TrxID সংগ্রহ:</span> মেসেজ থেকে Transaction ID কপি করুন।
-            </div>
-            <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
-                <span class="font-bold text-indigo-600">৪. সাবমিট:</span> নিচের ফর্মে সঠিক তথ্য জমা দিন।
-            </div>
+    <!-- ============================================== -->
+    <!-- 3. OFFICIAL PAYMENT ACCOUNTS (SEND MONEY)      -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft space-y-4 border border-white" data-aos="fade-up">
+        <div class="flex items-center justify-between border-b border-rose-100 pb-3">
+            <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-wallet text-ruby-600"></i> অফিশিয়াল পেমেন্ট নম্বরসমূহ
+            </h3>
+            <span class="text-[9px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-md font-black uppercase">Send Money Only</span>
         </div>
-    </div>
 
-    <!-- 💳 ৪. অফিশিয়াল পেমেন্ট নম্বরসমূহ -->
-    <div class="blockio-card p-5 bg-white border border-slate-200 shadow-sm rounded-2xl space-y-3">
-        <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">অফিশিয়াল পেমেন্ট নম্বর</h3>
-            <span class="text-[9px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-bold animate-pulse">Send Money Only</span>
-        </div>
-        
-        <div class="space-y-2.5">
+        <p class="text-[11px] text-slate-500 font-medium leading-relaxed">
+            নিচের যেকোনো নম্বরে বিকাশ বা নগদ অ্যাপ থেকে মাত্র <strong class="text-ruby-600 font-black">৳৩৫ (অফার)</strong> সেন্ড মানি করুন এবং Transaction ID সংগ্রহ করুন।
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <!-- bKash -->
-            <div class="flex justify-between items-center bg-pink-50/50 p-3 rounded-xl border border-pink-100 transition hover:border-pink-300">
-                <div class="flex items-center gap-2.5">
-                    <img src="https://images.seeklogo.com/logo-png/27/1/bkash-logo-png_seeklogo-273684.png" class="h-6 object-contain" alt="bKash">
-                    <div class="leading-tight">
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-[9px] text-pink-600 font-bold uppercase">bKash Personal</span>
-                            <span class="bg-pink-600 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full">৳৪০</span>
-                        </div>
-                        <span class="text-xs font-mono font-bold text-slate-800">01912107604</span>
+            <div class="bg-gradient-to-br from-pink-50/60 to-white border border-pink-200 p-4 rounded-2xl flex items-center justify-between shadow-2xs">
+                <div class="flex items-center gap-3">
+                    <img src="https://images.seeklogo.com/logo-png/27/1/bkash-logo-png_seeklogo-273684.png" class="h-6 object-contain">
+                    <div>
+                        <span class="text-[9px] text-pink-600 font-black uppercase tracking-wider block">bKash Personal</span>
+                        <span class="text-xs font-black font-mono text-slate-900">01912107604</span>
                     </div>
                 </div>
-                <button onclick="copyNumber('01912107604', 'bkash-btn')" id="bkash-btn" class="bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1">
-                    <i class="fa-regular fa-copy"></i> Copy
+                <button type="button" onclick="copyNumber('01912107604', 'bkash-btn')" id="bkash-btn" 
+                        class="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white text-[10px] font-black transition active:scale-95 duration-150 shadow-2xs flex items-center gap-1 cursor-pointer">
+                    <i class="fa-regular fa-copy"></i>
+                    <span>Copy</span>
                 </button>
             </div>
-            
+
             <!-- Nagad -->
-            <div class="flex justify-between items-center bg-orange-50/50 p-3 rounded-xl border border-orange-100 transition hover:border-orange-300">
-                <div class="flex items-center gap-2.5">
-                    <img src="https://images.seeklogo.com/logo-png/41/1/nagad-logo-png_seeklogo-411803.png" class="h-6 object-contain" alt="Nagad">
-                    <div class="leading-tight">
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-[9px] text-orange-600 font-bold uppercase">Nagad Personal</span>
-                            <span class="bg-orange-600 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full">৳৪০</span>
-                        </div>
-                        <span class="text-xs font-mono font-bold text-slate-800">01912107604</span>
+            <div class="bg-gradient-to-br from-orange-50/60 to-white border border-orange-200 p-4 rounded-2xl flex items-center justify-between shadow-2xs">
+                <div class="flex items-center gap-3">
+                    <img src="https://images.seeklogo.com/logo-png/41/1/nagad-logo-png_seeklogo-411803.png" class="h-6 object-contain">
+                    <div>
+                        <span class="text-[9px] text-orange-600 font-black uppercase tracking-wider block">Nagad Personal</span>
+                        <span class="text-xs font-black font-mono text-slate-900">01912107604</span>
                     </div>
                 </div>
-                <button onclick="copyNumber('01912107604', 'nagad-btn')" id="nagad-btn" class="bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1">
-                    <i class="fa-regular fa-copy"></i> Copy
+                <button type="button" onclick="copyNumber('01912107604', 'nagad-btn')" id="nagad-btn" 
+                        class="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white text-[10px] font-black transition active:scale-95 duration-150 shadow-2xs flex items-center gap-1 cursor-pointer">
+                    <i class="fa-regular fa-copy"></i>
+                    <span>Copy</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- 📝 ৫. পেমেন্ট প্রুফ ও অ্যাক্টিভেশন ফর্ম -->
-    <div class="blockio-card p-5 bg-white border border-slate-200 shadow-sm rounded-2xl">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 mb-3 border-b border-slate-100 pb-2 flex items-center gap-1.5">
-            <i class="fa-solid fa-paper-plane text-emerald-500"></i> ভেরিফিকেশন তথ্য জমা দিন
+    <!-- ============================================== -->
+    <!-- 4. SUBMISSION FORM & VERIFICATION STATUS       -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-card-soft space-y-5 border border-white" data-aos="fade-up">
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 border-b border-rose-100 pb-3 flex items-center gap-2">
+            <i class="fa-solid fa-shield-check text-ruby-600"></i> অ্যাক্টিভেশন তথ্য জমা দিন
         </h3>
-        
+
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="p-3 mb-3 text-xs rounded-xl border text-center font-medium {% if category == 'success' %}bg-emerald-50 text-emerald-700 border-emerald-200{% else %}bg-red-50 text-red-700 border-red-200{% endif %}">
+                    <div class="p-3.5 text-xs text-center rounded-2xl border font-bold shadow-xs {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-200{% else %}bg-red-50 text-red-600 border-red-200{% endif %}">
                         {{ message }}
                     </div>
                 {% endfor %}
@@ -122,75 +177,95 @@
 
         {% if status == 'Pending' %}
             <!-- পেন্ডিং অবস্থা -->
-            <div class="text-center py-6 bg-slate-50 rounded-2xl border border-dashed border-slate-300 p-4">
-                <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i class="fa-solid fa-hourglass-half text-amber-600 text-xl animate-spin"></i>
+            <div class="text-center py-10 bg-slate-50/80 rounded-3xl border border-dashed border-rose-200 space-y-3">
+                <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-xl shadow-xs">
+                    <i class="fa-solid fa-hourglass-half fa-spin"></i>
                 </div>
-                <p class="text-xs font-bold text-slate-800">পেমেন্ট ভেরিফিকেশন চলছে...</p>
-                <p class="text-[10px] text-slate-500 mt-1 max-w-[220px] mx-auto leading-relaxed">
-                    ধৈর্য ধরুন! আমাদের এডমিন আপনার ট্রানজেকশন আইডি চেক করে ৫-১০ মিনিটের মধ্যে অ্যাকাউন্ট সচল করে দেবে।
+                <h3 class="text-xs font-black text-slate-900">পেমেন্ট ভেরিফিকেশন চলছে...</h3>
+                <p class="text-[11px] text-slate-500 font-medium max-w-xs mx-auto leading-relaxed">
+                    ধৈর্য ধরুন! আমাদের এডমিন আপনার TrxID যাচাই করে ৫-১০ মিনিটের মধ্যে একাউন্ট সক্রিয় করে দেবে।
                 </p>
             </div>
         {% else %}
             
             {% if status == 'Rejected' %}
-            <div class="bg-red-50 border border-red-200 text-red-700 p-3 mb-4 rounded-xl text-[11px] font-medium leading-relaxed flex items-start gap-2">
-                 <i class="fa-solid fa-circle-xmark text-red-500 text-sm mt-0.5"></i>
-                 <div>
-                    <strong>আবেদনটি বাতিল হয়েছে!</strong> আপনার পূর্বে দেওয়া তথ্যটি ভুল ছিল। সঠিক নিয়মে সেন্ড মানি করে আবার প্রুফ দিন।
-                 </div>
+            <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold leading-relaxed flex items-start gap-2.5">
+                <i class="fa-solid fa-triangle-exclamation text-rose-600 text-sm mt-0.5 shrink-0"></i>
+                <div>
+                    <strong>আবেদনটি বাতিল হয়েছে:</strong> আপনার দেওয়া ট্রানজেকশন তথ্যটি সঠিক ছিল না। দয়া করে সঠিক নিয়মে সেন্ড মানি করে আবার সাবমিট করুন।
+                </div>
             </div>
             {% endif %}
 
-            <form action="/activate" method="POST" class="space-y-3.5">
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">পেমেন্ট মেথড</label>
-                    <select name="method" required class="minimal-select w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-slate-900 focus:outline-none transition">
+            <form action="/activate" method="POST" class="space-y-4">
+                
+                <!-- পেমেন্ট মেথড -->
+                <div class="space-y-1">
+                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">পেমেন্ট মেথড</label>
+                    <select name="method" required class="w-full px-4 py-3 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-900 font-bold focus:outline-none focus:border-ruby-600 shadow-xs">
                         <option value="Bkash">bKash (Send Money)</option>
                         <option value="Nagad">Nagad (Send Money)</option>
                     </select>
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">মোবাইল নম্বর (যে নম্বর থেকে পাঠিয়েছেন)</label>
-                    <input type="text" name="number" required placeholder="01XXXXXXXXX" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-slate-900 focus:outline-none transition">
+                <!-- প্রেরক নম্বর -->
+                <div class="space-y-1">
+                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">যে নম্বর থেকে টাকা পাঠিয়েছেন</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                            <i class="fa-solid fa-phone text-xs"></i>
+                        </span>
+                        <input type="text" name="number" required placeholder="01XXXXXXXXX" 
+                               class="w-full pl-10 pr-4 py-3 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-900 font-bold font-mono focus:outline-none focus:border-ruby-600 focus:ring-2 focus:ring-rose-100 transition shadow-xs">
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Transaction ID (TxID)</label>
-                    <input type="text" name="transaction_id" required placeholder="8JN4X9K3" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-slate-900 focus:outline-none font-mono uppercase transition">
+                <!-- ট্রানজেকশন আইডি -->
+                <div class="space-y-1">
+                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">Transaction ID (TxID)</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                            <i class="fa-solid fa-receipt text-xs"></i>
+                        </span>
+                        <input type="text" name="transaction_id" required placeholder="8JN4X9K3" 
+                               class="w-full pl-10 pr-4 py-3 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-900 font-black font-mono uppercase focus:outline-none focus:border-ruby-600 focus:ring-2 focus:ring-rose-100 transition shadow-xs">
+                    </div>
                 </div>
 
-                <button type="submit" class="w-full bg-slate-950 hover:bg-slate-800 active:scale-[0.98] text-white font-extrabold text-xs py-3 rounded-xl transition shadow flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-circle-check text-emerald-400"></i> সাবমিট করুন (৳৪০)
+                <!-- সাবমিট বাটন -->
+                <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-ruby-600 via-rose-600 to-red-600 hover:opacity-95 text-white font-black text-xs shadow-glow-ruby transition active:scale-95 duration-150 flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>অ্যাক্টিভেশন সাবমিট করুন (অফার মূল্য ৳৩৫)</span>
                 </button>
             </form>
         {% endif %}
     </div>
 
-    <!-- 💬 ৬. লাইভ সাপোর্ট কার্ড (ইউজারনেম আপডেট করা হয়েছে) -->
-    <div class="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-4 text-center">
-        <p class="text-[11px] text-indigo-900 font-semibold mb-1">কোনো সমস্যা হচ্ছে বা সাহায্য প্রয়োজন?</p>
-        <p class="text-[10px] text-indigo-600 mb-2.5">আমাদের সাপোর্ট টিম ২৪/৭ আপনার পাশে আছে।</p>
-        <a href="https://t.me/Optiworkhelp" target="_blank" class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold px-4 py-2 rounded-xl transition shadow-sm">
-            <i class="fa-brands fa-telegram"></i> টেলিগ্রাম সাপোর্টে যোগাযোগ করুন (@Optiworkhelp)
+    <!-- ============================================== -->
+    <!-- 5. 24/7 SUPPORT HELP CARD                      -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-5 rounded-3xl border border-white text-center space-y-2 shadow-xs">
+        <p class="text-xs font-black text-slate-800">কোনো সমস্যা হচ্ছে বা সরাসরি সহায়তা চান?</p>
+        <p class="text-[11px] text-slate-500 font-medium">আমাদের সাপোর্ট টিম ২৪ ঘণ্টা আপনার পাশে আছে।</p>
+        <a href="https://t.me/helpline_opti" target="_blank" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-[11px] font-black transition active:scale-95 duration-150 shadow-xs mt-1">
+            <i class="fa-brands fa-telegram text-sm"></i>
+            <span>টেলিগ্রাম হেল্পলাইন সাপোর্ট (@helpline_opti)</span>
         </a>
     </div>
 
 </div>
 
+<!-- কপি নম্বর স্ক্রিপ্ট -->
 <script>
-// কপি নম্বর স্ক্রিপ্ট
 function copyNumber(num, btnId) {
     navigator.clipboard.writeText(num);
     const btn = document.getElementById(btnId);
-    
     btn.innerHTML = `<i class="fa-solid fa-check"></i> Copied!`;
-    btn.className = "bg-emerald-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1";
-    
+    btn.className = "px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white text-[10px] font-black transition shadow-2xs flex items-center gap-1";
+
     setTimeout(() => {
         btn.innerHTML = `<i class="fa-regular fa-copy"></i> Copy`;
-        btn.className = "bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1";
+        btn.className = "px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white text-[10px] font-black transition active:scale-95 duration-150 shadow-2xs flex items-center gap-1 cursor-pointer";
     }, 1800);
 }
 </script>
