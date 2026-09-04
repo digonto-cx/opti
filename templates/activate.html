@@ -3,21 +3,21 @@
 
 <!-- কাস্টম টাইমার ও নিওন পালস অ্যানিমেশন -->
 <style>
-    @keyframes offerGlow {
+    @keyframes kycGlow {
         0%, 100% { box-shadow: 0 0 15px rgba(225, 29, 72, 0.35); }
         50% { box-shadow: 0 0 30px rgba(225, 29, 72, 0.65); }
     }
-    .neon-offer-card {
-        animation: offerGlow 2.5s infinite ease-in-out;
+    .neon-kyc-card {
+        animation: kycGlow 2.5s infinite ease-in-out;
     }
 </style>
 
-<div class="space-y-6 max-w-2xl mx-auto pb-16">
+<div class="space-y-6 max-w-2xl mx-auto pb-16 px-1 sm:px-0">
 
     <!-- ============================================== -->
-    <!-- 1. LIMITED TIME OFFER BANNER WITH LIVE TIMER   -->
+    <!-- 1. LIMITED TIME KYC OFFER WITH LIVE TIMER      -->
     <!-- ============================================== -->
-    <div class="glass-panel p-6 sm:p-7 rounded-[32px] shadow-card-soft border-2 border-ruby-500/80 bg-gradient-to-br from-rose-500 via-ruby-600 to-red-600 text-white relative overflow-hidden neon-offer-card" data-aos="fade-down">
+    <div class="glass-panel p-6 sm:p-7 rounded-[32px] shadow-card-soft border-2 border-ruby-500/80 bg-gradient-to-br from-rose-500 via-ruby-600 to-red-600 text-white relative overflow-hidden neon-kyc-card" data-aos="fade-down">
         <!-- ব্যাকগ্রাউন্ড নিওন গ্লো -->
         <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/20 rounded-full blur-2xl pointer-events-none"></div>
 
@@ -26,12 +26,12 @@
             <div class="flex flex-col sm:flex-row items-center justify-between gap-2">
                 <span class="px-3 py-1 rounded-full bg-yellow-300 text-slate-950 text-[10px] font-black uppercase tracking-wider inline-flex items-center gap-1.5 shadow-xs">
                     <span class="w-1.5 h-1.5 rounded-full bg-ruby-600 animate-ping"></span>
-                    সীমিত সময়ের মেগা অফার 🔥
+                    সীমিত সময়ের KYC মেগা অফার 🔥
                 </span>
                 <span class="text-xs font-black text-rose-100 font-mono">অফার শেষ হতে বাকি:</span>
             </div>
 
-            <!-- লাইভ ৪-ডিজিট কাউন্টডাউন টাইমার বক্স -->
+            <!-- লাইভ ৪-ডিজিট কাউন্টডাউন টাইমার -->
             <div class="grid grid-cols-4 gap-2 text-center">
                 <div class="bg-black/30 backdrop-blur-md p-2.5 rounded-2xl border border-white/20">
                     <span id="timer-days" class="text-xl sm:text-2xl font-black font-mono block">02</span>
@@ -51,14 +51,14 @@
                 </div>
             </div>
 
-            <!-- ৩৫ টাকা ফি হাইলাইটেড মেসেজ -->
+            <!-- ৩৫ টাকা KYC ফি হাইলাইটেড মেসেজ -->
             <div class="p-3.5 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
                 <div>
                     <h2 class="text-sm sm:text-base font-black leading-tight text-white">
-                        আগামী ৮ তারিখ পর্যন্ত অফার ফি মাত্র <span class="bg-yellow-300 text-slate-950 px-2 py-0.5 rounded-md text-sm sm:text-base font-black shadow-xs">৳৩৫ টাকা</span>!
+                        আগামী ৮ তারিখ পর্যন্ত KYC ভেরিফিকেশন ফি মাত্র <span class="bg-yellow-300 text-slate-950 px-2 py-0.5 rounded-md text-sm sm:text-base font-black shadow-xs">৳৩৫ টাকা</span>!
                     </h2>
                     <p class="text-[10px] text-rose-100 font-bold mt-0.5">
-                        ৮ তারিখের পর অ্যাক্টিভেশন ফি বেড়ে হবে <span class="line-through text-yellow-200 opacity-90">৳৯০ টাকা</span>।
+                        ৮ তারিখের পর অফিসিয়াল KYC ফি বেড়ে হবে <span class="line-through text-yellow-200 opacity-90">৳৯০ টাকা</span>।
                     </p>
                 </div>
                 
@@ -69,84 +69,102 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- 2. DETAILED NOTICE CTA BANNER                  -->
+    <!-- 2. OFFICIAL NOTICE & HELPLINE CTA              -->
     <!-- ============================================== -->
-    <div class="glass-panel p-4 rounded-2xl border border-rose-200/90 shadow-card-soft bg-gradient-to-r from-rose-50/70 via-white to-ruby-50/70 flex flex-col sm:flex-row items-center justify-between gap-3" data-aos="fade-up">
-        <div class="flex items-center gap-3 text-center sm:text-left">
-            <div class="w-9 h-9 rounded-xl bg-ruby-100 text-ruby-700 flex items-center justify-center text-sm shrink-0 shadow-2xs">
-                <i class="fa-solid fa-bullhorn animate-pulse"></i>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" data-aos="fade-up">
+        <!-- নোটিশ লিঙ্ক -->
+        <a href="/updates" class="glass-panel p-4 rounded-2xl border border-rose-200/90 shadow-card-soft hover:border-ruby-500 transition active:scale-95 duration-150 flex items-center justify-between gap-3 group">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-ruby-100 text-ruby-700 flex items-center justify-center text-sm shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-bullhorn"></i>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-slate-900">অফিসিয়াল আপডেট নোটিশ</h4>
+                    <p class="text-[10px] text-slate-500 font-medium">KYC ও ভেরিফিকেশনের নিয়মাবলী দেখুন</p>
+                </div>
             </div>
-            <div>
-                <h4 class="text-xs font-black text-slate-900">বিস্তারিত নিয়মাবলী ও ঘোষণা দেখতে চান?</h4>
-                <p class="text-[10px] text-slate-500 font-medium">অ্যাকাউন্ট ভেরিফিকেশনের অফিসিয়াল নোটিশ দেখে নিন।</p>
-            </div>
-        </div>
+            <i class="fa-solid fa-arrow-right text-xs text-slate-400 group-hover:text-ruby-600 transition-colors"></i>
+        </a>
 
-        <a href="/updates" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-ruby-600 text-white text-[10px] font-black uppercase tracking-wider transition active:scale-95 duration-150 shrink-0 shadow-xs flex items-center gap-1.5">
-            <span>নোটিশ দেখুন</span>
-            <i class="fa-solid fa-arrow-right text-[8px]"></i>
+        <!-- টেলিগ্রাম হেল্পলাইন CTA -->
+        <a href="https://t.me/helpline_opti" target="_blank" class="glass-panel p-4 rounded-2xl border border-sky-200/90 shadow-card-soft hover:border-sky-500 transition active:scale-95 duration-150 flex items-center justify-between gap-3 group bg-gradient-to-r from-sky-50/40 to-white">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-sky-500 text-white flex items-center justify-center text-sm shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
+                    <i class="fa-brands fa-telegram"></i>
+                </div>
+                <div>
+                    <h4 class="text-xs font-black text-slate-900">২৪/৭ কাস্টমার হেল্পলাইন</h4>
+                    <p class="text-[10px] text-sky-600 font-bold">@helpline_opti তে মেসেজ দিন</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-headset text-xs text-sky-500"></i>
         </a>
     </div>
 
     <!-- ============================================== -->
-    <!-- 3. 5 VIP PRIVILEGES INFOGRAPHIC                -->
+    <!-- 3. 5 VIP KYC BENEFITS (HIGHLIGHTED)            -->
     <!-- ============================================== -->
-    <div class="glass-panel p-6 rounded-3xl shadow-card-soft space-y-3.5 border border-white" data-aos="fade-up">
+    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft space-y-3.5 border border-white" data-aos="fade-up">
         <div class="flex items-center justify-between border-b border-rose-100 pb-3">
             <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 flex items-center gap-2">
-                <i class="fa-solid fa-crown text-amber-500 text-sm"></i> অ্যাকাউন্ট সচল করার ৫টি নিশ্চিত সুবিধা
+                <i class="fa-solid fa-crown text-amber-500 text-sm"></i> KYC সম্পন্ন করার ৫টি বিশেষ সুবিধা
             </h3>
-            <span class="text-[9px] font-black text-ruby-600 bg-ruby-50 border border-ruby-100 px-2 py-0.5 rounded-md">VIP PASS</span>
+            <span class="text-[9px] font-black text-ruby-600 bg-ruby-50 border border-ruby-100 px-2.5 py-0.5 rounded-md">VERIFIED VIP</span>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold text-slate-700">
-            <div class="p-3 bg-gradient-to-r from-emerald-50/50 to-white border border-emerald-200 rounded-2xl flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs shrink-0">
+            <!-- সুবিধা ১ -->
+            <div class="p-3.5 bg-gradient-to-r from-emerald-50/60 to-white border border-emerald-200 rounded-2xl flex items-center gap-3 shadow-2xs">
+                <div class="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
                     <i class="fa-solid fa-money-bill-wave"></i>
                 </div>
                 <div>
-                    <span class="text-slate-900 font-black block text-xs">৳১০০ হলেই উইথড্র</span>
-                    <span class="text-[9px] text-slate-400 font-medium">যেকোনো সময় টাকা তোলার সুবিধা</span>
+                    <span class="text-slate-900 font-black block text-xs">৳১০০ হলেই সরাসরি উইথড্র</span>
+                    <span class="text-[10px] text-slate-400 font-medium">কম ব্যালেন্সে ক্যাশআউট সুবিধা</span>
                 </div>
             </div>
 
-            <div class="p-3 bg-gradient-to-r from-ruby-50/50 to-white border border-rose-200 rounded-2xl flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-lg bg-ruby-600 text-white flex items-center justify-center text-xs shrink-0">
+            <!-- সুবিধা ২ -->
+            <div class="p-3.5 bg-gradient-to-r from-ruby-50/60 to-white border border-rose-200 rounded-2xl flex items-center gap-3 shadow-2xs">
+                <div class="w-8 h-8 rounded-xl bg-ruby-600 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
                     <i class="fa-solid fa-user-xmark"></i>
                 </div>
                 <div>
                     <span class="text-slate-900 font-black block text-xs">কোনো রেফার লাগবে না</span>
-                    <span class="text-[9px] text-slate-400 font-medium">Zero Referral Required</span>
+                    <span class="text-[10px] text-slate-400 font-medium">Zero Referrals Required</span>
                 </div>
             </div>
 
-            <div class="p-3 bg-gradient-to-r from-sky-50/50 to-white border border-sky-200 rounded-2xl flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-lg bg-sky-500 text-white flex items-center justify-center text-xs shrink-0">
+            <!-- সুবিধা ৩ -->
+            <div class="p-3.5 bg-gradient-to-r from-sky-50/60 to-white border border-sky-200 rounded-2xl flex items-center gap-3 shadow-2xs">
+                <div class="w-8 h-8 rounded-xl bg-sky-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
                     <i class="fa-solid fa-bolt"></i>
                 </div>
                 <div>
                     <span class="text-slate-900 font-black block text-xs">ইনস্ট্যান্ট ১০ মিনিটে পেমেন্ট</span>
-                    <span class="text-[9px] text-slate-400 font-medium">সুপারফাস্ট অটো ক্যাশআউট</span>
+                    <span class="text-[10px] text-slate-400 font-medium">সুপারফাস্ট অটোমেটেড ক্যাশআউট</span>
                 </div>
             </div>
 
-            <div class="p-3 bg-gradient-to-r from-amber-50/50 to-white border border-amber-200 rounded-2xl flex items-center gap-2.5">
-                <div class="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center text-xs shrink-0">
+            <!-- সুবিধা ৪ -->
+            <div class="p-3.5 bg-gradient-to-r from-amber-50/60 to-white border border-amber-200 rounded-2xl flex items-center gap-3 shadow-2xs">
+                <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
                     <i class="fa-solid fa-coins"></i>
                 </div>
                 <div>
                     <span class="text-slate-900 font-black block text-xs">৪০ টাকা ওয়ালেটে ফেরত</span>
-                    <span class="text-[9px] text-slate-400 font-medium">পুরো ফি মূল ব্যালেন্সে যোগ হবে</span>
+                    <span class="text-[10px] text-slate-400 font-medium">পুরো ফি মূল ব্যালেন্সে যোগ হবে</span>
                 </div>
             </div>
 
-            <div class="p-3 bg-gradient-to-r from-purple-50/50 to-white border border-purple-200 rounded-2xl flex items-center gap-2.5 sm:col-span-2">
-                <div class="w-7 h-7 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs shrink-0">
+            <!-- সুবিধা ৫ -->
+            <div class="p-3.5 bg-gradient-to-r from-purple-50/60 to-white border border-purple-200 rounded-2xl flex items-center gap-3 shadow-2xs sm:col-span-2">
+                <div class="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <div>
                     <span class="text-slate-900 font-black block text-xs">নো ব্যান ও নো অডিট রিপোর্ট ঝামেলা</span>
-                    <span class="text-[9px] text-slate-400 font-medium">আজীবন ভেরিফাইড মেম্বারশিপ ও ১০০% নিরাপদ প্রোফাইল</span>
+                    <span class="text-[10px] text-slate-400 font-medium">আজীবন ভেরিফাইড মেম্বারশিপ ও ১০০% সুরক্ষিত আইডি</span>
                 </div>
             </div>
         </div>
@@ -164,7 +182,7 @@
         </div>
 
         <p class="text-[11px] text-slate-500 font-medium leading-relaxed">
-            নিচের যেকোনো নম্বরে বিকাশ বা নগদ অ্যাপ থেকে অফার ফি মাত্র <strong class="text-ruby-600 font-black">৳৩৫ (অফার)</strong> সেন্ড মানি করুন এবং Transaction ID সংগ্রহ করুন।
+            নিচের যেকোনো পার্সোনাল নম্বরে বিকাশ বা নগদ অ্যাপ থেকে অফার ফি মাত্র <strong class="text-ruby-600 font-black">৳৩৫ (অফার)</strong> সেন্ড মানি করুন এবং Transaction ID সংগ্রহ করুন।
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -203,11 +221,11 @@
     </div>
 
     <!-- ============================================== -->
-    <!-- 5. ACTIVATION DATA SUBMISSION FORM             -->
+    <!-- 5. KYC SUBMISSION FORM                         -->
     <!-- ============================================== -->
     <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-card-soft space-y-5 border border-white" data-aos="fade-up">
         <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 border-b border-rose-100 pb-3 flex items-center gap-2">
-            <i class="fa-solid fa-shield-check text-ruby-600"></i> অ্যাক্টিভেশন তথ্য জমা দিন
+            <i class="fa-solid fa-id-card text-ruby-600"></i> KYC ভেরিফিকেশন তথ্য জমা দিন
         </h3>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -226,9 +244,9 @@
                 <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-xl shadow-xs">
                     <i class="fa-solid fa-hourglass-half fa-spin"></i>
                 </div>
-                <h3 class="text-xs font-black text-slate-900">পেমেন্ট ভেরিফিকেশন চলছে...</h3>
+                <h3 class="text-xs font-black text-slate-900">KYC পেমেন্ট ভেরিফিকেশন চলছে...</h3>
                 <p class="text-[11px] text-slate-500 font-medium max-w-xs mx-auto leading-relaxed">
-                    ধৈর্য ধরুন! আমাদের এডমিন আপনার TrxID যাচাই করে ৫-১০ মিনিটের মধ্যে একাউন্ট সক্রিয় করে দেবে।
+                    ধৈর্য ধরুন! আমাদের এডমিন আপনার TrxID যাচাই করে ৫-১০ মিনিটের মধ্যে একাউন্ট ভেরিফাই করে দেবে।
                 </p>
             </div>
         {% else %}
@@ -242,7 +260,7 @@
             </div>
             {% endif %}
 
-            <form action="/activate" method="POST" onsubmit="triggerActivationConfetti()" class="space-y-4">
+            <form action="/activate" method="POST" onsubmit="triggerKycConfetti()" class="space-y-4">
                 
                 <!-- পেমেন্ট মেথড -->
                 <div class="space-y-1">
@@ -280,7 +298,7 @@
                 <!-- সাবমিট বাটন -->
                 <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-ruby-600 via-rose-600 to-red-600 hover:opacity-95 text-white font-black text-xs shadow-glow-ruby transition active:scale-95 duration-150 flex items-center justify-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-circle-check"></i>
-                    <span>অ্যাক্টিভেশন সাবমিট করুন (অফার মূল্য ৳৩৫)</span>
+                    <span>KYC ভেরিফিকেশন সম্পন্ন করুন (অফার ফি ৳৩৫)</span>
                 </button>
             </form>
         {% endif %}
@@ -294,11 +312,9 @@
 <script>
 // ১. লাইভ ৮ তারিখ কাউন্টডাউন টাইমার ইঞ্জিন
 function initCountdownTimer() {
-    // প্রতি মাসের ৮ তারিখ রাত ১১:৫৯ পর্যন্ত টার্গেট সময়
     const now = new Date();
     let targetDate = new Date(now.getFullYear(), now.getMonth(), 8, 23, 59, 59);
 
-    // যদি বর্তমান তারিখ ৮ এর বেশি হয়, তবে পরবর্তী মাসের ৮ তারিখ সেট হবে
     if (now.getDate() > 8) {
         targetDate = new Date(now.getFullYear(), now.getMonth() + 1, 8, 23, 59, 59);
     }
@@ -345,7 +361,7 @@ function copyNumber(num, btnId) {
     }, 1800);
 }
 
-function triggerActivationConfetti() {
+function triggerKycConfetti() {
     if (typeof confetti === 'function') {
         confetti({
             particleCount: 85,
