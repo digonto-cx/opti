@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="space-y-6 max-w-3xl mx-auto pb-12">
+    
+    <!-- ============================================== -->
+    <!-- 1. HERO HEADER                                 -->
+    <!-- ============================================== -->
+    <div class="glass-panel p-6 sm:p-7 rounded-3xl shadow-card-soft relative overflow-hidden bg-gradient-to-br from-white via-rose-50/30 to-ruby-50/40 border border-white" data-aos="fade-down">
+        <div class="absolute -right-10 -top-10 w-36 h-36 bg-ruby-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="space-y-1 relative z-10">
+            <span class="px-2.5 py-0.5 rounded-lg bg-ruby-100 text-ruby-700 text-[10px] font-black uppercase tracking-wider inline-block">
+                Admin HelpDesk
+            </span>
+            <h1 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">এডমিন রিপোর্ট ও ফিডব্যাক পোর্টাল</h1>
+            <p class="text-[11px] text-slate-500 font-medium">প্ল্যাটফর্ম সংক্রান্ত যেকোনো অভিযোগ, সমস্যা বা মতামত সরাসরি এডমিনকে জানান।</p>
+        </div>
+    </div>
+
+    <!-- ফ্ল্যাশ মেসেজ -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="p-3.5 text-xs text-center rounded-2xl border font-bold shadow-xs {% if category == 'success' %}bg-emerald-50 text-emerald-600 border-emerald-200{% else %}bg-red-50 text-red-600 border-red-200{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- ============================================== -->
+    <!-- 2. REPORT STATUS TRACKER (IF ALREADY SUBMITTED)-->
+    <!-- ============================================== -->
+    {% if existing_report %}
+    <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-card-soft space-y-6 border border-white" data-aos="fade-up">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-rose-100 pb-4">
+            <div class="space-y-0.5">
+                <span class="text-[9px] font-black uppercase tracking-wider text-slate-400">Live Status Tracker</span>
+                <h3 class="text-sm font-black text-slate-900">আপনার জমা দেওয়া রিপোর্ট বিবরণী</h3>
+            </div>
+            <span class="px-3.5 py-1.5 rounded-xl font-black text-xs font-mono 
+                {% if status_step == 4 %}bg-emerald-100 text-emerald-800 border border-emerald-300 animate-pulse
+                {% elif status_step == 3 %}bg-purple-100 text-purple-800 border border-purple-300
+                {% elif status_step == 2 %}bg-sky-100 text-sky-800 border border-sky-300
+                {% else %}bg-amber-100 text-amber-800 border border-amber-300{% endif %}">
+                {{ dynamic_status }}
+            </span>
+        </div>
+
+        <!-- ৪-স্টেপ প্রোগ্রেস টাইমলাইন -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-center text-[10px] font-bold">
+            <!-- ধাপ ১: Pending -->
+            <div class="p-3 rounded-2xl border transition {% if status_step >= 1 %}bg-emerald-50 border-emerald-200 text-emerald-700{% else %}bg-slate-50 border-slate-200 text-slate-400{% endif %}">
+                <i class="fa-solid fa-circle-check text-xs block mb-1"></i>
+                <span>১. Pending</span>
+            </div>
+            <!-- ধাপ ২: Under Review (2h) -->
+            <div class="p-3 rounded-2xl border transition {% if status_step >= 2 %}bg-emerald-50 border-emerald-200 text-emerald-700{% else %}bg-slate-50 border-slate-200 text-slate-400{% endif %}">
+                <i class="fa-solid fa-clock-rotate-left text-xs block mb-1"></i>
+                <span>২. Under Review</span>
+            </div>
+            <!-- ধাপ ৩: এডমিন দেখেছেন (4h) -->
+            <div class="p-3 rounded-2xl border transition {% if status_step >= 3 %}bg-emerald-50 border-emerald-200 text-emerald-700{% else %}bg-slate-50 border-slate-200 text-slate-400{% endif %}">
+                <i class="fa-solid fa-eye text-xs block mb-1"></i>
+                <span>৩. এডমিন দেখেছেন</span>
+            </div>
+            <!-- ধাপ ৪: কল করবেন (10h) -->
+            <div class="p-3 rounded-2xl border transition {% if status_step >= 4 %}bg-emerald-50 border-emerald-200 text-emerald-700 shadow-xs{% else %}bg-slate-50 border-slate-200 text-slate-400{% endif %}">
+                <i class="fa-solid fa-phone-volume text-xs block mb-1"></i>
+                <span>৪. কল করবেন</span>
+            </div>
+        </div>
+
+        <!-- জমা দেওয়া তথ্যের সামারি কার্ড -->
+        <div class="bg-slate-50 border border-rose-100 p-5 rounded-2xl space-y-3 text-xs font-bold text-slate-700">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 border-b border-slate-200/60 pb-3">
+                <div>
+                    <span class="text-[9px] text-slate-400 uppercase block">নাম</span>
+                    <span class="text-slate-900 font-black">{{ existing_report.username }}</span>
+                </div>
+                <div>
+                    <span class="text-[9px] text-slate-400 uppercase block">UID</span>
+                    <span class="text-slate-900 font-mono">#{{ existing_report.uid }}</span>
+                </div>
+                <div>
+                    <span class="text-[9px] text-slate-400 uppercase block">ব্যালেন্স</span>
+                    <span class="text-emerald-600 font-black">৳ {{ existing_report.balance }}</span>
+                </div>
+                <div>
+                    <span class="text-[9px] text-slate-400 uppercase block">নগদ নম্বর</span>
+                    <span class="text-ruby-600 font-mono">{{ existing_report.nagad_number }}</span>
+                </div>
+            </div>
+
+            <div>
+                <span class="text-[9px] text-slate-400 uppercase block mb-1">আপনার অভিযোগ / ফিডব্যাক:</span>
+                <p class="p-3 bg-white rounded-xl border border-slate-200 text-slate-800 font-medium leading-relaxed">
+                    {{ existing_report.feedback_text }}
+                </p>
+            </div>
+
+            <div class="text-[10px] text-slate-400 font-mono text-right pt-1">
+                জমা দেওয়ার সময়: {{ existing_report.created_at[:16].replace('T', ' ') }}
+            </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-center text-xs font-bold">
+            <i class="fa-solid fa-lock text-[10px] mr-1"></i> আপনি ইতিমধ্যে একটি রিপোর্ট জমা দিয়েছেন। অনুগ্রহ করে এডমিনের পর্যালোচনার জন্য অপেক্ষা করুন।
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 3. REPORT SUBMISSION FORM (FIRST TIME ONLY)    -->
+    <!-- ============================================== -->
+    {% else %}
+    <div class="glass-panel p-6 sm:p-8 rounded-3xl shadow-card-soft space-y-5 border border-white" data-aos="fade-up">
+        <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 border-b border-rose-100 pb-3 flex items-center gap-2">
+            <i class="fa-solid fa-pen-to-square text-ruby-600"></i> নতুন রিপোর্ট বা ফিডব্যাক ফর্ম পূরণ করুন
+        </h3>
+
+        <form action="/report" method="POST" class="space-y-4">
+            
+            <!-- অটোফিল রো ১: নাম ও ইমেইল -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">আপনার নাম</label>
+                    <input type="text" value="{{ user.username }}" readonly 
+                           class="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-2xl text-xs text-slate-700 font-bold focus:outline-none cursor-not-allowed shadow-xs">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">ইমেইল এড্রেস</label>
+                    <input type="email" value="{{ user.email }}" readonly 
+                           class="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-2xl text-xs text-slate-700 font-bold focus:outline-none cursor-not-allowed shadow-xs">
+                </div>
+            </div>
+
+            <!-- অটোফিল রো ২: UID ও আন-এডিটেবল ব্যালেন্স -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">ইউজার UID</label>
+                    <input type="text" value="#{{ user.uid }}" readonly 
+                           class="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-2xl text-xs text-slate-700 font-mono font-bold focus:outline-none cursor-not-allowed shadow-xs">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">বর্তমান ব্যালেন্স (Not Editable)</label>
+                    <input type="text" value="৳ {{ user.balance }}" readonly 
+                           class="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-2xl text-xs text-emerald-600 font-black focus:outline-none cursor-not-allowed shadow-xs">
+                </div>
+            </div>
+
+            <!-- ইউজার ইনপুট ১: নগদ নম্বর -->
+            <div class="space-y-1">
+                <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">
+                    নগদ একাউন্ট নম্বর <span class="text-ruby-600">*</span>
+                </label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                        <i class="fa-solid fa-phone text-xs"></i>
+                    </span>
+                    <input type="text" name="nagad_number" required placeholder="01XXXXXXXXX" 
+                           class="w-full pl-10 pr-4 py-3 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-900 font-bold font-mono focus:outline-none focus:border-ruby-600 focus:ring-2 focus:ring-rose-100 transition shadow-xs">
+                </div>
+            </div>
+
+            <!-- ইউজার ইনপুট ২: রিপোর্ট বা ফিডব্যাক টেক্সট -->
+            <div class="space-y-1">
+                <label class="block text-[10px] font-black text-slate-500 uppercase tracking-wider pl-1">
+                    অভিযোগ বা ফিডব্যাক বিবরণী <span class="text-ruby-600">*</span>
+                </label>
+                <textarea name="feedback_text" required placeholder="আপনার সমস্যা বা অভিযোগ বিস্তারিত লিখুন..." 
+                          class="w-full px-4 py-3 bg-white border border-rose-200/90 rounded-2xl text-xs text-slate-900 font-medium focus:outline-none focus:border-ruby-600 focus:ring-2 focus:ring-rose-100 h-28 shadow-xs resize-none"></textarea>
+            </div>
+
+            <!-- সাবমিট বাটন -->
+            <button type="submit" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-ruby-600 via-rose-600 to-red-600 hover:opacity-95 text-white font-black text-xs shadow-glow-ruby transition active:scale-95 duration-150 flex items-center justify-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>রিপোর্ট সাবমিট করুন</span>
+            </button>
+        </form>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
