@@ -342,6 +342,94 @@ def page_not_found(e):
 
 # (অন্যান্য কোডের সাথে নিচের নতুন অ্যাকাউন্ট অ্যাক্টিভেশন রাউটগুলো যুক্ত করুন)
 
+# ==========================================
+# REPORT / FEEDBACK TO ADMIN ROUTE
+# ==========================================
+@app.route('/report', methods=['GET', 'POST'])
+def user_report_page():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+        
+    user_res = supabase.table("users").select("*").eq("id", user_id).execute().data
+    if not user_res:
+        session.clear()
+        return redirect(url_for('login'))
+        
+    user = user_res[0]
+    
+    # ইউজারের পূর্ববর্তী রিপোর্ট চেক
+    existing_report = None
+    try:
+        report_res = supabase.table("user_reports") \
+            .select("*").eq("user_id", user_id) \
+            .order("created_at", desc=True).execute().data
+        if report_res:
+            existing_report = report_res[0]
+    except Exception as e:
+        print("Report Fetch Error:", e)
+
+    # ডাইনামিক সময়-ভিত্তিক স্ট্যাটাস ক্যালকুলেশন
+    dynamic_status = "Pending"
+    status_step = 1
+    
+    if existing_report:
+        try:
+            created_at = datetime.datetime.fromisoformat(existing_report['created_at'].replace('Z', '+00:00'))
+            now = datetime.datetime.now(datetime.timezone.utc)
+            diff_hours = (now - created_at).total_seconds() / 3600.0
+
+            if diff_hours >= 10:
+                dynamic_status = "এডমিন আপনাকে কল করবেন"
+                status_step = 4
+            elif diff_hours >= 4:
+                dynamic_status = "এডমিন দেখেছেন"
+                status_step = 3
+            elif diff_hours >= 2:
+                dynamic_status = "Under Review (পর্যালোচনা চলছে)"
+                status_step = 2
+            else:
+                dynamic_status = "Pending (অপেক্ষমান)"
+                status_step = 1
+        except Exception:
+            pass
+
+    if request.method == 'POST':
+        if existing_report:
+            flash("আপনি ইতিমধ্যে একটি রিপোর্ট জমা দিয়েছেন। নতুন রিপোর্ট জমা দেওয়া যাবে না।", "danger")
+            return redirect(url_for('user_report_page'))
+            
+        nagad_number = str(request.form.get('nagad_number', '')).strip()
+        feedback_text = str(request.form.get('feedback_text', '')).strip()
+        
+        if not nagad_number or not feedback_text:
+            flash("দয়া করে নগদ নম্বর এবং সমস্যার বিবরণ লিখুন।", "danger")
+            return redirect(url_for('user_report_page'))
+            
+        try:
+            supabase.table("user_reports").insert({
+                "user_id": user_id,
+                "username": user.get('username'),
+                "email": user.get('email'),
+                "uid": user.get('uid'),
+                "balance": float(user.get('balance', 0)),
+                "nagad_number": nagad_number,
+                "feedback_text": feedback_text
+            }).execute()
+            flash("আপনার রিপোর্টটি সফলভাবে জমা হয়েছে। এডমিন দ্রুত ব্যবস্থা গ্রহণ করবে।", "success")
+            return redirect(url_for('user_report_page'))
+        except Exception as e:
+            print("Report Submit Error:", e)
+            flash("রিপোর্ট জমা দিতে সমস্যা হয়েছে। আবার চেষ্টা করুন।", "danger")
+            return redirect(url_for('user_report_page'))
+
+    return render_template('report.html', 
+                           user=user, 
+                           existing_report=existing_report, 
+                           dynamic_status=dynamic_status,
+                           status_step=status_step)
+
+
 # ১. মেম্বার প্যানেল অ্যাকাউন্ট অ্যাক্টিভেশন রাউট (/activate)
 @app.route('/activate', methods=['GET', 'POST'])
 def activate():
