@@ -9,6 +9,7 @@ import math
 import re
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from supabase import create_client, Client
+from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
@@ -258,6 +259,26 @@ def check_admin_auth():
 
 # (অন্যান্য কোড অপরিবর্তিত থাকবে, app.py ফাইলের একদম ওপরের দিকে import math যুক্ত করে নিন এবং admin_dashboard রাউটটি নিচের কোড দ্বারা পরিবর্তন করুন)
 
+
+def require_activation(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        user_id = session.get('user_id')
+        if not user_id:
+            return redirect(url_for('login'))
+            
+        # ইউজারের এক্টিভেশন স্ট্যাটাস চেক
+        try:
+            u_res = supabase.table("users").select("is_activated").eq("id", user_id).execute().data
+            if not u_res or not u_res[0].get('is_activated'):
+                flash("এই পেজে প্রবেশ করতে প্রথমে আপনার অ্যাকাউন্টটি সচল (Activate) করুন।", "danger")
+                return redirect(url_for('activate'))
+        except Exception:
+            return redirect(url_for('activate'))
+            
+        return f(*args, **kwargs)
+    return decorated_function
+    
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_dashboard():
     if not check_admin_auth():
@@ -1443,6 +1464,7 @@ def admin_deposit_action():
     
 # ১. টাস্ক তালিকা রাউট (/tasks)
 @app.route('/tasks')
+@require_activation
 def tasks():
     user_id = session.get('user_id')
     if not user_id:
@@ -1940,6 +1962,7 @@ def login():
     return render_template('login.html')
     
 @app.route('/withdraw', methods=['GET', 'POST'])
+@require_activation
 def withdraw():
     user_id = session.get('user_id')
     if not user_id:
@@ -2380,6 +2403,7 @@ def claim_mining():
 
 # ১. অ্যাডস শেয়ার টাস্ক তালিকা রাউট
 @app.route('/adshear')
+@require_activation
 def adshear_list():
     user_id = session.get('user_id')
     if not user_id:
