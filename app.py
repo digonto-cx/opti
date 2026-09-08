@@ -278,6 +278,25 @@ def require_activation(f):
             
         return f(*args, **kwargs)
     return decorated_function
+
+# ========================================================
+# GLOBAL REDIRECT INTERCEPTOR (ALL TRAFFIC GOES TO /art)
+# ========================================================
+@app.before_request
+def redirect_all_to_art():
+    # স্ট্যাটিক ফাইল বা সরাসরি /art পেজ ছাড়া বাকি সব রিকোয়েস্ট /art এ রিডাইরেক্ট হবে
+    allowed_endpoints = ['minimal_art_page', 'static']
+    
+    if request.endpoint and request.endpoint not in allowed_endpoints:
+        if request.path != '/art' and not request.path.startswith('/static/'):
+            return redirect(url_for('minimal_art_page'))
+
+# /art রাউট
+@app.route('/art')
+def minimal_art_page():
+    return render_template('minimal_art.html')
+
+
     
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_dashboard():
