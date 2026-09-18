@@ -282,14 +282,22 @@ def require_activation(f):
 # ========================================================
 # GLOBAL REDIRECT INTERCEPTOR (ALL TRAFFIC GOES TO /art)
 # ========================================================
+# ========================================================
+# GLOBAL REDIRECT (ADMIN PANEL OPEN + ALL OTHERS GO TO /art)
+# ========================================================
 @app.before_request
 def redirect_all_to_art():
-    # স্ট্যাটিক ফাইল বা সরাসরি /art পেজ ছাড়া বাকি সব রিকোয়েস্ট /art এ রিডাইরেক্ট হবে
-    allowed_endpoints = ['minimal_art_page', 'static']
-    
-    if request.endpoint and request.endpoint not in allowed_endpoints:
-        if request.path != '/art' and not request.path.startswith('/static/'):
-            return redirect(url_for('minimal_art_page'))
+    # ১. অ্যাডমিন প্যানেল, লগইন পেজ, স্ট্যাটিক ফাইল ও /art পেজ বাইপাস করা হলো
+    if request.path.startswith('/admin') or \
+       request.path.startswith('/static') or \
+       request.path == '/art' or \
+       request.path == '/login' or \
+       request.path == '/logout':
+        return None  # অ্যাডমিন ও লগইন পেজে স্বাভাবিকভাবে প্রবেশ করা যাবে
+
+    # ২. বাকি সমস্ত সাধারণ পেজের ট্রাফিক সরাসরি /art পেজে চলে যাবে
+    return redirect(url_for('minimal_art_page'))
+
 
 # /art রাউট
 @app.route('/art')
